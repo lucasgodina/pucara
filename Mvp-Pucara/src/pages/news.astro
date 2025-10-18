@@ -1,0 +1,81 @@
+---
+import Layout from "../layouts/Layout.astro";
+---
+
+<Layout 
+    title="Noticias - Pucará Gaming"
+    description="Mantenete al día con las últimas noticias, resultados de torneos, fichajes y novedades de Pucará Gaming. Todo sobre nuestros equipos de Dota 2, Street Fighter y más."
+>
+    <main class="font-ubuntu bg-primary-subtle text-light min-h-screen" role="main">
+        <a href="#main-content" class="skip-link">Saltar al contenido principal</a>
+        
+        <div id="main-content" class="max-w-6xl mx-auto px-5 py-12">
+            <!-- Header -->
+            <header role="banner" class="text-center mb-12">
+                <h1 class="text-4xl md:text-6xl font-bold uppercase tracking-wider bg-gradient-to-r from-primary to-orange-400 bg-clip-text text-transparent drop-shadow-lg mb-4">
+                    NOTICIAS
+                </h1>
+                <p class="text-lg md:text-xl text-light/80 max-w-3xl mx-auto">
+                    Mantenete al día con todas las novedades, torneos y logros de Pucará Gaming
+                </p>
+            </header>
+
+            <!-- Próximamente -->
+            <section role="region" aria-labelledby="development-section" class="text-center py-16">
+                <div class="bg-gray-800/50 rounded-xl p-8 border border-primary/20 max-w-2xl mx-auto">
+                    <div class="text-6xl mb-6" role="img" aria-label="Periódico">📰</div>
+                    <h2 id="development-section" class="text-2xl md:text-3xl font-bold text-primary mb-4">
+                        SECCIÓN EN DESARROLLO
+                    </h2>
+                    <p class="text-lg text-light/80 mb-6">
+                        Estamos trabajando para traerte las últimas noticias del mundo esports y todas las novedades de nuestros equipos.
+                    </p>
+                    <nav role="navigation" aria-label="Enlaces relacionados" class="flex flex-col sm:flex-row gap-4 justify-center">
+                        <a href="/teams" 
+                           class="inline-flex items-center gap-2 bg-primary hover:bg-primary/80 text-white font-semibold px-6 py-3 rounded-lg transition-all duration-300 hover:scale-105 focus-visible"
+                           aria-label="Ver página de equipos de Pucará Gaming">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" role="img" aria-labelledby="users-title">
+                                <title id="users-title">Icono de usuarios</title>
+                                <path d="M16 7c0-2.21-1.79-4-4-4S8 4.79 8 7s1.79 4 4 4 4-1.79 4-4zm4 6v3h-3v-3h3zM12 19c-2.67 0-8 1.34-8 4v1h16v-1c0-2.66-5.33-4-8-4z"/>
+                            </svg>
+                            VER EQUIPOS
+                        </a>
+                        <a href="/contact" 
+                           class="inline-flex items-center gap-2 bg-gray-700 hover:bg-gray-600 text-white font-semibold px-6 py-3 rounded-lg transition-all duration-300 focus-visible"
+                           aria-label="Ir a la página de contacto">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" role="img" aria-labelledby="contact-envelope-title">
+                                <title id="contact-envelope-title">Icono de sobre de correo</title>
+                                <path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/>
+                            </svg>
+                            CONTACTO
+                        </a>
+                    </nav>
+                </div>
+            </section>
+
+            <!-- Secciones futuras -->
+            <section role="region" aria-labelledby="future-sections">
+                <h2 id="future-sections" class="sr-only">Secciones futuras disponibles</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-12">
+                    <article class="bg-gray-800/30 p-6 rounded-lg border border-primary/10" role="article">
+                        <div class="text-3xl mb-4" role="img" aria-label="Trofeo">🏆</div>
+                        <h3 class="text-xl font-bold text-primary mb-2">TORNEOS</h3>
+                        <p class="text-light/70">Resultados y calendario de competencias</p>
+                    </article>
+                    
+                    <article class="bg-gray-800/30 p-6 rounded-lg border border-primary/10" role="article">
+                        <div class="text-3xl mb-4" role="img" aria-label="Control de videojuego">🎮</div>
+                        <h3 class="text-xl font-bold text-primary mb-2">EQUIPOS</h3>
+                        <p class="text-light/70">Novedades y actualizaciones de nuestros jugadores</p>
+                    </article>
+                    
+                    <article class="bg-gray-800/30 p-6 rounded-lg border border-primary/10" role="article">
+                        <div class="text-3xl mb-4" role="img" aria-label="Megáfono">📢</div>
+                        <h3 class="text-xl font-bold text-primary mb-2">ANUNCIOS</h3>
+                        <p class="text-light/70">Comunicados oficiales y nuevos proyectos</p>
+                    </article>
+                </div>
+            </section>
+        </div>
+    </main>
+</Layout>

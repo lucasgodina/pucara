@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Formulario de Contacto - Pucará Gaming</title>
+</head>
+<body>
+    <!-- Formulario estático para que Netlify lo detecte -->
+    <form name="contact" netlify netlify-honeypot="bot-field" hidden>
+        <input type="text" name="nombre" />
+        <input type="text" name="apellido" />
+        <input type="email" name="email" />
+        <select name="motivo">
+            <option value="press">Prensa</option>
+            <option value="partner-sponsor">Quiero ser Partner/Sponsor</option>
+            <option value="player">Quiero ser jugador</option>
+            <option value="work">Quiero trabajar en PUCARA</option>
+            <option value="other">Otro</option>
+        </select>
+        <textarea name="mensaje"></textarea>
+        <input type="checkbox" name="terminos" />
+        <input type="hidden" name="form-name" value="contact" />
+        <p class="hidden">
+            <label>Don't fill this out if you're human: <input name="bot-field" /></label>
+        </p>
+    </form>
+</body>
+</html>

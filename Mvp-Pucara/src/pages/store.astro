@@ -1,0 +1,69 @@
+---
+import Layout from "../layouts/Layout.astro";
+---
+
+<Layout 
+    title="Tienda Oficial - Pucará Gaming"
+    description="Tienda oficial de Pucara Gaming. Próximamente productos exclusivos: camisetas, hoodies, accesorios gaming y merchandising oficial del club. ¡Muy pronto disponible!"
+>
+    <main class="font-ubuntu bg-primary-subtle text-light min-h-screen flex items-center justify-center" role="main">
+        <a href="#main-content" class="skip-link">Saltar al contenido principal</a>
+        
+        <div id="main-content" class="text-center px-4 py-8 max-w-4xl mx-auto">
+            <header role="banner">
+                <div class="flex flex-col sm:flex-row items-center justify-center gap-4 mb-8">
+                    <h1 class="text-4xl sm:text-5xl md:text-6xl font-bold uppercase tracking-wider bg-gradient-to-r from-primary to-orange-400 bg-clip-text text-transparent drop-shadow-lg animate-pulse">
+                        PRÓXIMAMENTE...
+                    </h1>
+                    <span class="text-4xl sm:text-5xl md:text-6xl animate-bounce" role="img" aria-label="Construcción en progreso">🚧</span>
+                </div>
+            </header>
+            
+            <section role="region" aria-labelledby="store-description">
+                <h2 id="store-description" class="sr-only">Descripción de la tienda</h2>
+                <p class="text-lg md:text-xl text-light/80 mb-8 max-w-2xl mx-auto">
+                    Nuestra tienda está en construcción. Pronto vas a poder conseguir productos exclusivos de Pucará Gaming.
+                </p>
+            </section>
+            
+            <section role="region" aria-labelledby="upcoming-products">
+                <h2 id="upcoming-products" class="sr-only">Productos próximamente disponibles</h2>
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mt-12">
+                    <article class="bg-gray-800/50 p-6 rounded-lg border border-primary/20" role="article">
+                        <div class="text-3xl mb-4" role="img" aria-label="Remera">👕</div>
+                        <h3 class="text-xl font-bold text-primary mb-2">REMERAS</h3>
+                        <p class="text-light/70">Remeras oficiales con el logo de Pucará Gaming</p>
+                    </article>
+                    
+                    <article class="bg-gray-800/50 p-6 rounded-lg border border-primary/20" role="article">
+                        <div class="text-3xl mb-4" role="img" aria-label="Gorra">🧢</div>
+                        <h3 class="text-xl font-bold text-primary mb-2">GORRAS</h3>
+                        <p class="text-light/70">Gorras y viseras con diseños exclusivos</p>
+                    </article>
+                    
+                    <article class="bg-gray-800/50 p-6 rounded-lg border border-primary/20" role="article">
+                        <div class="text-3xl mb-4" role="img" aria-label="Control de videojuego">🎮</div>
+                        <h3 class="text-xl font-bold text-primary mb-2">ACCESORIOS</h3>
+                        <p class="text-light/70">Mousepads, stickers y más productos gaming</p>
+                    </article>
+                </div>
+            </section>
+            
+            <section role="region" aria-labelledby="contact-info">
+                <h2 id="contact-info" class="sr-only">Información de contacto</h2>
+                <div class="mt-12">
+                    <a href="/contact" 
+                       class="inline-flex items-center gap-2 bg-primary hover:bg-primary/80 text-white font-semibold px-6 py-3 rounded-lg transition-all duration-300 hover:scale-105 focus-visible"
+                       aria-label="Ir a la página de contacto para más información sobre productos"
+                       role="button">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" role="img" aria-labelledby="envelope-title">
+                            <title id="envelope-title">Icono de sobre de correo</title>
+                            <path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/>
+                        </svg>
+                        CONTACTANOS PARA MÁS INFO
+                    </a>
+                </div>
+            </section>
+        </div>
+    </main>
+</Layout>

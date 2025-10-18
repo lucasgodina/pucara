@@ -1,0 +1,580 @@
+---
+// Gaming Router Enhancement - Funcionalidades específicas para sitio gaming
+---
+
+<script is:inline>
+// Gaming Navigation System - Simplificado para mejor compatibilidad
+(function() {
+  'use strict';
+  
+  // 1. INDICADOR DE CARGA GAMING CON LOGO DE PUCARÁ
+  function showGamingLoader() {
+    const existingLoader = document.getElementById('gaming-loader');
+    if (existingLoader) return;
+    
+    const loader = document.createElement('div');
+    loader.id = 'gaming-loader';
+    loader.innerHTML = `
+      <div style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(135deg, #000000, #1a1a1a, #000000); z-index: 9999; display: flex; flex-direction: column; align-items: center; justify-content: center; font-family: Ubuntu, sans-serif;">
+        
+        <!-- Logo de Pucará -->
+        <div style="margin-bottom: 40px; animation: logo-pulse 2s ease-in-out infinite;">
+          <img src="/logopucara.png" alt="Pucará Gaming" style="width: 120px; height: 120px; filter: drop-shadow(0 0 20px rgba(255,107,26,0.6));" />
+        </div>
+        
+        <!-- Texto de carga -->
+        <h2 style="color: #ff6b1a; font-size: 28px; font-weight: 700; margin-bottom: 20px; letter-spacing: 3px; text-transform: uppercase; animation: text-glow 2s ease-in-out infinite;">
+          PUCARA GAMING
+        </h2>
+        
+        <!-- Barra de carga gaming -->
+        <div style="width: 300px; height: 6px; background: rgba(255,107,26,0.2); border-radius: 3px; overflow: hidden; margin-bottom: 20px; border: 1px solid rgba(255,107,26,0.3);">
+          <div id="gaming-progress-bar" style="height: 100%; background: linear-gradient(90deg, #ff6b1a, #ff8c42, #ff6b1a); width: 0%; transition: width 0.1s ease; animation: progress-shine 1s linear infinite;"></div>
+        </div>
+        
+        <!-- Texto de estado -->
+        <p id="loading-status" style="color: rgba(255,255,255,0.8); font-size: 14px; font-weight: 500; letter-spacing: 1px; margin: 0; animation: status-blink 1.5s ease-in-out infinite;">
+          INICIANDO EXPERIENCIA GAMING...
+        </p>
+        
+        <!-- Efectos de partículas -->
+        <div style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; overflow: hidden;">
+          <div style="position: absolute; top: 20%; left: 10%; width: 4px; height: 4px; background: #ff6b1a; border-radius: 50%; animation: particle-float 3s ease-in-out infinite;"></div>
+          <div style="position: absolute; top: 60%; right: 15%; width: 3px; height: 3px; background: #ff8c42; border-radius: 50%; animation: particle-float 2.5s ease-in-out infinite 0.5s;"></div>
+          <div style="position: absolute; bottom: 30%; left: 20%; width: 2px; height: 2px; background: #ff6b1a; border-radius: 50%; animation: particle-float 4s ease-in-out infinite 1s;"></div>
+          <div style="position: absolute; top: 40%; right: 30%; width: 3px; height: 3px; background: #ff8c42; border-radius: 50%; animation: particle-float 3.5s ease-in-out infinite 1.5s;"></div>
+        </div>
+      </div>
+    `;
+
+  // 1B. LOADER RÁPIDO PARA ATAJOS DE TECLADO
+  function showQuickLoader() {
+    const existingLoader = document.getElementById('quick-loader');
+    if (existingLoader) return;
+    
+    const loader = document.createElement('div');
+    loader.id = 'quick-loader';
+    loader.innerHTML = `
+      <div style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(135deg, #000000, #1a1a1a, #000000); z-index: 9999; display: flex; flex-direction: column; align-items: center; justify-content: center; font-family: Ubuntu, sans-serif;">
+        
+        <!-- Logo de Pucará -->
+        <div style="margin-bottom: 30px; animation: logo-pulse-fast 1s ease-in-out infinite;">
+          <img src="/logopucara.png" alt="Pucará Gaming" style="width: 80px; height: 80px; filter: drop-shadow(0 0 15px rgba(255,107,26,0.7));" />
+        </div>
+        
+        <!-- Texto de carga -->
+        <h2 style="color: #ff6b1a; font-size: 24px; font-weight: 700; margin-bottom: 15px; letter-spacing: 2px; text-transform: uppercase; animation: text-glow-fast 1s ease-in-out infinite;">
+          NAVEGANDO...
+        </h2>
+        
+        <!-- Barra de carga rápida -->
+        <div style="width: 200px; height: 4px; background: rgba(255,107,26,0.2); border-radius: 2px; overflow: hidden; margin-bottom: 15px; border: 1px solid rgba(255,107,26,0.3);">
+          <div id="quick-progress-bar" style="height: 100%; background: linear-gradient(90deg, #ff6b1a, #ff8c42, #ff6b1a); width: 0%; transition: width 0.05s ease; animation: progress-shine-fast 0.8s linear infinite;"></div>
+        </div>
+      </div>
+    `;
+    
+    // Agregar animaciones CSS para el loader rápido
+    const quickStyle = document.createElement('style');
+    quickStyle.textContent = `
+      @keyframes logo-pulse-fast {
+        0%, 100% { transform: scale(1); opacity: 1; }
+        50% { transform: scale(1.05); opacity: 0.9; }
+      }
+      
+      @keyframes text-glow-fast {
+        0%, 100% { text-shadow: 0 0 10px rgba(255,107,26,0.5); }
+        50% { text-shadow: 0 0 20px rgba(255,107,26,0.8); }
+      }
+      
+      @keyframes progress-shine-fast {
+        0% { box-shadow: 0 0 5px rgba(255,107,26,0.3); }
+        50% { box-shadow: 0 0 15px rgba(255,107,26,0.6); }
+        100% { box-shadow: 0 0 5px rgba(255,107,26,0.3); }
+      }
+    `;
+    
+    document.head.appendChild(quickStyle);
+    document.body.appendChild(loader);
+    
+    // Progreso rápido automático
+    const progressBar = document.getElementById('quick-progress-bar');
+    let progress = 0;
+    const quickInterval = setInterval(() => {
+      progress += 20; // Incremento más rápido
+      progressBar.style.width = progress + '%';
+      
+      if (progress >= 100) {
+        clearInterval(quickInterval);
+      }
+    }, 50); // Más rápido: cada 50ms
+  }
+  
+  function hideQuickLoader() {
+    const loader = document.getElementById('quick-loader');
+    if (loader) {
+      loader.style.transition = 'opacity 0.2s ease';
+      loader.style.opacity = '0';
+      setTimeout(() => {
+        if (loader.parentNode) {
+          loader.parentNode.removeChild(loader);
+        }
+      }, 200);
+    }
+  }
+    
+    // Agregar animaciones CSS
+    const style = document.createElement('style');
+    style.textContent = `
+      @keyframes logo-pulse {
+        0%, 100% { transform: scale(1); }
+        50% { transform: scale(1.05); }
+      }
+      
+      @keyframes text-glow {
+        0%, 100% { text-shadow: 0 0 20px rgba(255,107,26,0.8); }
+        50% { text-shadow: 0 0 30px rgba(255,107,26,1), 0 0 40px rgba(255,107,26,0.6); }
+      }
+      
+      @keyframes progress-shine {
+        0% { transform: translateX(-100%); }
+        100% { transform: translateX(100%); }
+      }
+      
+      @keyframes progress-shine::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+        animation: progress-shine 1s linear infinite;
+      }
+      
+      @keyframes status-blink {
+        0%, 100% { opacity: 0.8; }
+        50% { opacity: 1; }
+      }
+      
+      @keyframes particle-float {
+        0%, 100% { transform: translateY(0px) scale(1); opacity: 0.6; }
+        50% { transform: translateY(-20px) scale(1.2); opacity: 1; }
+      }
+      
+      @keyframes gentle-pulse {
+        0% { opacity: 0; }
+        50% { opacity: 1; }
+        100% { opacity: 0; }
+      }
+    `;
+    document.head.appendChild(style);
+    
+    document.body.appendChild(loader);
+    
+    // Inicializar la barra de progreso
+    startGamingProgressBar();
+  }
+  
+  // Función para animar la barra de progreso
+  function startGamingProgressBar() {
+    const progressBar = document.getElementById('gaming-progress-bar');
+    const statusText = document.getElementById('loading-status');
+    const statuses = [
+      'INICIANDO EXPERIENCIA GAMING...',
+      'CARGANDO RECURSOS...',
+      'PREPARANDO EQUIPOS...',
+      'LISTO PARA JUGAR!'
+    ];
+    
+    let progress = 0;
+    let statusIndex = 0;
+    
+    const interval = setInterval(() => {
+      progress += 3.33; // Incremento fijo para completar en exactamente 3 segundos
+      
+      if (progress > 100) progress = 100;
+      
+      if (progressBar) {
+        progressBar.style.width = progress + '%';
+      }
+      
+      // Cambiar texto de estado gradualmente
+      if (statusText && statusIndex < statuses.length - 1) {
+        if (progress > (statusIndex + 1) * 25) { // 100/4 = 25% por cada estado
+          statusIndex++;
+          statusText.textContent = statuses[statusIndex];
+        }
+      }
+      
+      // Completar exactamente en 3 segundos
+      if (progress >= 100) {
+        clearInterval(interval);
+        if (statusText) {
+          statusText.textContent = statuses[statuses.length - 1];
+        }
+      }
+    }, 100); // Actualizar cada 100ms (30 updates x 3.33% = 100% en 3 segundos)
+  }
+  
+  function hideGamingLoader() {
+    const loader = document.getElementById('gaming-loader');
+    if (loader) {
+      // Transición más suave de salida
+      loader.style.transition = 'opacity 0.3s ease';
+      loader.style.opacity = '0';
+      
+      setTimeout(() => {
+        if (loader.parentNode) {
+          loader.parentNode.removeChild(loader);
+        }
+      }, 300);
+    }
+  }
+  
+  // 2. EFECTOS DE TRANSICIÓN GAMING
+  function addGamingTransitionEffect() {
+    const effect = document.createElement('div');
+    effect.id = 'gaming-transition-effect';
+    effect.style.cssText = `
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(255,107,26,0.02);
+      z-index: 9998;
+      pointer-events: none;
+      animation: gentle-pulse 0.3s ease-in-out;
+      opacity: 0;
+    `;
+    
+    document.body.appendChild(effect);
+    
+    setTimeout(() => {
+      if (effect.parentNode) {
+        effect.parentNode.removeChild(effect);
+      }
+    }, 300);
+  }
+  
+  // 3. NAVEGACIÓN CON TECLADO GAMING - VERSIÓN LIMPIA
+  function setupKeyboardNavigation() {
+    console.log('🎮 Configurando navegación por teclado...');
+    
+    // Shortcuts disponibles
+    const shortcuts = {
+      'KeyH': '/home',
+      'KeyT': '/teams',
+      'KeyN': '/news',
+      'KeyC': '/contact',
+      'KeyS': '/store',
+      'KeyA': '/about'
+    };
+    
+    // Función para manejar las teclas
+    function handleKeyPress(event) {
+      // Solo procesar si Alt está presionado
+      if (!event.altKey) return;
+      
+      // DEBUG: Verificar que funciona
+      console.log('🎮 Alt presionado con:', event.code, event.key);
+      
+      // Manejar atajos de navegación
+      if (shortcuts[event.code]) {
+        event.preventDefault();
+        console.log('🎮 Navegando a:', shortcuts[event.code]);
+        
+        // INMEDIATAMENTE mostrar overlay para cubrir el flash
+        const overlay = document.createElement('div');
+        overlay.id = 'navigation-overlay';
+        overlay.style.cssText = `
+          position: fixed;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          background: linear-gradient(135deg, #000000, #1a1a1a, #000000);
+          z-index: 9999;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
+          font-family: Ubuntu, sans-serif;
+        `;
+        
+        overlay.innerHTML = `
+          <img src="/logopucara.png" alt="Pucará Gaming" 
+               style="width: 80px; height: 80px; filter: drop-shadow(0 0 15px rgba(255,107,26,0.7)); animation: pulse 1s infinite;" />
+          <h2 style="color: #ff6b1a; font-size: 24px; font-weight: 700; margin-top: 20px; letter-spacing: 2px; text-transform: uppercase;">
+            NAVEGANDO...
+          </h2>
+        `;
+        
+        // Agregar CSS para animación
+        const style = document.createElement('style');
+        style.textContent = `
+          @keyframes pulse {
+            0%, 100% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.1); opacity: 0.8; }
+          }
+        `;
+        document.head.appendChild(style);
+        
+        // Agregar overlay inmediatamente
+        document.body.appendChild(overlay);
+        
+        // Navegar después de 100ms para asegurar que el overlay se muestre
+        setTimeout(() => {
+          window.location.href = shortcuts[event.code];
+        }, 100);
+        
+        return;
+      }
+      
+      // Manejar Alt + M para mostrar shortcuts
+      if (event.key === 'm') {
+        event.preventDefault();
+        console.log('🎮 Alt + M presionado');
+        // POR AHORA: Solo mostrar en consola
+        console.log('🎮 Shortcuts disponibles:');
+        console.log('Alt + H → Home');
+        console.log('Alt + T → Teams');
+        console.log('Alt + N → News');
+        console.log('Alt + C → Contact');
+        console.log('Alt + S → Store');
+        console.log('Alt + A → About');
+        return;
+      }
+    }
+    
+    // Remover listener anterior si existe
+    if (window.pucaraKeyHandler) {
+      document.removeEventListener('keydown', window.pucaraKeyHandler);
+      console.log('🎮 Handler anterior removido');
+    }
+    
+    // Agregar nuevo listener
+    window.pucaraKeyHandler = handleKeyPress;
+    document.addEventListener('keydown', handleKeyPress);
+    console.log('🎮 Nuevo handler agregado');
+  }
+  
+  function showGamingNavigationNotification() {
+    const notification = document.createElement('div');
+    notification.style.cssText = `
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      background: rgba(255,107,26,0.9);
+      color: white;
+      padding: 12px 20px;
+      border-radius: 8px;
+      font-family: Ubuntu, sans-serif;
+      font-weight: 600;
+      font-size: 14px;
+      z-index: 9999;
+      box-shadow: 0 4px 12px rgba(255,107,26,0.3);
+    `;
+    notification.textContent = '⚡ NAVEGANDO...';
+    
+    document.body.appendChild(notification);
+    
+    setTimeout(() => {
+      if (notification.parentNode) {
+        notification.parentNode.removeChild(notification);
+      }
+    }, 1000);
+  }
+  
+  function showGamingShortcuts() {
+    const existingShortcuts = document.getElementById('gaming-shortcuts');
+    if (existingShortcuts) return;
+    
+    const shortcuts = document.createElement('div');
+    shortcuts.id = 'gaming-shortcuts';
+    shortcuts.innerHTML = `
+      <div style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); backdrop-filter: blur(5px); z-index: 9999; display: flex; align-items: center; justify-content: center;">
+        <div style="background: linear-gradient(135deg, #1a1a1a, #000); border: 2px solid #ff6b1a; border-radius: 12px; padding: 32px; max-width: 400px; color: white; font-family: Ubuntu, sans-serif;">
+          <h3 style="font-size: 24px; font-weight: bold; color: #ff6b1a; margin-bottom: 24px; text-align: center;">🎮 ATAJOS GAMING</h3>
+          <div style="margin-bottom: 24px;">
+            <div style="display: flex; justify-content: space-between; margin-bottom: 12px;"><span>Alt + H</span><span>Inicio</span></div>
+            <div style="display: flex; justify-content: space-between; margin-bottom: 12px;"><span>Alt + T</span><span>Equipos</span></div>
+            <div style="display: flex; justify-content: space-between; margin-bottom: 12px;"><span>Alt + N</span><span>Noticias</span></div>
+            <div style="display: flex; justify-content: space-between; margin-bottom: 12px;"><span>Alt + C</span><span>Contacto</span></div>
+            <div style="display: flex; justify-content: space-between; margin-bottom: 12px;"><span>Alt + S</span><span>Tienda</span></div>
+            <div style="display: flex; justify-content: space-between; margin-bottom: 12px;"><span>Alt + A</span><span>Nosotros</span></div>
+            <div style="display: flex; justify-content: space-between; margin-bottom: 12px; border-top: 1px solid rgba(255,107,26,0.3); padding-top: 12px;"><span>Alt + M</span><span>Mostrar este mapa</span></div>
+          </div>
+          <button onclick="document.getElementById('gaming-shortcuts').remove()" style="width: 100%; background: #ff6b1a; color: white; border: none; padding: 12px; border-radius: 8px; font-weight: 600; cursor: pointer; font-size: 14px; transition: background 0.3s;">
+            CERRAR
+          </button>
+        </div>
+      </div>
+    `;
+    
+    document.body.appendChild(shortcuts);
+  }
+  
+  // 4. EFECTOS PARA TARJETAS DE EQUIPOS
+  function setupTeamCardEffects() {
+    const teamCards = document.querySelectorAll('.team-card, [class*="team"]');
+    teamCards.forEach(function(card) {
+      card.addEventListener('mouseenter', function() {
+        this.style.transform = 'scale(1.05)';
+        this.style.boxShadow = '0 20px 40px rgba(255,107,26,0.3)';
+        this.style.transition = 'all 0.3s ease';
+      });
+      
+      card.addEventListener('mouseleave', function() {
+        this.style.transform = 'scale(1)';
+        this.style.boxShadow = 'none';
+      });
+    });
+  }
+  
+  // 5. INICIALIZACIÓN ESPECÍFICA POR PÁGINA
+  function initializePageSpecificFeatures() {
+    const currentPath = window.location.pathname;
+    
+    // Limpiar efectos anteriores
+    clearTimeout(window.gamingPageTimeout);
+    
+    switch(currentPath) {
+      case '/':
+        window.gamingPageTimeout = setTimeout(function() {
+          // Reinicializar carousel si existe
+          const carousel = document.querySelector('.instagram-carousel');
+          if (carousel) {
+            carousel.dispatchEvent(new CustomEvent('carousel:reinit'));
+          }
+        }, 100);
+        break;
+        
+      case '/teams':
+        window.gamingPageTimeout = setTimeout(setupTeamCardEffects, 100);
+        break;
+        
+      case '/contact':
+        window.gamingPageTimeout = setTimeout(function() {
+          // Reinicializar formulario
+          const form = document.querySelector('.contact-form');
+          if (form) {
+            form.querySelectorAll('input, textarea').forEach(function(input) {
+              input.classList.remove('error', 'success');
+            });
+          }
+        }, 100);
+        break;
+    }
+  }
+  
+  // 6. CONFIGURACIÓN DE EVENTOS DEL CLIENTROUTER
+  function setupClientRouterEvents() {
+    // Eventos del ciclo de vida de ClientRouter
+    document.addEventListener('astro:before-preparation', function(event) {
+      showGamingLoader();
+    });
+    
+    document.addEventListener('astro:after-swap', function() {
+      // FORZAR que la pantalla de carga se muestre por EXACTAMENTE 3 segundos en CADA transición
+      setTimeout(() => {
+        hideGamingLoader();
+        initializePageSpecificFeatures();
+      }, 3000); // 3 segundos fijos para cada transición
+    });
+    
+    document.addEventListener('astro:page-load', function() {
+      initializePageSpecificFeatures();
+    });
+    
+    // Interceptar TODOS los links para mostrar la carga gaming
+    document.addEventListener('click', function(e) {
+      const link = e.target.closest('a');
+      if (link && link.href && !link.href.includes('mailto:') && !link.href.includes('tel:') && !link.href.includes('#')) {
+        // Solo aplicar a links internos
+        if (link.href.includes(window.location.origin)) {
+          showGamingLoader();
+        }
+      }
+    });
+  }
+  
+  // 7. INICIALIZACIÓN PRINCIPAL - VERSIÓN LIMPIA
+  function initGamingEnhancements() {
+    // Configurar navegación por teclado
+    setupKeyboardNavigation();
+    
+    // Configurar eventos de ClientRouter
+    setupClientRouterEvents();
+    
+    // Inicializar características específicas de la página actual
+    initializePageSpecificFeatures();
+    
+    // Mostrar pantalla de carga solo en la primera visita
+    if (!sessionStorage.getItem('pucaraFirstLoad')) {
+      showGamingLoader();
+      setTimeout(() => {
+        hideGamingLoader();
+      }, 3000);
+      sessionStorage.setItem('pucaraFirstLoad', 'true');
+    }
+  }
+  
+  // 8. INICIALIZACIÓN CUANDO EL DOM ESTÁ LISTO
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initGamingEnhancements);
+  } else {
+    initGamingEnhancements();
+  }
+  
+  // 9. REINICIALIZACIÓN EN NAVEGACIÓN
+  document.addEventListener('astro:page-load', function() {
+    // Reinicializar SOLO la navegación por teclado
+    setupKeyboardNavigation();
+    
+    // Reinicializar características específicas de la página
+    initializePageSpecificFeatures();
+  });
+  
+  // 10. FALLBACK PARA NAVEGACIÓN DIRECTA (F5, URL directa, etc.)
+  window.addEventListener('beforeunload', function() {
+    // Limpiar sessionStorage para que se muestre carga en próxima visita
+    sessionStorage.removeItem('pucaraFirstLoad');
+  });
+  
+})();
+</script>
+
+<style>
+/* Estilos adicionales para efectos gaming */
+.gaming-nav-effect {
+  position: relative;
+  overflow: hidden;
+}
+
+.gaming-nav-effect::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,107,26,0.2), transparent);
+  transition: left 0.5s ease;
+}
+
+.gaming-nav-effect:hover::after {
+  left: 100%;
+}
+
+/* Transiciones mejoradas para páginas */
+.team-page-transition {
+  transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Cursor gaming personalizado */
+.gaming-cursor-active {
+  cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="%23ff6b1a"><circle cx="12" cy="12" r="8"/></svg>'), auto;
+}
+</style>

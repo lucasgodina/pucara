@@ -1,0 +1,692 @@
+---
+// ContactForm Island Component
+interface Props {
+  className?: string;
+}
+
+const { className = "" } = Astro.props;
+---
+
+<div class="contact-form-container">
+  <form 
+    id="contactForm" 
+    class="flex flex-col gap-6" 
+    method="POST" 
+    role="form" 
+    aria-labelledby="form-title">
+    
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div class="form-group">
+        <label for="nombre" class="block mb-2 font-semibold text-white">Nombre</label>
+        <input type="text" id="nombre" name="nombre" required
+          class="w-full rounded-lg border-2 border-white/20 bg-black/30 p-3 text-white placeholder:text-gray-400 focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary transition"
+          placeholder="Tu nombre" 
+          aria-describedby="nombre-help"
+          autocomplete="given-name" />
+        <span id="nombre-help" class="sr-only">Ingresá tu nombre</span>
+        <div class="error-message hidden text-red-400 text-sm mt-1"></div>
+      </div>
+      <div class="form-group">
+        <label for="apellido" class="block mb-2 font-semibold text-white">Apellido</label>
+        <input type="text" id="apellido" name="apellido" required
+          class="w-full rounded-lg border-2 border-white/20 bg-black/30 p-3 text-white placeholder:text-gray-400 focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary transition"
+          placeholder="Tu apellido" 
+          aria-describedby="apellido-help"
+          autocomplete="family-name" />
+        <span id="apellido-help" class="sr-only">Ingresá tu apellido</span>
+        <div class="error-message hidden text-red-400 text-sm mt-1"></div>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="email" class="block mb-2 font-semibold text-white">Email</label>
+      <input type="email" id="email" name="email" required
+        class="w-full rounded-lg border-2 border-white/20 bg-black/30 p-3 text-white placeholder:text-gray-400 focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary transition"
+        placeholder="tu@email.com" 
+        aria-describedby="email-help"
+        autocomplete="email" />
+      <span id="email-help" class="sr-only">Ingresá tu dirección de correo electrónico válida</span>
+      <div class="error-message hidden text-red-400 text-sm mt-1"></div>
+    </div>
+
+    <div class="form-group">
+      <label for="motivo" class="block mb-2 font-semibold text-white">Motivo del contacto</label>
+      <select id="motivo" name="motivo" required
+        class="w-full rounded-lg border-2 border-white/20 bg-black/30 p-3 text-white focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary transition appearance-none bg-[url('data:image/svg+xml,%3csvg xmlns=%27http://www.w3.org/2000/svg%27 fill=%27none%27 viewBox=%270 0 20 20%27%3e%3cpath stroke=%27%23ffffff%27 stroke-linecap=%27round%27 stroke-linejoin=%27round%27 stroke-width=%271.5%27 d=%27M6 8l4 4 4-4%27/%3e%3c/svg%3e')] bg-no-repeat bg-right-3 bg-center pr-10"
+        aria-describedby="motivo-help">
+        <option value="">Seleccioná una opción</option>
+        <option value="press" class="bg-gray-800 text-white">Prensa</option>
+        <option value="partner-sponsor" class="bg-gray-800 text-white">Quiero ser Partner/Sponsor</option>
+        <option value="player" class="bg-gray-800 text-white">Quiero ser jugador</option>
+        <option value="work" class="bg-gray-800 text-white">Quiero trabajar en PUCARA</option>
+        <option value="other" class="bg-gray-800 text-white">Otro</option>
+      </select>
+      <span id="motivo-help" class="sr-only">Seleccioná el tipo de consulta que mejor describe tu mensaje</span>
+      <div class="error-message hidden text-red-400 text-sm mt-1"></div>
+    </div>
+
+    <div class="form-group">
+      <label for="mensaje" class="block mb-2 font-semibold text-white">Mensaje</label>
+      <textarea id="mensaje" name="mensaje" rows="5" required
+        class="w-full rounded-lg border-2 border-white/20 bg-black/30 p-3 text-white placeholder:text-gray-400 focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary transition resize-none"
+        placeholder="Contanos más sobre tu consulta..."
+        aria-describedby="mensaje-help"
+        maxlength="2000"></textarea>
+      <span id="mensaje-help" class="text-xs text-white/60 mt-1">Máximo 2000 caracteres. Describí detalladamente tu consulta.</span>
+      <div class="character-count text-xs text-white/60 mt-1">0/2000 caracteres</div>
+      <div class="error-message hidden text-red-400 text-sm mt-1"></div>
+    </div>
+
+    <!-- reCAPTCHA -->
+    <div class="form-group flex justify-center" role="group" aria-labelledby="captcha-label">
+      <div class="flex flex-col items-center">
+        <span id="captcha-label" class="sr-only">Verificación de seguridad reCAPTCHA</span>
+        <div id="recaptcha-container" class="g-recaptcha" data-sitekey="6LcHqX0rAAAAAMNAdLanpx8pCnncgufHa8HYFvki" aria-label="Verificación reCAPTCHA"></div>
+        <span id="captcha-error" class="text-red-500 text-sm mt-1 hidden" role="alert">Por favor completa la verificación reCAPTCHA.</span>
+      </div>
+    </div>
+
+    <div class="flex items-start gap-3" role="group" aria-labelledby="terms-label">
+      <input type="checkbox" id="terminos" name="terminos" required
+        class="mt-1 h-4 w-4 text-primary border-white/20 rounded focus:ring-primary focus:ring-2"
+        aria-describedby="terms-description" />
+      <label id="terms-label" for="terminos" class="text-sm text-white/80 leading-5">
+        Acepto los términos y condiciones y autorizo el tratamiento de mis datos personales para responder a mi consulta.
+      </label>
+      <span id="terms-description" class="sr-only">Campo obligatorio para aceptar términos y condiciones</span>
+      <div class="error-message hidden text-red-400 text-sm mt-1"></div>
+    </div>
+
+    <!-- Botón con loading state -->
+    <div class="flex justify-center mt-4">
+      <button type="submit" id="submitBtn"
+        class="bg-primary hover:bg-primary/80 text-white font-bold py-3 px-8 rounded-lg transition-all duration-300 hover:scale-105 shadow-lg hover:shadow-glow-sm disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
+        aria-describedby="submit-help">
+        <span class="btn-text">
+          <i class="fa-solid fa-paper-plane mr-2" aria-hidden="true"></i>
+          Enviar mensaje
+        </span>
+        <span class="loading-text hidden">
+          <i class="fa-solid fa-spinner fa-spin mr-2" aria-hidden="true"></i>
+          Enviando...
+        </span>
+      </button>
+      <span id="submit-help" class="sr-only">Enviar formulario de contacto a Pucará Gaming</span>
+    </div>
+  </form>
+
+  <!-- Mensaje de éxito -->
+  <div id="successMessage" class="hidden mt-6 p-4 bg-green-500/20 border border-green-500/50 rounded-lg text-green-400 text-center">
+    <i class="fa-solid fa-check-circle mr-2"></i>
+    ¡Mensaje enviado exitosamente! Te responderemos pronto.
+  </div>
+
+  <!-- Mensaje de error -->
+  <div id="errorMessage" class="hidden mt-6 p-4 bg-red-500/20 border border-red-500/50 rounded-lg text-red-400 text-center">
+    <i class="fa-solid fa-exclamation-triangle mr-2"></i>
+    <span class="error-text">Hubo un error al enviar el mensaje. Por favor, intenta nuevamente.</span>
+  </div>
+</div>
+
+<!-- Pop-up de éxito -->
+<div id="successPopup" class="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 hidden items-center justify-center">
+  <div class="bg-black/90 border-2 border-green-500/50 rounded-2xl p-8 max-w-md mx-4 shadow-2xl shadow-green-500/20 animate-bounce-in">
+    <div class="text-center">
+      <div class="mb-4">
+        <i class="fa-solid fa-check-circle text-6xl text-green-400 animate-pulse"></i>
+      </div>
+      <h3 class="text-2xl font-bold text-green-400 mb-2">¡Mensaje Enviado!</h3>
+      <p class="text-white/90 mb-4">
+        Gracias por contactarte con <span class="text-primary font-semibold">Pucará Gaming</span>. 
+        Te responderemos en 24-48 horas.
+      </p>
+      <div class="text-sm text-white/60">
+        <i class="fa-solid fa-spinner fa-spin mr-2"></i>
+        Cerrando automáticamente...
+      </div>
+    </div>
+  </div>
+</div>
+
+</div>
+
+<script>
+// Tipos globales para reCAPTCHA
+declare global {
+  interface Window {
+    grecaptcha?: {
+      render: (container: string | HTMLElement, parameters: { sitekey: string; theme: string; }) => number;
+      getResponse: (widgetId?: number) => string;
+      reset: (widgetId?: number) => void;
+      ready: (callback: () => void) => void;
+    };
+  }
+}
+
+// Configuración
+const RECAPTCHA_SITE_KEY = '6LcHqX0rAAAAAMNAdLanpx8pCnncgufHa8HYFvki';
+const API_ENDPOINT = '/api/contact'; // NOTA: Actualmente hardcodeado - no se usa
+
+// MODO HARDCODEADO: El formulario no envía a la API, solo simula el envío
+
+// Clase principal del formulario
+class ContactForm {
+  private form: HTMLFormElement;
+  private submitBtn: HTMLButtonElement;
+  private recaptchaWidgetId: number | null = null;
+  private isRecaptchaLoaded = false;
+  private isRecaptchaRendered = false;
+
+  constructor() {
+    this.form = document.getElementById('contactForm') as HTMLFormElement;
+    this.submitBtn = document.getElementById('submitBtn') as HTMLButtonElement;
+    
+    if (!this.form || !this.submitBtn) {
+      console.error('Form elements not found');
+      return;
+    }
+
+    this.init();
+  }
+
+  private init(): void {
+    this.setupEventListeners();
+    this.setupCharacterCounter();
+    this.loadRecaptcha();
+  }
+
+  private setupEventListeners(): void {
+    // Validación en tiempo real
+    const formFields = this.form.querySelectorAll('input, select, textarea');
+    formFields.forEach(field => {
+      field.addEventListener('blur', () => this.validateField(field as HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement));
+      field.addEventListener('input', () => this.clearFieldError(field as HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement));
+    });
+
+    // Envío del formulario
+    this.form.addEventListener('submit', (e) => this.handleSubmit(e));
+  }
+
+  private setupCharacterCounter(): void {
+    const textarea = document.getElementById('mensaje') as HTMLTextAreaElement;
+    const counter = document.querySelector('.character-count') as HTMLElement;
+    
+    if (textarea && counter) {
+      const updateCounter = () => {
+        const count = textarea.value.length;
+        counter.textContent = `${count}/2000 caracteres`;
+        counter.classList.toggle('text-red-400', count > 2000);
+      };
+      
+      textarea.addEventListener('input', updateCounter);
+      updateCounter(); // Inicializar
+    }
+  }
+
+  private async loadRecaptcha(): Promise<void> {
+    if (this.isRecaptchaLoaded) return;
+
+    try {
+      // Verificar si el script ya está cargado
+      if (document.querySelector('script[src*="recaptcha"]')) {
+        console.log('reCAPTCHA script already loaded');
+        this.isRecaptchaLoaded = true;
+        this.renderRecaptcha();
+        return;
+      }
+
+      // Cargar script dinámicamente
+      const script = document.createElement('script');
+      script.src = `https://www.google.com/recaptcha/api.js?render=explicit`;
+      script.async = true;
+      script.defer = true;
+      
+      const loadPromise = new Promise<void>((resolve, reject) => {
+        script.onload = () => {
+          console.log('reCAPTCHA script loaded');
+          this.isRecaptchaLoaded = true;
+          resolve();
+        };
+        
+        script.onerror = (error) => {
+          console.warn('reCAPTCHA script failed to load (possibly blocked by ad blocker):', error);
+          reject(error);
+        };
+      });
+
+      document.head.appendChild(script);
+      await loadPromise;
+      this.renderRecaptcha();
+      
+    } catch (error) {
+      console.warn('reCAPTCHA loading failed:', error);
+      // Continuar sin reCAPTCHA
+    }
+  }
+
+  private renderRecaptcha(): void {
+    if (this.isRecaptchaRendered || !this.isRecaptchaLoaded) return;
+
+    const container = document.getElementById('recaptcha-container');
+    if (!container) return;
+
+    // Esperar a que grecaptcha esté disponible
+    const tryRender = () => {
+      if (typeof window.grecaptcha?.render === 'function') {
+        try {
+          this.recaptchaWidgetId = window.grecaptcha.render(container, {
+            sitekey: RECAPTCHA_SITE_KEY,
+            theme: 'dark'
+          });
+          this.isRecaptchaRendered = true;
+          console.log('reCAPTCHA rendered successfully');
+        } catch (error) {
+          console.warn('Error rendering reCAPTCHA:', error);
+        }
+      } else {
+        // Intentar de nuevo en un momento
+        setTimeout(tryRender, 100);
+      }
+    };
+
+    if (window.grecaptcha?.ready) {
+      window.grecaptcha.ready(tryRender);
+    } else {
+      tryRender();
+    }
+  }
+
+  private validateField(field: HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement): boolean {
+    const errorDiv = field.parentElement?.querySelector('.error-message') as HTMLElement;
+    let isValid = true;
+    let errorMessage = '';
+
+    // Validaciones específicas por tipo de campo
+    switch (field.type) {
+      case 'text':
+        if (!field.value.trim()) {
+          isValid = false;
+          errorMessage = 'Este campo es requerido';
+        } else if (field.value.trim().length < 2) {
+          isValid = false;
+          errorMessage = 'Debe tener al menos 2 caracteres';
+        }
+        break;
+
+      case 'email':
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!field.value.trim()) {
+          isValid = false;
+          errorMessage = 'El email es requerido';
+        } else if (!emailRegex.test(field.value.trim())) {
+          isValid = false;
+          errorMessage = 'Ingresa un email válido';
+        }
+        break;
+
+      case 'select-one':
+        if (!field.value) {
+          isValid = false;
+          errorMessage = 'Selecciona una opción';
+        }
+        break;
+
+      case 'textarea':
+        if (!field.value.trim()) {
+          isValid = false;
+          errorMessage = 'El mensaje es requerido';
+        } else if (field.value.trim().length < 10) {
+          isValid = false;
+          errorMessage = 'El mensaje debe tener al menos 10 caracteres';
+        } else if (field.value.length > 2000) {
+          isValid = false;
+          errorMessage = 'El mensaje no puede exceder 2000 caracteres';
+        }
+        break;
+
+      case 'checkbox':
+        if (!(field as HTMLInputElement).checked) {
+          isValid = false;
+          errorMessage = 'Debes aceptar los términos y condiciones';
+        }
+        break;
+    }
+
+    // Mostrar/ocultar error
+    if (errorDiv) {
+      if (isValid) {
+        errorDiv.classList.add('hidden');
+        field.classList.remove('border-red-500');
+        field.classList.add('border-white/20');
+      } else {
+        errorDiv.textContent = errorMessage;
+        errorDiv.classList.remove('hidden');
+        field.classList.add('border-red-500');
+        field.classList.remove('border-white/20');
+      }
+    }
+
+    return isValid;
+  }
+
+  private clearFieldError(field: HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement): void {
+    const errorDiv = field.parentElement?.querySelector('.error-message') as HTMLElement;
+    if (errorDiv && !errorDiv.classList.contains('hidden')) {
+      errorDiv.classList.add('hidden');
+      field.classList.remove('border-red-500');
+      field.classList.add('border-white/20');
+    }
+  }
+
+  private validateForm(): boolean {
+    const requiredFields = this.form.querySelectorAll('input[required], select[required], textarea[required]');
+    let isValid = true;
+
+    // Validar todos los campos requeridos
+    requiredFields.forEach(field => {
+      if (!this.validateField(field as HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement)) {
+        isValid = false;
+      }
+    });
+
+    // Validar reCAPTCHA (opcional)
+    this.validateRecaptcha();
+
+    return isValid;
+  }
+
+  private validateRecaptcha(): void {
+    const captchaError = document.getElementById('captcha-error');
+    if (!captchaError) return;
+
+    try {
+      if (this.isRecaptchaRendered && window.grecaptcha?.getResponse) {
+        const response = window.grecaptcha.getResponse(this.recaptchaWidgetId || undefined);
+        if (!response) {
+          captchaError.classList.remove('hidden');
+          console.warn('reCAPTCHA not completed');
+        } else {
+          captchaError.classList.add('hidden');
+        }
+      } else {
+        captchaError.classList.add('hidden');
+        console.log('reCAPTCHA not available - continuing without validation');
+      }
+    } catch (error) {
+      console.warn('Error validating reCAPTCHA:', error);
+      captchaError.classList.add('hidden');
+    }
+  }
+
+  private async handleSubmit(e: Event): Promise<void> {
+    e.preventDefault();
+    
+    if (!this.validateForm()) {
+      console.log('Form validation failed');
+      return;
+    }
+
+    this.setLoadingState(true);
+    
+    try {
+      // Simular un pequeño delay para que se vea natural
+      await new Promise(resolve => setTimeout(resolve, 1500));
+      
+      // Recopilar datos del formulario para logging
+      const formData = new FormData(this.form);
+      const formObject: { [key: string]: any } = Object.fromEntries(formData);
+      
+      console.log('=== FORMULARIO ENVIADO (HARDCODED) ===');
+      console.log('Nombre:', formObject.nombre, formObject.apellido);
+      console.log('Email:', formObject.email);
+      console.log('Motivo:', formObject.motivo);
+      console.log('Mensaje:', formObject.mensaje);
+      console.log('Timestamp:', new Date().toLocaleString());
+      console.log('=====================================');
+
+      // Mostrar éxito directamente
+      console.log('Simulando envío exitoso...');
+      this.showSuccess();
+      this.resetForm();
+
+    } catch (error) {
+      console.error('Error simulado:', error);
+      this.showError('Error simulado para testing');
+    } finally {
+      this.setLoadingState(false);
+    }
+  }
+
+  private setLoadingState(loading: boolean): void {
+    const btnText = this.submitBtn.querySelector('.btn-text') as HTMLElement;
+    const loadingText = this.submitBtn.querySelector('.loading-text') as HTMLElement;
+    
+    if (loading) {
+      btnText?.classList.add('hidden');
+      loadingText?.classList.remove('hidden');
+      this.submitBtn.disabled = true;
+    } else {
+      btnText?.classList.remove('hidden');
+      loadingText?.classList.add('hidden');
+      this.submitBtn.disabled = false;
+    }
+  }
+
+  private showSuccess(): void {
+    this.hideMessages();
+    this.showSuccessPopup();
+  }
+
+  private showError(message?: string): void {
+    this.hideMessages();
+    
+    const errorMessage = document.getElementById('errorMessage') as HTMLElement;
+    if (errorMessage) {
+      if (message) {
+        const errorText = errorMessage.querySelector('i + .error-text') as HTMLElement;
+        if (errorText) {
+          errorText.textContent = message;
+        }
+      }
+      errorMessage.classList.remove('hidden');
+      errorMessage.scrollIntoView({ behavior: 'smooth' });
+    }
+  }
+
+  private hideMessages(): void {
+    const successMessage = document.getElementById('successMessage') as HTMLElement;
+    const errorMessage = document.getElementById('errorMessage') as HTMLElement;
+    
+    successMessage?.classList.add('hidden');
+    errorMessage?.classList.add('hidden');
+  }
+
+  private showSuccessPopup(): void {
+    const popup = document.getElementById('successPopup') as HTMLElement;
+    if (popup) {
+      popup.classList.remove('hidden');
+      popup.classList.add('flex');
+      
+      // Cerrar automáticamente después de 3 segundos
+      setTimeout(() => {
+        popup.classList.add('hidden');
+        popup.classList.remove('flex');
+      }, 3000);
+    }
+  }
+
+  private resetForm(): void {
+    this.form.reset();
+    
+    // Resetear contador de caracteres
+    const counter = document.querySelector('.character-count') as HTMLElement;
+    if (counter) {
+      counter.textContent = '0/2000 caracteres';
+      counter.classList.remove('text-red-400');
+    }
+    
+    // Resetear reCAPTCHA
+    if (this.isRecaptchaRendered && window.grecaptcha?.reset) {
+      try {
+        window.grecaptcha.reset(this.recaptchaWidgetId || undefined);
+      } catch (error) {
+        console.warn('Error resetting reCAPTCHA:', error);
+      }
+    }
+    
+    // Limpiar errores
+    const errorDivs = this.form.querySelectorAll('.error-message');
+    errorDivs.forEach(div => div.classList.add('hidden'));
+    
+    const fields = this.form.querySelectorAll('input, select, textarea');
+    fields.forEach(field => {
+      field.classList.remove('border-red-500');
+      field.classList.add('border-white/20');
+    });
+  }
+}
+
+// Inicialización global
+let contactFormInstance: ContactForm | null = null;
+
+function initializeContactForm(): void {
+  const form = document.getElementById('contactForm');
+  if (form && !form.hasAttribute('data-initialized')) {
+    console.log('Initializing ContactForm...');
+    contactFormInstance = new ContactForm();
+    form.setAttribute('data-initialized', 'true');
+  }
+}
+
+// Eventos para Astro View Transitions
+document.addEventListener('astro:page-load', initializeContactForm);
+
+// Inicialización inicial
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', initializeContactForm);
+} else {
+  initializeContactForm();
+}
+</script>
+
+<style>
+  /* Animación para el pop-up */
+  @keyframes bounce-in {
+    0% {
+      transform: scale(0.3);
+      opacity: 0;
+    }
+    50% {
+      transform: scale(1.05);
+      opacity: 0.8;
+    }
+    100% {
+      transform: scale(1);
+      opacity: 1;
+    }
+  }
+
+  .animate-bounce-in {
+    animation: bounce-in 0.5s ease-out;
+  }
+
+  /* Estilos personalizados para las opciones del select */
+  #motivo option {
+    background-color: #374151 !important;
+    color: #ffffff !important;
+    padding: 8px 12px !important;
+  }
+  
+  #motivo option:hover {
+    background-color: #4b5563 !important;
+  }
+  
+  #motivo option:checked {
+    background-color: #ea601a !important;
+    color: #ffffff !important;
+  }
+
+  /* Clase para elementos solo para lectores de pantalla */
+  .sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+  }
+
+  /* Prevenir que el autofill cambie el color de fondo - Mejorado */
+  input:-webkit-autofill,
+  input:-webkit-autofill:hover,
+  input:-webkit-autofill:focus,
+  input:-webkit-autofill:active {
+    -webkit-box-shadow: 0 0 0 30px rgba(0, 0, 0, 0.3) inset !important;
+    -webkit-text-fill-color: #ffffff !important;
+    background-color: rgba(0, 0, 0, 0.3) !important;
+    transition: background-color 5000s ease-in-out 0s !important;
+  }
+  
+  /* Para Firefox */
+  input:-moz-autofill,
+  input:-moz-autofill:hover,
+  input:-moz-autofill:focus {
+    background-color: rgba(0, 0, 0, 0.3) !important;
+    color: #ffffff !important;
+  }
+  
+  /* Forzar el estilo correcto para todos los estados */
+  input[type="text"], 
+  input[type="email"], 
+  select, 
+  textarea {
+    background-color: rgba(0, 0, 0, 0.3) !important;
+    color: #ffffff !important;
+  }
+  
+  /* Estilo adicional para asegurar consistencia */
+  input:autofill,
+  input:-webkit-autofill,
+  input:-webkit-autofill:hover,
+  input:-webkit-autofill:focus,
+  input:-webkit-autofill:active {
+    -webkit-box-shadow: 0 0 0 1000px rgba(0, 0, 0, 0.3) inset !important;
+    -webkit-text-fill-color: #ffffff !important;
+    box-shadow: 0 0 0 1000px rgba(0, 0, 0, 0.3) inset !important;
+    background-color: rgba(0, 0, 0, 0.3) !important;
+  }
+  
+  /* Mejorar contraste de focus para accesibilidad */
+  input:focus, select:focus, textarea:focus, button:focus {
+    outline: 2px solid #ea601a;
+    outline-offset: 2px;
+  }
+
+  /* Mejor indicador visual para elementos requeridos */
+  label:has(+ input[required])::after,
+  label:has(+ select[required])::after,
+  label:has(+ textarea[required])::after {
+    content: " *";
+    color: #ea601a;
+    font-weight: bold;
+  }
+
+  /* Animaciones para mensajes */
+  #successMessage, #errorMessage {
+    animation: slideIn 0.3s ease-out;
+  }
+
+  @keyframes slideIn {
+    from {
+      opacity: 0;
+      transform: translateY(-10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+</style>
