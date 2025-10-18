@@ -1,0 +1,41 @@
+---
+// Hero component responsive - Solo imagen optimizada
+---
+
+<section class="relative w-full overflow-hidden">
+  <!-- Hero Container con altura responsiva -->
+  <div class="relative h-[40vh] mobile-s:h-[42vh] mobile-m:h-[45vh] mobile-l:h-[48vh] xs:h-[50vh] sm:h-[55vh] md:h-[60vh] lg:h-[65vh] xl:h-[70vh] w-full">
+    
+    <!-- Background Image responsive -->
+    <div class="absolute inset-0">
+      <picture>
+        <!-- Imagen optimizada para móviles muy pequeños -->
+        <source media="(max-width: 320px)" 
+                srcset="/pucarahero.webp" />
+        <!-- Imagen para móviles pequeños -->
+        <source media="(min-width: 321px) and (max-width: 374px)" 
+                srcset="/pucarahero.webp" />
+        <!-- Imagen para móviles medianos -->
+        <source media="(min-width: 375px) and (max-width: 424px)" 
+                srcset="/pucarahero.webp" />
+        <!-- Imagen para móviles grandes -->
+        <source media="(min-width: 425px) and (max-width: 474px)" 
+                srcset="/pucarahero.webp" />
+        <!-- Imagen para móviles XS -->
+        <source media="(min-width: 475px) and (max-width: 639px)" 
+                srcset="/pucarahero.webp" />
+        <!-- Imagen para móviles SM -->
+        <source media="(min-width: 640px) and (max-width: 767px)" 
+                srcset="/pucarahero.webp" />
+        <!-- Imagen para tablet y desktop -->
+        <source media="(min-width: 768px)" 
+                srcset="/pucarahero.webp" />
+        <!-- Fallback -->
+        <img src="/pucarahero.webp" 
+             alt="Pucará Gaming Hero" 
+             class="w-full h-full object-cover object-center mobile-s:object-top mobile-m:object-center mobile-l:object-center xs:object-top sm:object-center" 
+             loading="eager" />
+      </picture>
+    </div>
+  </div>
+</section>
