@@ -51,6 +51,10 @@ const httpClient = async (url: string, options: RequestInit = {}) => {
 
 // Función para convertir los nombres de campos de AdonisJS a React Admin
 const convertToReactAdmin = (resource: string, data: any) => {
+  // Unwrap envelopes from Backend A create/update responses
+  if (resource === 'users' && data?.user) data = data.user
+  if (resource === 'news' && data?.news) data = data.news
+
   if (resource === 'teams') {
     return {
       id: data.teamId,
@@ -73,6 +77,30 @@ const convertToReactAdmin = (resource: string, data: any) => {
       bio: data.bio,
       stats: data.stats,
       photoUrl: data.photoUrl,
+      createdAt: data.createdAt,
+      updatedAt: data.updatedAt,
+    }
+  }
+
+  if (resource === 'users') {
+    return {
+      id: data.id,
+      username: data.username,
+      email: data.email,
+      role: data.role,
+      createdAt: data.createdAt,
+      updatedAt: data.updatedAt,
+    }
+  }
+
+  if (resource === 'news') {
+    return {
+      id: data.id,
+      titulo: data.titulo,
+      fecha: data.fecha,
+      comentario: data.comentario,
+      user: data.user, // Backend A ya transforma a string "username (email)" en index/show
+      userId: data.userId,
       createdAt: data.createdAt,
       updatedAt: data.updatedAt,
     }
@@ -206,8 +234,9 @@ export const dataProvider: DataProvider = {
     console.log('Converted data:', data)
 
     try {
+      const method = resource === 'users' || resource === 'news' ? 'PUT' : 'PATCH'
       const { json } = await httpClient(url, {
-        method: 'PATCH',
+        method,
         body: JSON.stringify(data),
       })
 
