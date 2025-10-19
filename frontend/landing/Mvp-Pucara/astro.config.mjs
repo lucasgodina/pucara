@@ -12,4 +12,12 @@ export default defineConfig({
     inlineStylesheets: 'auto',
   },
   compressHTML: true,
+  vite: {
+    server: {
+      allowedHosts: [
+        'mandie-unaccustomed-audry.ngrok-free.dev',
+        '.ngrok-free.dev', // Permite cualquier subdominio de ngrok
+      ],
+    },
+  },
 });
