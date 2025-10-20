@@ -19,7 +19,7 @@ Migrar el proyecto Pucara de **MySQL a SQLite3** y reorganizar la estructura del
 ```
 d:\Repos\Pucara\
 ├── backend/
-│   └── crud-players-pucara/
+│   └── crud-pucara/
 ├── frontend/
 │   └── admin-frontend/
 └── proyectoPucara/          ❌ Carpeta duplicada
@@ -32,7 +32,7 @@ d:\Repos\Pucara\
 ```
 d:\Repos\Pucara\
 ├── backend/
-│   └── crud-players-pucara/  ✅ Unificado
+│   └── crud-pucara/  ✅ Unificado
 ├── frontend/
 │   └── admin-frontend/       ✅ Optimizado
 ├── package.json
@@ -406,8 +406,8 @@ npm run build:admin
 
 ## 📚 Documentos de Referencia
 
-- [ADMIN_CREDENTIALS.md](../backend/crud-players-pucara/ADMIN_CREDENTIALS.md)
-- [TESTING_RESULTS.md](../backend/crud-players-pucara/TESTING_RESULTS.md)
-- [API_DOCUMENTATION.md](../backend/crud-players-pucara/API_DOCUMENTATION.md)
-- [TESTING_API.md](../backend/crud-players-pucara/TESTING_API.md)
+- [ADMIN_CREDENTIALS.md](../backend/crud-pucara/ADMIN_CREDENTIALS.md)
+- [TESTING_RESULTS.md](../backend/crud-pucara/TESTING_RESULTS.md)
+- [API_DOCUMENTATION.md](../backend/crud-pucara/API_DOCUMENTATION.md)
+- [TESTING_API.md](../backend/crud-pucara/TESTING_API.md)
 - [MEMORY_FIX.md](../frontend/admin-frontend/MEMORY_FIX.md)

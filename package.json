@@ -3,11 +3,11 @@
   "private": true,
   "version": "0.1.0",
   "scripts": {
-    "dev:api": "npm run dev --prefix backend/crud-players-pucara",
+    "dev:api": "npm run dev --prefix backend/crud-pucara",
     "dev:admin": "npm start --prefix frontend/admin-frontend",
     "dev:all": "concurrently -n api,admin -c green,blue \"npm run dev:api\" \"npm run dev:admin\"",
-    "install:all": "npm install --prefix backend/crud-players-pucara && npm install --prefix frontend/admin-frontend",
-    "build:api": "npm run build --prefix backend/crud-players-pucara",
+    "install:all": "npm install --prefix backend/crud-pucara && npm install --prefix frontend/admin-frontend",
+    "build:api": "npm run build --prefix backend/crud-pucara",
     "build:admin": "npm run build --prefix frontend/admin-frontend"
   },
   "devDependencies": {

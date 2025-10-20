@@ -375,7 +375,7 @@ Ver la sección [Configuración del Frontend](#configuración-del-frontend) para
 
 **Para cambiar la duración del token:**
 
-Editar `backend/crud-players-pucara/app/controllers/auth_controller.ts`:
+Editar `backend/crud-pucara/app/controllers/auth_controller.ts`:
 
 ```typescript
 // Cambiar de 7 días a otro valor
@@ -534,7 +534,7 @@ export const authProvider: AuthProvider = {
 ### Crear nuevo usuario manualmente
 
 ```bash
-cd backend/crud-players-pucara
+cd backend/crud-pucara
 node ace tinker
 ```
 
@@ -550,7 +550,7 @@ await User.default.create({
 ### Listar todos los usuarios
 
 ```bash
-sqlite3 backend/crud-players-pucara/database/pucara.sqlite
+sqlite3 backend/crud-pucara/database/pucara.sqlite
 ```
 
 ```sql

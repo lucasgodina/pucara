@@ -7,15 +7,15 @@ frontend/
   admin-frontend/   # Panel de administración (CRUD)
 
 backend/
-  crud-players-pucara/  # API AdonisJS (equipos y jugadores)
+  crud-pucara/  # API AdonisJS (equipos, jugadores, usuarios, noticias)
 ```
 
 ## Cómo levantar cada parte
 
-1) Backend API (AdonisJS)
+1. Backend API (AdonisJS)
 
 ```powershell
-cd .\backend\crud-players-pucara
+cd .\backend\crud-pucara
 npm install
 node ace migration:run
 node ace serve --watch
@@ -29,7 +29,7 @@ Invoke-RestMethod -Method GET -Uri "http://localhost:3333/api/v1/teams"
 Invoke-RestMethod -Method GET -Uri "http://localhost:3333/api/v1/players"
 ```
 
-2) Admin Frontend (React Admin)
+2. Admin Frontend (React Admin)
 
 ```powershell
 cd .\frontend\admin-frontend
@@ -70,12 +70,12 @@ npm run build:admin
 
 ## ¿La conexión sigue funcionando?
 
-Sí. La API no cambió de URL. Solo se movió el código al subdirectorio `backend/crud-players-pucara`. Mientras levantes el backend desde ese path y el admin desde su carpeta, todo sigue operando igual:
+Sí. La API no cambió de URL. Solo se movió el código al subdirectorio `backend/crud-pucara`. Mientras levantes el backend desde ese path y el admin desde su carpeta, todo sigue operando igual:
 
 - API: http://localhost:3333/api/v1
 - Admin: http://localhost:3000
 
 Si querés consumir solo lectura desde otro frontend (por ejemplo Astro), usá exclusivamente GET de la API. Las guías específicas quedaron dentro del backend:
 
-- `backend/crud-players-pucara/docs/guia-integracion-frontend.md`
-- `backend/crud-players-pucara/docs/guia-consumo-astro.md`
+- `backend/crud-pucara/docs/guia-integracion-frontend.md`
+- `backend/crud-pucara/docs/guia-consumo-astro.md`
