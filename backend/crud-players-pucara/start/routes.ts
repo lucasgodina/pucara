@@ -7,8 +7,8 @@
 |
 */
 
-import router from '@adonisjs/core/services/router'
 import { middleware } from '#start/kernel'
+import router from '@adonisjs/core/services/router'
 
 // Health check route
 router.get('/', async ({ response }) => {
@@ -27,6 +27,14 @@ router.get('/', async ({ response }) => {
 // API v1 routes
 router
   .group(() => {
+    // Auth routes (public)
+    router.post('/auth/register', '#controllers/auth_controller.register')
+    router.post('/auth/login', '#controllers/auth_controller.login')
+    router
+      .delete('/auth/logout', '#controllers/auth_controller.logout')
+      .middleware([middleware.auth()])
+    router.get('/auth/me', '#controllers/auth_controller.me').middleware([middleware.auth()])
+
     // Teams routes
     router
       .group(() => {
@@ -61,10 +69,7 @@ router
 
         // Specific endpoint for assigning players to teams
         router
-          .patch(
-            '/:player_id/assign-team',
-            '#controllers/players_controller.assignTeam'
-          ) // PATCH /players/:player_id/assign-team
+          .patch('/:player_id/assign-team', '#controllers/players_controller.assignTeam') // PATCH /players/:player_id/assign-team
           .middleware([middleware.auth()])
       })
       .prefix('/players')

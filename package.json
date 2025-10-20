@@ -4,7 +4,7 @@
   "version": "0.1.0",
   "scripts": {
     "dev:api": "npm run dev --prefix backend/crud-players-pucara",
-    "dev:admin": "set \"NODE_OPTIONS=--max-old-space-size=4096\" && npm start --prefix frontend/admin-frontend",
+    "dev:admin": "npm start --prefix frontend/admin-frontend",
     "dev:all": "concurrently -n api,admin -c green,blue \"npm run dev:api\" \"npm run dev:admin\"",
     "install:all": "npm install --prefix backend/crud-players-pucara && npm install --prefix frontend/admin-frontend",
     "build:api": "npm run build --prefix backend/crud-players-pucara",
