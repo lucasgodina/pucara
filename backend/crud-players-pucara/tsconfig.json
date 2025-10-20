@@ -1,7 +1,46 @@
 {
-  "extends": "@adonisjs/tsconfig/tsconfig.app.json",
   "compilerOptions": {
+    "target": "ES2022",
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
+    "lib": ["ES2022"],
+    "strict": true,
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    "skipLibCheck": true,
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
+    "useDefineForClassFields": false,
     "rootDir": "./",
-    "outDir": "./build"
-  }
+    "outDir": "./build",
+    "baseUrl": ".",
+    "paths": {
+      "#controllers/*": ["app/controllers/*.ts"],
+      "#exceptions/*": ["app/exceptions/*.ts"],
+      "#models/*": ["app/models/*.ts"],
+      "#mails/*": ["app/mails/*.ts"],
+      "#services/*": ["app/services/*.ts"],
+      "#listeners/*": ["app/listeners/*.ts"],
+      "#events/*": ["app/events/*.ts"],
+      "#middleware/*": ["app/middleware/*.ts"],
+      "#validators/*": ["app/validators/*.ts"],
+      "#providers/*": ["providers/*.ts"],
+      "#policies/*": ["app/policies/*.ts"],
+      "#abilities/*": ["app/abilities/*.ts"],
+      "#database/*": ["database/*.ts"],
+      "#start/*": ["start/*.ts"],
+      "#tests/*": ["tests/*.ts"],
+      "#config/*": ["config/*.ts"]
+    },
+    "types": [
+      "node"
+    ]
+  },
+  "include": [
+    "**/*.ts"
+  ],
+  "exclude": [
+    "node_modules",
+    "build"
+  ]
 }
