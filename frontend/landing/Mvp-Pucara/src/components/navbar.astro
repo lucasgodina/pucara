@@ -1,0 +1,441 @@
+---
+// Navbar con mobile menu funcional
+---
+
+<nav class="font-ubuntu fixed top-0 left-0 w-full z-[1000] bg-black/70 backdrop-blur-[10px] backdrop-saturate-[120%] shadow-[0_4px_12px_rgba(0,0,0,0.35)] py-1 md:py-2 border border-white/10 transition-all duration-500 ease-in-out" id="navbar" role="navigation" aria-label="Menú principal" transition:persist="main-navbar">
+  <!-- Barra superior naranja -->
+  <div class="absolute top-0 left-0 w-full h-[3px] bg-primary shadow-[0_0_10px_rgb(234,96,26),0_0_20px_rgb(234,96,26)]"></div>
+  
+  <div class="flex justify-between items-center max-w-[1400px] mx-auto px-3 md:px-5 relative transition-all duration-500 ease-in-out">
+    
+    <!-- Mobile menu button -->
+    <button class="md:hidden text-white text-xl order-1 z-50 relative group focus-visible" 
+            id="mobile-menu-btn" 
+            aria-label="Abrir menú de navegación móvil" 
+            aria-expanded="false"
+            aria-controls="mobile-menu"
+            type="button">
+      <div class="hamburger-icon relative w-6 h-5 flex flex-col justify-between cursor-pointer">
+        <span class="line block w-full h-0.5 bg-white transition-all duration-300 ease-in-out group-[.active]:rotate-45 group-[.active]:translate-y-2"></span>
+        <span class="line block w-full h-0.5 bg-white transition-all duration-300 ease-in-out group-[.active]:opacity-0"></span>
+        <span class="line block w-full h-0.5 bg-white transition-all duration-300 ease-in-out group-[.active]:-rotate-45 group-[.active]:-translate-y-2"></span>
+      </div>
+    </button>
+
+    <!-- Logo - Centrado en móvil, izquierda en desktop -->
+    <a href="/home" class="order-2 md:order-1 transition-transform duration-300 z-40 relative" transition:persist="navbar-logo-link">
+      <img src="/logopucara.png" alt="Pucará Gaming Logo" class="h-[70px] mobile-s:h-[75px] mobile-m:h-[80px] mobile-l:h-[85px] md:h-[100px] lg:h-[115px] xl:h-[125px] transition-all duration-500 ease-in-out filter drop-shadow-[0_4px_8px_rgba(234,96,26,0.5)]" id="navbar-logo" loading="eager" fetchpriority="high" decoding="async" transition:persist="navbar-logo-img" />
+    </a>
+
+    <!-- Social Icons - Desktop only -->
+    <div class="hidden md:flex gap-4 order-3">
+      <a href="https://www.facebook.com/pucaragamingok" aria-label="Seguinos en Facebook" class="text-white text-lg lg:text-xl transition-all duration-300 hover:text-primary" rel="noopener noreferrer" target="_blank">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="nav-facebook-title">
+          <title id="nav-facebook-title">Facebook</title>
+          <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
+        </svg>
+      </a>
+      <a href="https://x.com/pucaragaming" aria-label="Seguinos en X (anteriormente Twitter)" class="text-white text-lg lg:text-xl transition-all duration-300 hover:text-primary" rel="noopener noreferrer" target="_blank">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="nav-x-title">
+          <title id="nav-x-title">X (Twitter)</title>
+          <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.80l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+        </svg>
+      </a>
+      <a href="https://www.instagram.com/pucaragaming" aria-label="Seguinos en Instagram" class="text-white text-lg lg:text-xl transition-all duration-300 hover:text-primary" rel="noopener noreferrer" target="_blank">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="nav-instagram-title">
+          <title id="nav-instagram-title">Instagram</title>
+          <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
+        </svg>
+      </a>
+      <a href="https://www.youtube.com/@PucaraGaming" aria-label="Suscribite a nuestro canal de YouTube" class="text-white text-lg lg:text-xl transition-all duration-300 hover:text-primary" rel="noopener noreferrer" target="_blank">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="nav-youtube-title">
+          <title id="nav-youtube-title">YouTube</title>
+          <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
+        </svg>
+      </a>
+      <a href="https://www.twitch.tv/pucaragaming" aria-label="Seguinos en Twitch para streams en vivo" class="text-white text-lg lg:text-xl transition-all duration-300 hover:text-primary" rel="noopener noreferrer" target="_blank">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="nav-twitch-title">
+          <title id="nav-twitch-title">Twitch</title>
+          <path d="M11.571 4.714h1.715v5.143H11.57zm4.715 0H18v5.143h-1.714zM6 0L1.714 4.286v15.428h5.143V24l4.286-4.286h3.428L22.286 12V0zm14.571 11.143l-3.428 3.428h-3.429l-3 3v-3H6.857V1.714h13.714Z"/>
+        </svg>
+      </a>
+      <a href="https://www.tiktok.com/@pucaragaming" aria-label="Seguinos en TikTok" class="text-white text-lg lg:text-xl transition-all duration-300 hover:text-primary" rel="noopener noreferrer" target="_blank">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="nav-tiktok-title">
+          <title id="nav-tiktok-title">TikTok</title>
+          <path d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93-.01 2.92.01 5.84-.02 8.75-.08 1.4-.54 2.79-1.35 3.94-1.31 1.92-3.58 3.17-5.91 3.21-1.43.08-2.86-.31-4.08-1.03-2.02-1.19-3.44-3.37-3.65-5.71-.02-.5-.03-1-.01-1.49.18-1.9 1.12-3.72 2.58-4.96 1.66-1.44 3.98-2.13 6.15-1.72.02 1.48-.04 2.96-.04 4.44-.99-.32-2.15-.23-3.02.37-.63.41-1.11 1.04-1.36 1.75-.21.51-.15 1.07-.14 1.61.24 1.64 1.82 3.02 3.5 2.87 1.12-.01 2.19-.66 2.77-1.61.19-.33.4-.67.41-1.06.1-1.79.06-3.57.07-5.36.01-4.03-.01-8.05.02-12.07z"/>
+        </svg>
+      </a>
+      <a href="https://www.linkedin.com/company/pucaragaming" aria-label="Conectá con nosotros en LinkedIn" class="text-white text-lg lg:text-xl transition-all duration-300 hover:text-primary" rel="noopener noreferrer" target="_blank">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="nav-linkedin-title">
+          <title id="nav-linkedin-title">LinkedIn</title>
+          <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
+        </svg>
+      </a>
+    </div>
+
+    <!-- Desktop Menu -->
+    <div class="hidden md:flex gap-[25px] lg:gap-[35px] order-2">
+      <a href="/home" class="text-white no-underline font-semibold uppercase tracking-wider transition-all duration-300 relative text-sm lg:text-base hover:text-primary after:content-[''] after:absolute after:bottom-[-5px] after:left-0 after:w-0 after:h-[2px] after:bg-primary after:transition-all after:duration-300 hover:after:w-full gaming-nav-effect">INICIO</a>
+      <a href="/about" class="text-white no-underline font-semibold uppercase tracking-wider transition-all duration-300 relative text-sm lg:text-base hover:text-primary after:content-[''] after:absolute after:bottom-[-5px] after:left-0 after:w-0 after:h-[2px] after:bg-primary after:transition-all after:duration-300 hover:after:w-full gaming-nav-effect">NOSOTROS</a>
+      <a href="/teams" class="text-white no-underline font-semibold uppercase tracking-wider transition-all duration-300 relative text-sm lg:text-base hover:text-primary after:content-[''] after:absolute after:bottom-[-5px] after:left-0 after:w-0 after:h-[2px] after:bg-primary after:transition-all after:duration-300 hover:after:w-full gaming-nav-effect">EQUIPOS</a>
+      <a href="/news" class="text-white no-underline font-semibold uppercase tracking-wider transition-all duration-300 relative text-sm lg:text-base hover:text-primary after:content-[''] after:absolute after:bottom-[-5px] after:left-0 after:w-0 after:h-[2px] after:bg-primary after:transition-all after:duration-300 hover:after:w-full gaming-nav-effect">NOTICIAS</a>
+      <a href="/store" class="text-white no-underline font-semibold uppercase tracking-wider transition-all duration-300 relative text-sm lg:text-base hover:text-primary after:content-[''] after:absolute after:bottom-[-5px] after:left-0 after:w-0 after:h-[2px] after:bg-primary after:transition-all after:duration-300 hover:after:w-full gaming-nav-effect">TIENDA</a>
+      <a href="/contact" class="text-white no-underline font-semibold uppercase tracking-wider transition-all duration-300 relative text-sm lg:text-base hover:text-primary after:content-[''] after:absolute after:bottom-[-5px] after:left-0 after:w-0 after:h-[2px] after:bg-primary after:transition-all after:duration-300 hover:after:w-full gaming-nav-effect">CONTACTO</a>
+    </div>
+
+  </div>
+
+  <!-- Mobile Menu -->
+  <div 
+    class="md:hidden fixed inset-0 bg-black/95 backdrop-blur-lg z-40 transition-transform duration-300 ease-in-out overflow-y-auto" 
+    id="mobile-menu"
+    style="transform: translateX(-100%); height: 100vh; height: 100dvh; min-height: 100vh; min-height: 100dvh;"
+  >
+    <div class="relative w-full h-full min-h-screen pt-24 pb-20 px-6 flex flex-col justify-start">
+      <!-- Mobile Navigation -->
+      <div class="flex flex-col gap-6 mb-8 mt-4 w-full flex-grow">
+        <a href="/home" class="text-white text-xl font-semibold uppercase tracking-wider py-4 border-b border-white/10 hover:text-primary transition-colors duration-300 block">INICIO</a>
+        <a href="/about" class="text-white text-xl font-semibold uppercase tracking-wider py-4 border-b border-white/10 hover:text-primary transition-colors duration-300 block">NOSOTROS</a>
+        <a href="/teams" class="text-white text-xl font-semibold uppercase tracking-wider py-4 border-b border-white/10 hover:text-primary transition-colors duration-300 block">EQUIPOS</a>
+        <a href="/news" class="text-white text-xl font-semibold uppercase tracking-wider py-4 border-b border-white/10 hover:text-primary transition-colors duration-300 block">NOTICIAS</a>
+        <a href="/store" class="text-white text-xl font-semibold uppercase tracking-wider py-4 border-b border-white/10 hover:text-primary transition-colors duration-300 block">TIENDA</a>
+        <a href="/contact" class="text-white text-xl font-semibold uppercase tracking-wider py-4 border-b border-white/10 hover:text-primary transition-colors duration-300 block">CONTACTO</a>
+      </div>
+      
+      <!-- Spacer generoso para evitar que el contenido se corte -->
+      <div class="h-24 flex-shrink-0"></div>
+    </div>
+  </div>
+
+  <!-- Mobile Overlay -->
+  <div 
+    class="md:hidden fixed inset-0 bg-black/50 backdrop-blur-sm z-30 transition-opacity duration-300" 
+    id="mobile-overlay"
+    style="opacity: 0; pointer-events: none; height: 100vh; height: 100dvh; min-height: 100vh; min-height: 100dvh;"
+  ></div>
+
+  <!-- Barra inferior naranja -->
+  <div class="absolute bottom-0 left-0 w-full h-[3px] bg-primary shadow-[0_0_10px_rgb(234,96,26),0_0_20px_rgb(234,96,26)]"></div>
+</nav>
+
+<script>
+  // Navbar optimizado con TypeScript para mayor seguridad
+  interface NavbarElements {
+    menuButton: HTMLButtonElement;
+    mobileMenu: HTMLDivElement;
+    overlay: HTMLDivElement;
+    navbar: HTMLElement;
+    logo: HTMLImageElement;
+  }
+
+  class NavbarController {
+    private isMenuOpen: boolean = false;
+    private scrollTicking: boolean = false;
+    private isScrolled: boolean = false;
+    private elements: NavbarElements | null = null;
+    private isInitialized: boolean = false;
+
+    constructor() {
+      this.init();
+    }
+
+    private init(): void {
+      // Múltiples estrategias de inicialización para mayor confiabilidad
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', () => this.safeInitNavbar());
+      } else {
+        // DOM ya está listo, inicializar inmediatamente
+        this.safeInitNavbar();
+      }
+
+      // Reinicialización para Astro con múltiples eventos
+      document.addEventListener('astro:page-load', () => {
+        // Reset scroll state cuando cambia de página
+        this.isScrolled = false;
+        this.scrollTicking = false;
+        setTimeout(() => this.safeInitNavbar(), 50);
+      });
+      
+      // Evento adicional para mayor compatibilidad
+      window.addEventListener('load', () => {
+        if (!this.isInitialized) {
+          setTimeout(() => this.safeInitNavbar(), 100);
+        }
+      });
+    }
+
+    private safeInitNavbar(): void {
+      // Permitir reinicialización en cambios de página
+      if (this.isInitialized) {
+        this.isInitialized = false;
+        // Limpiar listeners previos
+        if (this.elements) {
+          this.cleanupEventListeners();
+        }
+      }
+
+      // Intentar inicialización con retry
+      let attempts = 0;
+      const maxAttempts = 5;
+      
+      const tryInit = () => {
+        attempts++;
+        
+        if (this.initNavbar()) {
+          this.isInitialized = true;
+          console.log('Navbar inicializado correctamente');
+        } else if (attempts < maxAttempts) {
+          // Retry después de un pequeño delay
+          setTimeout(tryInit, 100 * attempts);
+        } else {
+          console.warn('Navbar: No se pudo inicializar después de múltiples intentos');
+        }
+      };
+      
+      tryInit();
+    }
+
+    private initNavbar(): boolean {
+      // Cache elementos DOM con validación de tipos
+      const menuButton = document.getElementById('mobile-menu-btn') as HTMLButtonElement;
+      const mobileMenu = document.getElementById('mobile-menu') as HTMLDivElement;
+      const overlay = document.getElementById('mobile-overlay') as HTMLDivElement;
+      const navbar = document.getElementById('navbar') as HTMLElement;
+      const logo = document.getElementById('navbar-logo') as HTMLImageElement;
+
+      if (!menuButton || !mobileMenu || !overlay || !navbar || !logo) {
+        console.warn('Navbar: Algunos elementos no encontrados, reintentando...');
+        return false;
+      }
+
+      // Limpiar event listeners previos si existen
+      if (this.elements) {
+        this.cleanupEventListeners();
+      }
+
+      this.elements = { menuButton, mobileMenu, overlay, navbar, logo };
+
+      // Estados iniciales
+      this.closeMenuImmediate();
+      this.updateScrollState(window.scrollY > 50);
+
+      // Event listeners optimizados
+      this.setupEventListeners();
+      
+      return true;
+    }
+
+    private cleanupEventListeners(): void {
+      if (!this.elements) return;
+      
+      // Remover listeners de scroll global
+      window.removeEventListener('scroll', this.handleScrollThrottled);
+      
+      // Remover listeners previos para evitar duplicados
+      const newMenuButton = this.elements.menuButton.cloneNode(true) as HTMLButtonElement;
+      this.elements.menuButton.parentNode?.replaceChild(newMenuButton, this.elements.menuButton);
+      
+      const newOverlay = this.elements.overlay.cloneNode(true) as HTMLDivElement;
+      this.elements.overlay.parentNode?.replaceChild(newOverlay, this.elements.overlay);
+    }
+
+    private setupEventListeners(): void {
+      if (!this.elements) return;
+
+      // Scroll con throttling optimizado - bind para mantener contexto
+      const boundScrollHandler = this.handleScrollThrottled.bind(this);
+      window.addEventListener('scroll', boundScrollHandler, { passive: true });
+      
+      // Mobile menu button
+      this.elements.menuButton.addEventListener('click', (e: MouseEvent) => {
+        e.stopPropagation();
+        this.toggleMenu();
+      });
+
+      // Overlay click
+      this.elements.overlay.addEventListener('click', (e: MouseEvent) => {
+        e.stopPropagation();
+        this.closeMenu();
+      });
+
+      // Links móviles
+      const mobileLinks = this.elements.mobileMenu.querySelectorAll('a');
+      mobileLinks.forEach((link: Element) => {
+        const linkElement = link as HTMLAnchorElement;
+        linkElement.addEventListener('click', () => {
+          setTimeout(() => this.closeMenu(), 100);
+        });
+      });
+
+      // Keyboard navigation
+      document.addEventListener('keydown', (e: KeyboardEvent) => {
+        if (e.key === 'Escape' && this.isMenuOpen) {
+          this.closeMenu();
+        }
+      });
+    }
+
+    // Throttled scroll handler con requestAnimationFrame
+    private handleScrollThrottled(): void {
+      if (!this.scrollTicking) {
+        requestAnimationFrame(() => {
+          const scrolled: boolean = window.scrollY > 50;
+          
+          // Solo actualizar si cambió el estado
+          if (scrolled !== this.isScrolled) {
+            this.updateScrollState(scrolled);
+          }
+          
+          this.scrollTicking = false;
+        });
+        
+        this.scrollTicking = true;
+      }
+    }
+
+    // Actualización optimizada del estado de scroll
+    private updateScrollState(scrolled: boolean): void {
+      if (!this.elements) return;
+      
+      this.isScrolled = scrolled;
+      
+      const container = this.elements.navbar.querySelector('.flex.justify-between') as HTMLElement;
+      
+      if (scrolled) {
+        // Estado comprimido con color naranja, altura de 80px y elementos centrados verticalmente
+        this.elements.navbar.classList.add('!py-1', '!bg-primary-subtle/70', '!h-[80px]');
+        this.elements.navbar.classList.remove('!bg-black/70');
+        // Centrar solo verticalmente el contenedor interno
+        if (container) {
+          container.classList.add('!h-full', '!items-center');
+        }
+        this.elements.logo.classList.add('!h-[70px]', 'md:!h-[80px]', 'lg:!h-[90px]', 'xl:!h-[100px]');
+      } else {
+        // Estado normal
+        this.elements.navbar.classList.remove('!py-1', '!bg-primary-subtle/70', '!h-[80px]');
+        this.elements.navbar.classList.add('!bg-black/70');
+        // Quitar el centrado vertical del contenedor interno
+        if (container) {
+          container.classList.remove('!h-full', '!items-center');
+        }
+        this.elements.logo.classList.remove('!h-[70px]', 'md:!h-[80px]', 'lg:!h-[90px]', 'xl:!h-[100px]');
+      }
+    }
+
+    private toggleMenu(): void {
+      if (this.isMenuOpen) {
+        this.closeMenu();
+      } else {
+        this.openMenu();
+      }
+    }
+
+    private openMenu(): void {
+      if (!this.elements || this.isMenuOpen) return;
+
+      this.isMenuOpen = true;
+
+      // Batch DOM updates para mejor performance
+      this.elements.mobileMenu.style.transform = 'translateX(0)';
+      this.elements.overlay.style.opacity = '1';
+      this.elements.overlay.style.pointerEvents = 'auto';
+      this.elements.menuButton.classList.add('active');
+      this.elements.menuButton.setAttribute('aria-expanded', 'true');
+      
+      // Prevenir scroll del body y asegurar que ocupe toda la pantalla
+      document.body.style.overflow = 'hidden';
+      document.body.style.position = 'fixed';
+      document.body.style.width = '100%';
+      document.body.style.height = '100%';
+      document.body.style.top = '0';
+      document.body.style.left = '0';
+      
+      // Forzar altura completa con múltiples estrategias
+      this.elements.mobileMenu.style.height = '100vh';
+      this.elements.mobileMenu.style.minHeight = '100vh';
+      this.elements.mobileMenu.style.maxHeight = 'none';
+      
+      // Estrategia adicional para navegadores móviles
+      const viewportHeight = window.innerHeight;
+      this.elements.mobileMenu.style.height = `${viewportHeight}px`;
+      this.elements.mobileMenu.style.minHeight = `${viewportHeight}px`;
+    }
+
+    private closeMenu(): void {
+      if (!this.elements || !this.isMenuOpen) return;
+
+      this.isMenuOpen = false;
+
+      // Batch DOM updates para mejor performance
+      this.elements.mobileMenu.style.transform = 'translateX(-100%)';
+      this.elements.overlay.style.opacity = '0';
+      this.elements.overlay.style.pointerEvents = 'none';
+      this.elements.menuButton.classList.remove('active');
+      this.elements.menuButton.setAttribute('aria-expanded', 'false');
+      
+      // Restaurar scroll del body
+      document.body.style.overflow = '';
+      document.body.style.position = '';
+      document.body.style.width = '';
+      document.body.style.height = '';
+      document.body.style.top = '';
+      document.body.style.left = '';
+    }
+
+    private closeMenuImmediate(): void {
+      if (!this.elements) return;
+
+      this.isMenuOpen = false;
+      this.elements.mobileMenu.style.transform = 'translateX(-100%)';
+      this.elements.overlay.style.opacity = '0';
+      this.elements.overlay.style.pointerEvents = 'none';
+      this.elements.menuButton.classList.remove('active');
+      this.elements.menuButton.setAttribute('aria-expanded', 'false');
+      
+      // Restaurar scroll del body
+      document.body.style.overflow = '';
+      document.body.style.position = '';
+      document.body.style.width = '';
+      document.body.style.height = '';
+      document.body.style.top = '';
+      document.body.style.left = '';
+    }
+  }
+
+  // Inicializar el controlador del navbar
+  new NavbarController();
+</script>
+
+<style>
+  /* Transiciones suaves personalizadas para el navbar */
+  #navbar {
+    transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  
+  #navbar > div {
+    transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  
+  #navbar-logo {
+    transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  
+  /* Transición suave para los iconos de redes sociales */
+  #navbar a svg {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  
+  /* Transición original para el botón de menú móvil - NO cambiar */
+  #mobile-menu-btn .line {
+    transition: all 0.3s ease-in-out;
+  }
+  
+  /* Transiciones originales para el menú móvil - NO cambiar */
+  #mobile-menu {
+    transition: transform 0.3s ease-in-out;
+  }
+  
+  #mobile-overlay {
+    transition: opacity 0.3s;
+  }
+</style>

@@ -1,0 +1,94 @@
+---
+import Layout from "../../layouts/Layout.astro";
+
+const searchParams = Astro.url.searchParams;
+const paymentId = searchParams.get('payment_id');
+const status = searchParams.get('status');
+---
+
+<Layout 
+    title="Pago Pendiente - Pucará Gaming"
+    description="Tu pago está siendo procesado"
+>
+    <main class="font-ubuntu bg-dark text-light min-h-screen flex items-center justify-center pt-24 pb-12" role="main">
+        <div class="container mx-auto px-4 max-w-2xl text-center">
+            <!-- Icono de pendiente -->
+            <div class="mb-8 flex justify-center">
+                <div class="w-24 h-24 bg-yellow-500/20 rounded-full flex items-center justify-center border-4 border-yellow-500">
+                    <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" class="text-yellow-500 animate-spin">
+                        <path d="M12 2v4m0 12v4M4.93 4.93l2.83 2.83m8.48 8.48l2.83 2.83M2 12h4m12 0h4M4.93 19.07l2.83-2.83m8.48-8.48l2.83-2.83"/>
+                    </svg>
+                </div>
+            </div>
+
+            <!-- Título -->
+            <h1 class="text-4xl md:text-5xl font-bold mb-4">
+                <span class="bg-gradient-to-r from-yellow-400 to-yellow-600 bg-clip-text text-transparent">
+                    PAGO PENDIENTE
+                </span>
+            </h1>
+
+            <p class="text-xl text-light/80 mb-8">
+                Estamos procesando tu pago
+            </p>
+
+            <!-- Información -->
+            <div class="bg-dark-subtle border border-yellow-500/30 rounded-lg p-6 mb-8 text-left">
+                <h2 class="text-lg font-bold text-yellow-500 mb-4 flex items-center gap-2">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/>
+                    </svg>
+                    ¿Qué significa esto?
+                </h2>
+                <ul class="space-y-2 text-light/70">
+                    <li class="flex items-start gap-2">
+                        <span class="text-yellow-500 mt-1">•</span>
+                        <span>Tu pago está siendo verificado por Mercado Pago</span>
+                    </li>
+                    <li class="flex items-start gap-2">
+                        <span class="text-yellow-500 mt-1">•</span>
+                        <span>Puede demorar hasta 48 horas hábiles</span>
+                    </li>
+                    <li class="flex items-start gap-2">
+                        <span class="text-yellow-500 mt-1">•</span>
+                        <span>Te notificaremos por email cuando se confirme</span>
+                    </li>
+                </ul>
+            </div>
+
+            {paymentId && (
+                <div class="bg-gray-800/50 border border-gray-700 rounded-lg p-4 mb-8 text-sm text-light/70">
+                    <p><strong class="text-light">ID de transacción:</strong> {paymentId}</p>
+                    {status && <p><strong class="text-light">Estado:</strong> {status}</p>}
+                    <p class="mt-2 text-xs">Guardá este número para hacer seguimiento de tu pago</p>
+                </div>
+            )}
+
+            <!-- Métodos de pago comunes que generan pending -->
+            <div class="bg-primary/10 border border-primary/30 rounded-lg p-6 mb-8">
+                <h3 class="text-sm font-bold text-primary mb-2">Métodos que pueden generar pagos pendientes:</h3>
+                <p class="text-sm text-light/70">Transferencia bancaria, Rapipago, Pago Fácil, y algunos medios de pago en efectivo</p>
+            </div>
+
+            <!-- Botones de acción -->
+            <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                <a 
+                    href="/store" 
+                    class="inline-flex items-center justify-center gap-2 bg-primary hover:bg-primary/80 text-white font-semibold px-6 py-3 rounded-lg transition-all duration-300 hover:scale-105"
+                >
+                    Volver a la tienda
+                </a>
+                <a 
+                    href="/contact" 
+                    class="inline-flex items-center justify-center gap-2 bg-gray-800 hover:bg-gray-700 text-white font-semibold px-6 py-3 rounded-lg transition-all duration-300 hover:scale-105"
+                >
+                    Contactar soporte
+                </a>
+            </div>
+
+            <div class="mt-8 text-sm text-light/60">
+                <a href="/home" class="text-primary hover:underline">Volver al inicio</a>
+            </div>
+        </div>
+    </main>
+</Layout>

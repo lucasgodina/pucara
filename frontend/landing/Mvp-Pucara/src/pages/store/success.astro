@@ -1,0 +1,103 @@
+---
+import Layout from "../../layouts/Layout.astro";
+
+// Obtener parámetros de la URL (Mercado Pago los envía)
+const searchParams = Astro.url.searchParams;
+const paymentId = searchParams.get('payment_id');
+const status = searchParams.get('status');
+const externalReference = searchParams.get('external_reference');
+---
+
+<Layout 
+    title="Pago Exitoso - Pucará Gaming"
+    description="Tu pago se procesó correctamente"
+>
+    <main class="font-ubuntu bg-dark text-light min-h-screen flex items-center justify-center pt-24 pb-12" role="main">
+        <div class="container mx-auto px-4 max-w-2xl text-center">
+            <!-- Icono de éxito -->
+            <div class="mb-8 flex justify-center">
+                <div class="w-24 h-24 bg-green-500/20 rounded-full flex items-center justify-center border-4 border-green-500 animate-pulse">
+                    <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" class="text-green-500">
+                        <path d="M20 6L9 17l-5-5"/>
+                    </svg>
+                </div>
+            </div>
+
+            <!-- Título -->
+            <h1 class="text-4xl md:text-5xl font-bold mb-4">
+                <span class="bg-gradient-to-r from-green-400 to-green-600 bg-clip-text text-transparent">
+                    ¡PAGO EXITOSO!
+                </span>
+            </h1>
+
+            <p class="text-xl text-light/80 mb-8">
+                Tu compra se procesó correctamente
+            </p>
+
+            <!-- Detalles del pago -->
+            <div class="bg-dark-subtle border border-green-500/30 rounded-lg p-6 mb-8 text-left">
+                <h2 class="text-lg font-bold text-green-500 mb-4 flex items-center gap-2">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z"/>
+                    </svg>
+                    Detalles de la transacción
+                </h2>
+                <div class="space-y-2 text-light/70">
+                    {paymentId && (
+                        <p><strong class="text-light">ID de Pago:</strong> {paymentId}</p>
+                    )}
+                    {status && (
+                        <p><strong class="text-light">Estado:</strong> {status === 'approved' ? 'Aprobado' : status}</p>
+                    )}
+                    {externalReference && (
+                        <p><strong class="text-light">Referencia:</strong> {externalReference}</p>
+                    )}
+                </div>
+            </div>
+
+            <!-- Próximos pasos -->
+            <div class="bg-primary/10 border border-primary/30 rounded-lg p-6 mb-8">
+                <h2 class="text-lg font-bold text-primary mb-3">📧 Próximos pasos</h2>
+                <ul class="text-left text-light/70 space-y-2">
+                    <li class="flex items-start gap-2">
+                        <span class="text-primary mt-1">✓</span>
+                        <span>Recibirás un email de confirmación con los detalles de tu compra</span>
+                    </li>
+                    <li class="flex items-start gap-2">
+                        <span class="text-primary mt-1">✓</span>
+                        <span>El equipo de Pucará Gaming preparará tu pedido</span>
+                    </li>
+                    <li class="flex items-start gap-2">
+                        <span class="text-primary mt-1">✓</span>
+                        <span>Te contactaremos para coordinar el envío o retiro</span>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- Botones de acción -->
+            <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                <a 
+                    href="/store" 
+                    class="inline-flex items-center justify-center gap-2 bg-primary hover:bg-primary/80 text-white font-semibold px-6 py-3 rounded-lg transition-all duration-300 hover:scale-105"
+                >
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M9 2a1 1 0 0 0-.894.553L7.382 4H4a1 1 0 0 0-1 1v3a1 1 0 0 0 1 1h16a1 1 0 0 0 1-1V5a1 1 0 0 0-1-1h-3.382l-.724-1.447A1 1 0 0 0 15 2H9zM4 10v9a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-9"/>
+                    </svg>
+                    Volver a la tienda
+                </a>
+                <a 
+                    href="/home" 
+                    class="inline-flex items-center justify-center gap-2 bg-gray-800 hover:bg-gray-700 text-white font-semibold px-6 py-3 rounded-lg transition-all duration-300 hover:scale-105"
+                >
+                    Ir al inicio
+                </a>
+            </div>
+
+            <!-- Soporte -->
+            <div class="mt-8 text-sm text-light/60">
+                ¿Problemas con tu pedido? 
+                <a href="/contact" class="text-primary hover:underline">Contactanos</a>
+            </div>
+        </div>
+    </main>
+</Layout>

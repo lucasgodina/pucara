@@ -1,0 +1,67 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import { getAllTeams } from "../../data/teams";
+
+// Obtener todos los equipos desde el archivo de datos centralizado
+const teams = getAllTeams();
+---
+
+<Layout 
+    title="Equipos - Pucará Gaming"
+    description="Conocé todos los equipos de Pucara Gaming. Nuestros roster profesionales de Dota 2, Street Fighter 6, Tekken 8 y League of Legends. Los mejores jugadores argentinos compitiendo al más alto nivel."
+    keywords="equipos pucara gaming, dota 2 team, street fighter team, tekken team, league of legends, roster gaming, jugadores profesionales argentina"
+>
+  <main class="font-ubuntu min-h-screen bg-primary-subtle text-light">
+    
+    <!-- Section para títulos -->
+    <section class="text-center py-20" role="banner">
+      <h1 class="text-4xl md:text-6xl font-bold uppercase tracking-wider mb-6 bg-gradient-to-r from-primary to-orange-400 bg-clip-text text-transparent drop-shadow-lg">
+        NUESTROS EQUIPOS
+      </h1>
+      
+      <p class="text-lg md:text-xl text-white/80 mb-12 max-w-3xl mx-auto px-5">
+        Conocé a los profesionales que representan a Pucará Gaming en los esports más competitivos
+      </p>
+    </section>
+
+    <!-- Section para grid de equipos -->
+    <section class="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-[1435px] mx-auto px-4 md:px-[72px] pb-20" 
+             role="region" 
+             aria-label="Lista de equipos de Pucará Gaming">
+      {teams.map((team) => (
+        <a href={`/teams/${team.id}`} 
+           class="group relative rounded-2xl overflow-hidden shadow-2xl hover:scale-[1.02] transition-all duration-500 border border-white/10 hover:border-primary/60 md:w-[628px] md:h-[229px] mx-auto"
+           aria-label={`Ver equipo de ${team.nombre}`}
+           role="article">
+              
+              <!-- Background Image Container -->
+              <div class="relative h-48 sm:h-56 md:h-[229px] overflow-hidden">
+                <img 
+                  src={team.imagen} 
+                  alt={team.nombre} 
+                  width="628"
+                  height="229"
+                  loading="lazy"
+                  class="w-full h-full object-cover object-center filter grayscale group-hover:grayscale-0 transition-all duration-700 group-hover:scale-110" 
+                />
+                
+                <!-- Dark Overlay -->
+                <div class="absolute inset-0 bg-black/60 group-hover:bg-black/30 transition-all duration-500"></div>
+                
+                <!-- Content Overlay -->
+                <div class="absolute inset-0 flex flex-col justify-center items-center text-center p-6">
+                  <!-- Sin contenido, solo efectos visuales -->
+                </div>
+                
+                <!-- Glow Effect -->
+                <div class="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500">
+                  <div class="absolute inset-0 bg-gradient-to-t from-primary/20 via-transparent to-transparent"></div>
+                  <div class="absolute -inset-1 bg-gradient-to-r from-primary/50 via-orange-400/50 to-primary/50 blur-xl opacity-30"></div>
+                </div>
+              </div>
+              
+            </a>
+          ))}
+    </section>
+  </main>
+</Layout>

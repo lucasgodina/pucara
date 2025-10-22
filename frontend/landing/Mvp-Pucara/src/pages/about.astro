@@ -1,0 +1,161 @@
+---
+import Layout from "../layouts/Layout.astro";
+---
+
+<Layout 
+    title="Nosotros - Pucará Gaming"
+    description="Conocé la historia de Pucara Gaming, nuestra misión, visión y valores. Descubrí quiénes somos, qué nos motiva y cómo construimos la comunidad gaming más fuerte de Argentina desde 2024."
+    keywords="sobre pucara gaming, historia, mision vision, equipo fundador, gaming argentina, esports organization"
+>
+    <main class="bg-black text-white min-h-screen font-ubuntu">
+        
+        <!-- Hero Section -->
+        <section class="text-center py-20 bg-primary-subtle relative" role="banner">
+            <div class="max-w-7xl mx-auto px-5 relative z-10">
+                <h1 class="text-4xl md:text-6xl font-bold uppercase tracking-wider mb-5 text-white drop-shadow-lg">
+                    SOBRE NOSOTROS
+                </h1>
+            </div>
+        </section>
+
+        <!-- Separador negro -->
+        <div class="h-2 bg-gradient-to-r from-transparent via-primary to-transparent opacity-60" role="separator" aria-hidden="true"></div>
+
+        <!-- Misión, Visión y Valores - Tres columnas con fondo vision.png -->
+        <section class="py-32 relative overflow-hidden min-h-screen flex items-center"
+                 style="background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('/vision.webp'); background-size: cover; background-position: center; background-repeat: no-repeat;"
+                 aria-labelledby="historia-titulo">
+            <div class="max-w-7xl mx-auto px-5 relative z-10 w-full">
+                 <h2 id="historia-titulo" class="text-3xl md:text-4xl font-bold text-center text-white/80 uppercase tracking-wide mb-16 drop-shadow-lg">
+                    HISTORIA
+                </h2>
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 lg:gap-12" role="region" aria-labelledby="historia-titulo">
+                    
+                    <!-- Misión -->
+                    <article class="relative overflow-hidden rounded-2xl bg-black/40 backdrop-blur-sm min-h-[400px] border border-primary/20">
+                        <div class="relative z-10 p-8 h-full flex flex-col justify-center text-center">
+                            <div class="text-6xl mb-6" role="img" aria-label="Objetivo - Emoji de diana">🎯</div>
+                            <h3 class="text-2xl md:text-3xl font-bold text-primary uppercase tracking-wide mb-6">
+                                MISIÓN
+                            </h3>
+                            <p class="text-base md:text-lg leading-relaxed text-white/90">
+                                Acompañar a profesionales del gaming para desarrollarse, trabajar en equipo y lograr sus metas profesionales
+                            </p>
+                        </div>
+                    </article>
+
+                    <!-- Visión -->
+                    <article class="relative overflow-hidden rounded-2xl bg-black/40 backdrop-blur-sm min-h-[400px] border border-primary/20">
+                        <div class="relative z-10 p-8 h-full flex flex-col justify-center text-center">
+                            <div class="text-6xl mb-6" role="img" aria-label="Visión - Emoji de ojo">👁️</div>
+                            <h3 class="text-2xl md:text-3xl font-bold text-primary uppercase tracking-wide mb-6">
+                                VISIÓN
+                            </h3>
+                            <p class="text-base md:text-lg leading-relaxed text-white/90">
+                                Convertir Pucará Gaming en una organización de Esports líder en Argentina, participando en los torneos de más alto nivel.
+                            </p>
+                        </div>
+                    </article>
+
+                    <!-- Valores -->
+                    <article class="relative overflow-hidden rounded-2xl bg-black/40 backdrop-blur-sm min-h-[400px] border border-primary/20">
+                        <div class="relative z-10 p-8 h-full flex flex-col justify-center text-center">
+                            <div class="text-6xl mb-6" role="img" aria-label="Estrella - Valores">⭐</div>
+                            <h3 class="text-2xl md:text-3xl font-bold text-primary uppercase tracking-wide mb-6">
+                                VALORES
+                            </h3>
+                            <p class="text-base md:text-lg leading-relaxed text-white/90">
+                                Pasión, profesionalismo, positividad, sinergia.
+                            </p>
+                        </div>
+                    </article>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+        <!-- Separador naranja -->
+        <div class="h-2 bg-gradient-to-r from-transparent via-primary to-transparent opacity-60"></div>
+
+        <!-- Logros e Hitos Section -->
+        <section class="py-32 relative overflow-hidden min-h-screen flex items-center" 
+                 style="background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('/achievements.webp'); background-size: cover; background-position: center; background-repeat: no-repeat;">
+            <div class="max-w-7xl mx-auto px-5 w-full relative z-10">
+                <h2 class="text-3xl md:text-4xl font-bold text-center text-white/80 uppercase tracking-wide mb-16 drop-shadow-lg">
+                    LOGROS E HITOS
+                </h2>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-10 pt-8">
+                    <div class="bg-black/60 p-8 rounded-2xl text-center border border-primary/30 transition-all duration-300 hover:border-primary hover:shadow-primary-glow backdrop-blur-sm">
+                        <h3 class="text-primary text-xl font-semibold mb-3">1er puesto en el torneo</h3>
+                        <h4 class="text-white text-lg mb-2">Urban Battles</h4>
+                        <p class="text-white/80">(Street Fighter)</p>
+                    </div>
+                    <div class="bg-black/60 p-8 rounded-2xl text-center border border-primary/30 transition-all duration-300 hover:border-primary hover:shadow-primary-glow backdrop-blur-sm">
+                        <h3 class="text-primary text-xl font-semibold mb-3">Múltiples participaciones</h3>
+                        <h4 class="text-white text-lg mb-2">en torneos presenciales de</h4>
+                        <p class="text-white/80">Street Fighter</p>
+                    </div>
+                    <div class="bg-black/60 p-8 rounded-2xl text-center border border-primary/30 transition-all duration-300 hover:border-primary hover:shadow-primary-glow backdrop-blur-sm">
+                        <h3 class="text-primary text-xl font-semibold mb-3">Presencia constante en redes sociales</h3>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Separador naranja -->
+        <div class="h-2 bg-gradient-to-r from-transparent via-primary to-transparent opacity-60"></div>
+
+        <!-- Owners Section -->
+        <section class="py-32 relative bg-primary-subtle min-h-screen">
+            <!-- Título separado -->
+            <header class="max-w-7xl mx-auto px-5 relative z-10 pt-16">
+                <h2 class="text-3xl md:text-4xl font-bold text-center text-white/80 uppercase tracking-wide mb-16 drop-shadow-lg">
+                    CONOCE A NUESTRO EQUIPO
+                </h2>
+            </header>
+            
+            <!-- Cards separadas -->
+            <div class="max-w-7xl mx-auto px-5 relative z-10 w-full">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-10">
+                    <div class="flex flex-col items-center text-center">
+                        <div class="relative mb-6">
+                            <div class="w-48 h-48 md:w-56 md:h-56 lg:w-64 lg:h-64 rounded-full border-4 border-primary overflow-hidden">
+                                <img src="/founders/juan.webp" alt="Juan Morteyru" 
+                                     class="w-full h-full object-cover object-top" loading="lazy" decoding="async">
+                            </div>
+                        </div>
+                        <div class="space-y-2">
+                            <h3 class="text-white text-2xl font-bold drop-shadow-lg">Juan Morteyru</h3>
+                            <p class="text-primary text-lg font-medium drop-shadow-md">Co-Fundador</p>
+                        </div>
+                    </div>
+                    <div class="flex flex-col items-center text-center">
+                        <div class="relative mb-6">
+                            <div class="w-48 h-48 md:w-56 md:h-56 lg:w-64 lg:h-64 rounded-full border-4 border-primary overflow-hidden">
+                                <img src="/founders/pablo.webp" alt="Pablo Sammartino" 
+                                     class="w-full h-full object-cover object-top" loading="lazy" decoding="async">
+                            </div>
+                        </div>
+                        <div class="space-y-2">
+                            <h3 class="text-white text-2xl font-bold drop-shadow-lg">Pablo Sammartino</h3>
+                            <p class="text-primary text-lg font-medium drop-shadow-md">Co-Fundador</p>
+                        </div>
+                    </div>
+                    <div class="flex flex-col items-center text-center">
+                        <div class="relative mb-6">
+                            <div class="w-48 h-48 md:w-56 md:h-56 lg:w-64 lg:h-64 rounded-full border-4 border-primary overflow-hidden">
+                                <img src="/founders/lucas.webp" alt="Lucas Morales" 
+                                     class="w-full h-full object-cover object-top" loading="lazy" decoding="async">
+                            </div>
+                        </div>
+                        <div class="space-y-2">
+                            <h3 class="text-white text-2xl font-bold drop-shadow-lg">Lucas Morales</h3>
+                            <p class="text-primary text-lg font-medium drop-shadow-md">Co-Fundador</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+</Layout>

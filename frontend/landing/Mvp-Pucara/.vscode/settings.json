@@ -1,0 +1,22 @@
+{
+  "css.validate": false,
+  "less.validate": false,
+  "scss.validate": false,
+  "postcss.validate": true,
+  "files.associations": {
+    "*.css": "postcss"
+  },
+  "editor.quickSuggestions": {
+    "strings": true
+  },
+  "tailwindCSS.includeLanguages": {
+    "astro": "html",
+    "javascript": "javascript",
+    "typescript": "javascript"
+  },
+  "tailwindCSS.emmetCompletions": true,
+  "editor.inlineSuggest.enabled": true,  "editor.formatOnSave": true,
+  "editor.codeActionsOnSave": {
+    "source.fixAll": "explicit"
+  }
+}
