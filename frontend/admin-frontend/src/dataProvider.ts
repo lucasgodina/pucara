@@ -1,6 +1,14 @@
 import { DataProvider } from 'react-admin'
 
-const apiUrl = 'http://localhost:3333/api/v1'
+const API_BACKEND_A = 'http://localhost:3333'
+const API_BACKEND_B = 'http://localhost:3334/api/v1'
+
+const getBaseUrl = (resource: string) => {
+  // news, users -> Backend A (auth/news/users)
+  // teams, players -> Backend B (CRUD API)
+  if (resource === 'news' || resource === 'users') return API_BACKEND_A
+  return API_BACKEND_B
+}
 
 // Custom fetch function that handles JSON and errors
 const httpClient = async (url: string, options: RequestInit = {}) => {
@@ -9,10 +17,12 @@ const httpClient = async (url: string, options: RequestInit = {}) => {
   console.log('Options:', options)
 
   try {
+    const token = localStorage.getItem('auth')
     const response = await fetch(url, {
       ...options,
       headers: {
         'Content-Type': 'application/json',
+        ...(token ? { Authorization: `Bearer ${token}` } : {}),
         ...options.headers,
       },
     })
@@ -41,6 +51,10 @@ const httpClient = async (url: string, options: RequestInit = {}) => {
 
 // Función para convertir los nombres de campos de AdonisJS a React Admin
 const convertToReactAdmin = (resource: string, data: any) => {
+  // Unwrap envelopes from Backend A create/update responses
+  if (resource === 'users' && data?.user) data = data.user
+  if (resource === 'news' && data?.news) data = data.news
+
   if (resource === 'teams') {
     return {
       id: data.teamId,
@@ -63,6 +77,30 @@ const convertToReactAdmin = (resource: string, data: any) => {
       bio: data.bio,
       stats: data.stats,
       photoUrl: data.photoUrl,
+      createdAt: data.createdAt,
+      updatedAt: data.updatedAt,
+    }
+  }
+
+  if (resource === 'users') {
+    return {
+      id: data.id,
+      username: data.username,
+      email: data.email,
+      role: data.role,
+      createdAt: data.createdAt,
+      updatedAt: data.updatedAt,
+    }
+  }
+
+  if (resource === 'news') {
+    return {
+      id: data.id,
+      titulo: data.titulo,
+      fecha: data.fecha,
+      comentario: data.comentario,
+      user: data.user, // Backend A ya transforma a string "username (email)" en index/show
+      userId: data.userId,
       createdAt: data.createdAt,
       updatedAt: data.updatedAt,
     }
@@ -100,7 +138,8 @@ const convertFromReactAdmin = (resource: string, data: any) => {
 export const dataProvider: DataProvider = {
   getList: async (resource, params) => {
     // Para este ejemplo simplificado, no implementamos paginación completa
-    const url = `${apiUrl}/${resource}`
+    const base = getBaseUrl(resource)
+    const url = `${base}/${resource}`
 
     try {
       const { json } = await httpClient(url)
@@ -122,7 +161,8 @@ export const dataProvider: DataProvider = {
   },
 
   getOne: async (resource, params) => {
-    const url = `${apiUrl}/${resource}/${params.id}`
+    const base = getBaseUrl(resource)
+    const url = `${base}/${resource}/${params.id}`
 
     try {
       const { json } = await httpClient(url)
@@ -139,8 +179,9 @@ export const dataProvider: DataProvider = {
 
   getMany: async (resource, params) => {
     // Para simplificar, hacemos múltiples llamadas getOne
+    const base = getBaseUrl(resource)
     const promises = params.ids.map((id) =>
-      httpClient(`${apiUrl}/${resource}/${id}`)
+      httpClient(`${base}/${resource}/${id}`)
         .then(({ json }) => convertToReactAdmin(resource, json.data || json))
         .catch(() => null)
     )
@@ -160,7 +201,8 @@ export const dataProvider: DataProvider = {
   },
 
   create: async (resource, params) => {
-    const url = `${apiUrl}/${resource}`
+    const base = getBaseUrl(resource)
+    const url = `${base}/${resource}`
     const data = convertFromReactAdmin(resource, params.data)
 
     try {
@@ -180,7 +222,8 @@ export const dataProvider: DataProvider = {
   },
 
   update: async (resource, params) => {
-    const url = `${apiUrl}/${resource}/${params.id}`
+    const base = getBaseUrl(resource)
+    const url = `${base}/${resource}/${params.id}`
     const data = convertFromReactAdmin(resource, params.data)
 
     console.log('=== DataProvider Update ===')
@@ -191,8 +234,9 @@ export const dataProvider: DataProvider = {
     console.log('Converted data:', data)
 
     try {
+      const method = resource === 'users' || resource === 'news' ? 'PUT' : 'PATCH'
       const { json } = await httpClient(url, {
-        method: 'PATCH',
+        method,
         body: JSON.stringify(data),
       })
 
@@ -213,8 +257,9 @@ export const dataProvider: DataProvider = {
   },
 
   updateMany: async (resource, params) => {
+    const base = getBaseUrl(resource)
     const promises = params.ids.map((id) =>
-      httpClient(`${apiUrl}/${resource}/${id}`, {
+      httpClient(`${base}/${resource}/${id}`, {
         method: 'PATCH',
         body: JSON.stringify(convertFromReactAdmin(resource, params.data)),
       })
@@ -227,7 +272,8 @@ export const dataProvider: DataProvider = {
   },
 
   delete: async (resource, params) => {
-    const url = `${apiUrl}/${resource}/${params.id}`
+    const base = getBaseUrl(resource)
+    const url = `${base}/${resource}/${params.id}`
 
     try {
       await httpClient(url, {
@@ -245,8 +291,9 @@ export const dataProvider: DataProvider = {
   },
 
   deleteMany: async (resource, params) => {
+    const base = getBaseUrl(resource)
     const promises = params.ids.map((id) =>
-      httpClient(`${apiUrl}/${resource}/${id}`, {
+      httpClient(`${base}/${resource}/${id}`, {
         method: 'DELETE',
       })
     )
