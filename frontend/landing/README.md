@@ -1,30 +1,48 @@
-                                    MVP PUCARA
+                                    LANDING PUCARÁ
 
+## 🎮 Sitio Web Oficial de Pucará Gaming
 
-Explicación sencilla y rápida (lo más entendible posible??)
+Este es el sitio web landing oficial de Pucará Gaming, desarrollado con Astro.
 
-El nombre de sandbox, hace referencia a que es una zona de pruebas, acá vamos a experimentar y tirar magia sin que nos sentíamos avergonzados y con miedo a que lo vean en el main, asi que tranquilos si piensan que su codigo esta mal no lo va a ver nadie excepto nosotros 😀.
+Dentro de la carpeta `landing`, vas a encontrar el código fuente completo del sitio web desarrollado en Astro. Si encontrás algún error de dependencias o problemas técnicos, consultá el grupo o buscá en la documentación.
 
-Dentro de la carpeta Mvp-pucara, van a encontrar el entorno en donde vamos a ir desarrollando y probando nuestro código en Astro, igualmente si les tira un error de dependencias o algo avisen por el grupo o busquen, pero no debería de tirar ningún error creo.
+## 📁 Estructura del Proyecto
 
-Dentro de la carpeta src/pages es donde realmente vamos a estar enfocados en ir haciendo nuestro código y pruebas, las demás carpetas del src por el momento no las vamos a tocar pero les dejo una breve explicación de que son:
+### `src/pages/`
 
--assets/	Archivos como imágenes, íconos, fuentes, etc. que usás dentro del código.
+Aquí están todas las páginas del sitio web. Cada archivo `.astro` representa una ruta.
 
--components/	Componentes reutilizables (.astro, .jsx, .ts, etc.) como Navbar, Footer, Card, etc.
+### `src/components/`
 
--layouts/	Estructuras base que se reutilizan en muchas páginas (por ejemplo, una página con Header y Footer).
+Componentes reutilizables como Navbar, Footer, PlayerCard, etc.
 
-El hecho de que no tocar estas carpetas, es porque tenemos que definir cómo van a ser la navbar y el footer, si les parecio copado el navbar y footer que había creado en la presentación del boceto de home, dejamos ese, pero como mas les guste
+### `src/layouts/`
 
+Estructuras base que se reutilizan en muchas páginas (Layout principal con Header y Footer).
 
-Las demás carpetas como public o vs.code no le den tanta importancia, public la vamos a usar más adelante cuando la página está subida a la web.
+### `src/data/`
 
-La carpeta node_modules (que se les debería descargar con la clonación del repo) no la toquen manualmente!!! averiguen o consulten es todo el tema de la caché interna de astro y las dependencias instaladas con npm
+Datos del sitio como información de equipos y jugadores.
 
-Por último, en el archivo astro.config.mjs, que también es dentro de todo importante, ahí se encuentran las integraciones que usamos, por ejemplo si en algún momento agregamos react en esa carpeta se va aclarar que usamos react, pero eso es mas a futuro no se hagan tantos problemas con eso.
+### `src/assets/`
 
+Archivos como imágenes, íconos, fuentes, etc. que se usan dentro del código.
 
-Ahora sí con la explicación terminada, bienvenidos al repo oficial del proyecto final y éxitos a todos! 
+### `public/`
 
-PD: ojala en un futuro vuelvan a ver este repositorio y se rían de como hacíamos nuestros primeros proyectos 
+Archivos estáticos que se sirven directamente (imágenes, favicons, etc.).
+
+### `api/`
+
+Funciones serverless para endpoints de API (contacto, webhooks, etc.).
+
+## ⚙️ Archivos de Configuración
+
+- **`astro.config.mjs`**: Configuración principal de Astro (integraciones, adapter, etc.)
+- **`tailwind.config.cjs`**: Configuración de Tailwind CSS
+- **`tsconfig.json`**: Configuración de TypeScript
+- **`vercel.json`**: Configuración de deployment en Vercel
+
+## 📖 Más Información
+
+Para instrucciones detalladas de instalación y configuración, consultá el archivo `INSTALLATION_GUIDE.md`.

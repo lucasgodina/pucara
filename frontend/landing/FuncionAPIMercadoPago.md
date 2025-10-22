@@ -30,7 +30,7 @@ Backend procesa y responde 200 OK
 ### 1️⃣ Instalar dependencias
 
 ```powershell
-cd pucara/frontend/landing/Mvp-Pucara
+cd pucara/frontend/landing
 npm install
 ```
 
@@ -49,12 +49,14 @@ NODE_ENV=development
 ### 3️⃣ Instalar Ngrok
 
 **Opción 1: Descarga manual**
+
 ```powershell
 # Descarga de: https://ngrok.com/download
 # Extrae a: C:\Users\TU_USUARIO\ngrok\
 ```
 
 **Opción 2: Chocolatey**
+
 ```powershell
 choco install ngrok
 ```
@@ -73,7 +75,7 @@ C:\Users\TU_USUARIO\ngrok\ngrok.exe config add-authtoken TU_TOKEN
 ### Terminal 1: Astro
 
 ```powershell
-cd C:\ruta\pucara\frontend\landing\Mvp-Pucara
+cd C:\ruta\pucara\frontend\landing
 npm run dev
 ```
 
@@ -88,6 +90,7 @@ C:\Users\TU_USUARIO\ngrok\ngrok.exe http 4321
 ### Configurar Ngrok URL
 
 1. Edita `.env`:
+
    ```env
    NGROK_URL=https://abc123.ngrok-free.app
    ```
@@ -101,16 +104,17 @@ C:\Users\TU_USUARIO\ngrok\ngrok.exe http 4321
 ## 🧪 Testing
 
 ### 1. Abrir tienda
+
 http://localhost:4321/store
 
 ### 2. Usar tarjeta de prueba
 
-| Campo | Valor |
-|-------|-------|
-| Número | `5031 7557 3453 0604` |
-| Nombre | `APRO` |
-| CVV | `123` |
-| Vencimiento | `11/25` |
+| Campo       | Valor                 |
+| ----------- | --------------------- |
+| Número      | `5031 7557 3453 0604` |
+| Nombre      | `APRO`                |
+| CVV         | `123`                 |
+| Vencimiento | `11/25`               |
 
 ### 3. Verificar
 
@@ -127,15 +131,17 @@ http://localhost:4321/store
 **Causa:** Vite bloquea el host de ngrok
 
 **Solución:** Verifica `astro.config.mjs`:
+
 ```javascript
 export default defineConfig({
   vite: {
     server: {
-      allowedHosts: ['.ngrok-free.app', '.ngrok-free.dev']
-    }
-  }
+      allowedHosts: [".ngrok-free.app", ".ngrok-free.dev"],
+    },
+  },
 });
 ```
+
 Reinicia Astro después.
 
 ---
@@ -143,6 +149,7 @@ Reinicia Astro después.
 ### Webhooks no llegan
 
 **Checklist:**
+
 - [ ] Ngrok está corriendo (Terminal 2)
 - [ ] `NGROK_URL` en `.env` es correcta
 - [ ] Reiniciaste Astro después de configurar
@@ -161,6 +168,7 @@ Reinicia Astro después.
 ### URL de ngrok cambia cada vez
 
 **Normal en plan gratuito.** Cada vez que reinicies ngrok:
+
 1. Copia la nueva URL
 2. Actualiza `.env`
 3. Reinicia Astro
@@ -172,25 +180,31 @@ Reinicia Astro después.
 ## 📊 Archivos Clave
 
 ### `src/pages/api/create-preference.ts`
+
 Crea preferencia de pago en MercadoPago cuando usuario hace clic en "COMPRAR".
 
 **Importante:**
+
 - `notification_url` usa `NGROK_URL`
 - Define `back_urls` (success/failure/pending)
 - Incluye datos del `payer`
 
 ### `src/pages/api/webhook.ts`
+
 Recibe notificaciones de MercadoPago cuando se procesa el pago.
 
 **Importante:**
+
 - Siempre responde `200 OK`
 - Lee `body.topic` o `body.type`
 - Procesa según tipo: `payment` o `merchant_order`
 
 ### `astro.config.mjs`
+
 Configuración de Vite para permitir conexiones de ngrok.
 
 **Importante:**
+
 - Define `allowedHosts` con dominios de ngrok
 - Sin esto, Vite bloquea los webhooks
 
@@ -243,4 +257,4 @@ Cuando deploys (Vercel, Netlify, etc.):
 ---
 
 **Tecnologías:** Astro • MercadoPago • Ngrok  
-**Fecha:** Octubre 2025 
+**Fecha:** Octubre 2025
