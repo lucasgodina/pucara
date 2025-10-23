@@ -24,7 +24,7 @@ node ace serve --watch
 curl -X POST http://localhost:3333/login \
   -H "Content-Type: application/json" \
   -d '{
-    "email": "psammartino@pucaragaming.com.ar",
+    "email": "@pucaragaming.com.ar",
     "password": "admin123"
   }'
 ```
@@ -36,7 +36,7 @@ curl -X POST http://localhost:3333/login \
   "token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9...",
   "user": {
     "id": 1,
-    "email": "psammartino@pucaragaming.com.ar",
+    "email": "@pucaragaming.com.ar",
     "role": "admin"
   }
 }
@@ -196,7 +196,7 @@ curl -X POST http://localhost:3333/users \
   -H "Content-Type: application/json" \
   -d '{
     "username": "duplicado",
-    "email": "psammartino@pucaragaming.com.ar",
+    "email": "@pucaragaming.com.ar",
     "password": "password123",
     "role": "editor"
   }'

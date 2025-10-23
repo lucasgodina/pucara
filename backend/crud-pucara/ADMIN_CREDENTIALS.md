@@ -1,217 +1,128 @@
 # 🔐 Credenciales de Administrador
 
-## Información del Usuario Admin
+## ⚠️ IMPORTANTE - Seguridad
 
-Cuando ejecutas el comando `node ace db:seed`, se crea automáticamente un usuario administrador con las siguientes credenciales:
-
-### 📧 Credenciales por Defecto
-
-| Campo               | Valor                             |
-| ------------------- | --------------------------------- |
-| **Nombre completo** | `Administrador`                   |
-| **Email**           | `psammartino@pucaragaming.com.ar` |
-| **Contraseña**      | `admin123`                        |
+Las credenciales de administrador se configuran mediante **variables de entorno** para mayor seguridad.
 
 ---
 
-## 🔧 Cómo Modificar las Credenciales
+## 🚀 Configuración Inicial (Desarrollo)
 
-Si deseas cambiar el email o contraseña por defecto del administrador, debes editar el archivo del seeder:
+### 1. Configurar variables de entorno
 
-### Ubicación del archivo:
-
-```
-backend/crud-players-pucara/database/seeders/admin_seeder.ts
-```
-
-### Ejemplo de modificación:
-
-```typescript
-await User.create({
-  fullName: 'Tu Nombre', // ← Cambia el nombre
-  email: 'tumail@ejemplo.com', // ← Cambia el email
-  password: 'TuContraseñaSegura123', // ← Cambia la contraseña
-})
+Editá el archivo `.env` y configurá las credenciales:
+```env
+ADMIN_NAME=Tu Nombre
+ADMIN_EMAIL=tu-email@ejemplo.com
+ADMIN_PASSWORD=tu_password_seguro_aqui
 ```
 
----
-
-## 🚀 Cómo Ejecutar el Seeder
-
-### Primera vez (crear el usuario):
-
+### 2. Ejecutar el seeder
 ```bash
 node ace db:seed
 ```
 
-### Si ya existe el usuario:
+Esto creará automáticamente el usuario admin con las credenciales configuradas en `.env`.
 
-El seeder verificará automáticamente si el usuario ya existe usando el email. Si existe, no lo volverá a crear y mostrará el mensaje:
+---
 
+## 🔑 Credenciales por Defecto (si no configuraste el .env)
+
+Si no configuraste las variables de entorno, se usarán estos valores por defecto:
+
+- **Email:** `admin@pucara.local`
+- **Password:** `admin123`
+
+⚠️ **Estos valores son solo para desarrollo local. NUNCA uses credenciales por defecto en producción.**
+
+---
+
+## 🔒 Recomendaciones de Seguridad
+
+### Para Desarrollo:
+1. ✅ Usa credenciales diferentes a las de producción
+2. ✅ No compartas tu archivo `.env` (está en `.gitignore`)
+3. ✅ Usa passwords de al menos 8 caracteres
+
+### Para Producción:
+1. 🔴 **OBLIGATORIO:** Cambia todas las credenciales por defecto
+2. 🔴 **OBLIGATORIO:** Usa passwords fuertes (mínimo 16 caracteres)
+3. 🔴 **OBLIGATORIO:** Usa emails reales y seguros
+4. 🔴 Considera usar autenticación de dos factores (2FA)
+5. 🔴 Usa variables de entorno del servidor (no el archivo `.env`)
+
+### Ejemplo de password seguro:
 ```
-ℹ️  Usuario Admin ya existe
+# Malo (NUNCA uses esto)
+admin123
+
+# Bueno
+P@ssw0rd!2024$Pucara
+
+# Mejor
+K8x#mQ2$vL9@pN4&wR7^eT1!zY6
 ```
 
-### Para recrear el usuario (si necesitas cambiar las credenciales):
+---
 
-**Opción 1: Eliminar el usuario desde la base de datos**
+## 🔄 Cómo Recrear el Usuario Admin
 
+Si necesitas cambiar las credenciales:
+
+### Opción 1: Eliminar y recrear (Desarrollo)
 ```bash
-# Conectarte a SQLite
-sqlite3 database/pucara.sqlite
-
-# Eliminar el usuario
-DELETE FROM users WHERE email = 'psammartino@pucaragaming.com.ar';
-
-# Salir
-.exit
-```
-
-Luego ejecuta nuevamente:
-
-```bash
-node ace db:seed
-```
-
-**Opción 2: Recrear toda la base de datos (CUIDADO: Elimina todos los datos)**
-
-```bash
-# Eliminar todas las tablas
+# 1. Eliminar base de datos completa
 node ace migration:rollback
 
-# Recrear las tablas
+# 2. Recrear tablas
 node ace migration:run
 
-# Crear el usuario admin
+# 3. Editar .env con nuevas credenciales
+
+# 4. Crear usuario admin
 node ace db:seed
 ```
 
----
-
-## 🔐 Seguridad - Recomendaciones
-
-### ⚠️ IMPORTANTE para Producción:
-
-1. **Nunca uses credenciales por defecto en producción**
-2. **Cambia la contraseña inmediatamente después del primer login**
-3. **Usa contraseñas fuertes** (mínimo 12 caracteres, con letras, números y símbolos)
-4. **Usa variables de entorno** para las credenciales sensibles
-
-### Ejemplo usando variables de entorno:
-
-#### 1. Agregar al archivo `.env`:
-
-```env
-ADMIN_NAME=Administrador
-ADMIN_EMAIL=admin@tupucaragaming.com
-ADMIN_PASSWORD=SuperContraseñaSegura123!
-```
-
-#### 2. Actualizar el archivo `start/env.ts`:
-
-```typescript
-export default await Env.create(new URL('../', import.meta.url), {
-  // ... otras variables
-  ADMIN_NAME: Env.schema.string.optional(),
-  ADMIN_EMAIL: Env.schema.string.optional(),
-  ADMIN_PASSWORD: Env.schema.string.optional(),
-})
-```
-
-#### 3. Modificar el seeder:
-
-```typescript
-import User from '#models/user'
-import env from '#start/env'
-
-export default class AdminSeeder {
-  public async run() {
-    const adminEmail = env.get('ADMIN_EMAIL', 'psammartino@pucaragaming.com.ar')
-    const existingUser = await User.findBy('email', adminEmail)
-
-    if (existingUser) {
-      console.log('ℹ️  Usuario Admin ya existe')
-      return
-    }
-
-    await User.create({
-      fullName: env.get('ADMIN_NAME', 'Administrador'),
-      email: adminEmail,
-      password: env.get('ADMIN_PASSWORD', 'admin123'),
-    })
-
-    console.log('✅ Usuario Admin creado exitosamente')
-  }
-}
-```
-
----
-
-## 📝 Login en la API
-
-Para autenticarte con estas credenciales, usa el endpoint de login:
-
-### Endpoint:
-
-```
-POST http://localhost:3333/login
-```
-
-### Body (JSON):
-
-```json
-{
-  "email": "psammartino@pucaragaming.com.ar",
-  "password": "admin123"
-}
-```
-
-### Respuesta esperada:
-
-```json
-{
-  "type": "bearer",
-  "value": "oat_xxx...",
-  "user": {
-    "id": 1,
-    "fullName": "Administrador",
-    "email": "psammartino@pucaragaming.com.ar",
-    "createdAt": "2025-10-19T..."
-  }
-}
-```
-
----
-
-## 🔄 Cambiar Contraseña después del Login
-
-Aunque actualmente no hay un endpoint específico para cambiar contraseña, puedes agregarlo o cambiarla directamente en la base de datos.
-
-### Cambio manual en SQLite:
-
-```bash
-sqlite3 database/pucara.sqlite
-
-# Ver el hash actual
-SELECT password FROM users WHERE email = 'psammartino@pucaragaming.com.ar';
-```
-
-Para cambiar la contraseña de forma segura, es mejor usar un endpoint de la API o el Tinker de AdonisJS:
-
+### Opción 2: Cambiar password con Tinker
 ```bash
 node ace tinker
 ```
 
-Luego en el REPL:
-
+Luego ejecutá:
 ```javascript
-const User = await import('#models/user')
-const user = await User.default.findBy('email', 'psammartino@pucaragaming.com.ar')
-user.password = 'NuevaContraseñaSegura123!'
+const User = (await import('#models/user')).default
+const user = await User.findBy('email', 'tu-email@ejemplo.com')
+user.password = 'nueva_password_segura'
 await user.save()
+console.log('✅ Password actualizado')
 ```
 
+Salir con `.exit`
+
 ---
+
+## 📚 Más Información
+
+- Las credenciales se configuran en: `backend-crud-pucara/.env`
+- El seeder está en: `database/seeders/admin_seeder.ts`
+- Nunca subas el archivo `.env` a git (ya está en `.gitignore`)
+
+---
+
+## ❓ Troubleshooting
+
+**Error: "Usuario Admin ya existe"**
+- El seeder detectó que ya hay un usuario con ese email
+- Si querés recrearlo, eliminá el usuario existente primero
+
+**No puedo hacer login**
+- Verificá que el servidor backend esté corriendo (`node ace serve --watch`)
+- Verificá que las credenciales en `.env` coincidan con las que estás usando
+- Revisá los logs del servidor para ver errores
+
+**Olvidé mi password**
+- Usá la Opción 2 (Tinker) para cambiarla
+- O eliminá la base de datos y recreala (perderás todos los datos)
 
 ## 📚 Recursos Adicionales
 

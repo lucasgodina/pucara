@@ -176,7 +176,7 @@ router
 ```typescript
 await User.create({
   fullName: "Administrador",
-  email: "psammartino@pucaragaming.com.ar",
+  email: "admin@example.com",
   password: "admin123",
 });
 ```
@@ -370,7 +370,7 @@ npm run build:admin
 | --------------- | --------------------- | ------------------------------------------------------------ |
 | **Backend API** | http://localhost:3333 | -                                                            |
 | **Frontend**    | http://localhost:3000 | -                                                            |
-| **Admin Login** | -                     | email: `psammartino@pucaragaming.com.ar`<br>pass: `admin123` |
+| **Admin Login** | -                     | email: `admin@example.com`<br>pass: `admin123` |
 
 ---
 

@@ -31,7 +31,7 @@ Se realizó la migración completa de MySQL a SQLite3 y se ejecutaron pruebas ma
 
 ```json
 {
-  "email": "psammartino@pucaragaming.com.ar",
+  "email": "@pucaragaming.com.ar",
   "password": "admin123"
 }
 ```
@@ -45,7 +45,7 @@ Se realizó la migración completa de MySQL a SQLite3 y se ejecutaron pruebas ma
   "user": {
     "id": 1,
     "fullName": "Administrador",
-    "email": "psammartino@pucaragaming.com.ar"
+    "email": "@pucaragaming.com.ar"
   }
 }
 ```
@@ -63,7 +63,7 @@ Se realizó la migración completa de MySQL a SQLite3 y se ejecutaron pruebas ma
 {
   "id": 1,
   "fullName": "Administrador",
-  "email": "psammartino@pucaragaming.com.ar",
+  "email": "@pucaragaming.com.ar",
   "createdAt": "2025-10-20T00:50:57.000+00:00",
   "updatedAt": "2025-10-20T00:50:57.000+00:00"
 }
@@ -240,7 +240,7 @@ Se realizó la migración completa de MySQL a SQLite3 y se ejecutaron pruebas ma
 
 ```powershell
 # 1. Login
-$body = @{ email = "psammartino@pucaragaming.com.ar"; password = "admin123" } | ConvertTo-Json
+$body = @{ email = "@pucaragaming.com.ar"; password = "admin123" } | ConvertTo-Json
 Invoke-RestMethod -Uri "http://localhost:3333/api/v1/auth/login" -Method POST -Body $body -ContentType "application/json"
 
 # 2. Obtener usuario actual

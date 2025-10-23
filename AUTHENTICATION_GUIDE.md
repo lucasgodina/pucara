@@ -36,7 +36,7 @@ Después de ejecutar `node ace db:seed`, se crea un usuario administrador:
 | Campo               | Valor                             |
 | ------------------- | --------------------------------- |
 | **Nombre Completo** | `Administrador`                   |
-| **Email**           | `psammartino@pucaragaming.com.ar` |
+| **Email**           | `admin@example.com` |
 | **Contraseña**      | `admin123`                        |
 
 ### ⚠️ IMPORTANTE
@@ -111,7 +111,7 @@ POST /api/v1/auth/login
 Content-Type: application/json
 
 {
-  "email": "psammartino@pucaragaming.com.ar",
+  "email": "admin@example.com",
   "password": "admin123"
 }
 ```
@@ -125,7 +125,7 @@ Content-Type: application/json
   "user": {
     "id": 1,
     "fullName": "Administrador",
-    "email": "psammartino@pucaragaming.com.ar"
+    "email": "admin@example.com"
   }
 }
 ```
@@ -179,7 +179,7 @@ Authorization: Bearer {token}
 {
   "id": 1,
   "fullName": "Administrador",
-  "email": "psammartino@pucaragaming.com.ar",
+  "email": "admin@example.com",
   "createdAt": "2025-10-20T00:50:57.000+00:00",
   "updatedAt": "2025-10-20T00:50:57.000+00:00"
 }
@@ -208,7 +208,7 @@ Authorization: Bearer {token}
 
 1. **Abrir el navegador:** http://localhost:3000
 2. **Ingresar credenciales:**
-   - **Username/Email:** `psammartino@pucaragaming.com.ar`
+   - **Username/Email:** `admin@example.com`
    - **Password:** `admin123`
 3. **Click en "Sign in"**
 
@@ -217,7 +217,7 @@ Authorization: Bearer {token}
 ```powershell
 # PowerShell
 $body = @{
-    email = "psammartino@pucaragaming.com.ar"
+    email = "admin@example.com"
     password = "admin123"
 } | ConvertTo-Json
 
@@ -236,7 +236,7 @@ $response.value
 curl -X POST http://localhost:3333/api/v1/auth/login \
   -H "Content-Type: application/json" \
   -d '{
-    "email": "psammartino@pucaragaming.com.ar",
+    "email": "admin@example.com",
     "password": "admin123"
   }'
 ```
@@ -251,7 +251,7 @@ curl -X POST http://localhost:3333/api/v1/auth/login \
 
 ```json
 {
-  "email": "psammartino@pucaragaming.com.ar",
+  "email": "admin@example.com",
   "password": "admin123"
 }
 ```
@@ -277,7 +277,7 @@ sqlite3 database/pucara.sqlite
 ```
 
 ```sql
-SELECT * FROM users WHERE email = 'psammartino@pucaragaming.com.ar';
+SELECT * FROM users WHERE email = 'admin@example.com';
 .exit
 ```
 
@@ -290,7 +290,7 @@ node ace db:seed
 
 ✅ **Verificar que el email es correcto:**
 
-- Debe ser exactamente: `psammartino@pucaragaming.com.ar`
+- Debe ser exactamente: `admin@example.com`
 - No usar username, usar el email completo
 
 ✅ **Verificar que la contraseña es correcta:**
@@ -596,7 +596,7 @@ Antes de reportar un problema de login, verifica:
 - [ ] Frontend está corriendo en http://localhost:3000
 - [ ] Usuario admin fue creado con `node ace db:seed`
 - [ ] Estás usando el EMAIL, no un username
-- [ ] Email es exactamente: `psammartino@pucaragaming.com.ar`
+- [ ] Email es exactamente: `admin@example.com`
 - [ ] Contraseña es exactamente: `admin123`
 - [ ] El `authProvider` tiene las URLs correctas
 - [ ] El `authProvider` usa `data.value` para el token
