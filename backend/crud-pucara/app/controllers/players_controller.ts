@@ -1,14 +1,8 @@
-import type { HttpContext } from '@adonisjs/core/http'
 import Player from '#models/player'
 import Team from '#models/team'
+import { createPlayerValidator, playerFiltersValidator } from '#validators/player_validator'
+import type { HttpContext } from '@adonisjs/core/http'
 import { v4 as uuidv4 } from 'uuid'
-import {
-  createPlayerValidator,
-  updatePlayerValidator,
-  playerIdValidator,
-  assignTeamValidator,
-  playerFiltersValidator,
-} from '#validators/player_validator'
 
 export default class PlayersController {
   /**
@@ -76,6 +70,10 @@ export default class PlayersController {
       const player = new Player()
       player.playerId = uuidv4()
       player.name = data.name
+      player.age = data.age || null
+      player.role = data.role || null
+      player.country = data.country || '🇦🇷 Argentina'
+      player.instagram = data.instagram || null
       player.teamId = data.team_id || null
       player.bio = data.bio || null
       player.stats = data.stats || null
@@ -153,7 +151,17 @@ export default class PlayersController {
 
       console.log('Current player data:', player.toJSON())
 
-      const data = request.only(['name', 'team_id', 'bio', 'stats', 'photo_url'])
+      const data = request.only([
+        'name',
+        'age',
+        'role',
+        'country',
+        'instagram',
+        'team_id',
+        'bio',
+        'stats',
+        'photo_url',
+      ])
       console.log('Extracted data:', data)
 
       // Validate team exists if team_id is provided (and not null)
@@ -172,6 +180,10 @@ export default class PlayersController {
 
       // Update only provided fields
       if (data.name !== undefined) player.name = data.name
+      if (data.age !== undefined) player.age = data.age
+      if (data.role !== undefined) player.role = data.role
+      if (data.country !== undefined) player.country = data.country
+      if (data.instagram !== undefined) player.instagram = data.instagram
       if (data.team_id !== undefined) {
         console.log('Updating teamId from', player.teamId, 'to', data.team_id)
         player.teamId = data.team_id

@@ -3,12 +3,18 @@
   "private": true,
   "version": "0.1.0",
   "scripts": {
+    "dev": "npm run dev:all",
     "dev:api": "npm run dev --prefix backend/crud-pucara",
     "dev:admin": "npm start --prefix frontend/admin-frontend",
-    "dev:all": "concurrently -n api,admin -c green,blue \"npm run dev:api\" \"npm run dev:admin\"",
-    "install:all": "npm install --prefix backend/crud-pucara && npm install --prefix frontend/admin-frontend",
+    "dev:landing": "npm run dev --prefix frontend/landing",
+    "dev:all": "concurrently -n api,admin,landing -c green,blue,magenta \"npm run dev:api\" \"npm run dev:admin\" \"npm run dev:landing\"",
+    "install:all": "npm install --prefix backend/crud-pucara && npm install --prefix frontend/admin-frontend && npm install --prefix frontend/landing",
+    "build": "npm run build:all",
     "build:api": "npm run build --prefix backend/crud-pucara",
-    "build:admin": "npm run build --prefix frontend/admin-frontend"
+    "build:admin": "npm run build --prefix frontend/admin-frontend",
+    "build:landing": "npm run build --prefix frontend/landing",
+    "build:all": "npm run build:api && npm run build:admin && npm run build:landing",
+    "preview:landing": "npm run preview --prefix frontend/landing"
   },
   "devDependencies": {
     "concurrently": "^8.2.2"

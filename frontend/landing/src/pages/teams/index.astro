@@ -3,7 +3,7 @@ import Layout from "../../layouts/Layout.astro";
 import { getAllTeams } from "../../data/teams";
 
 // Obtener todos los equipos desde el archivo de datos centralizado
-const teams = getAllTeams();
+const teams = await getAllTeams();
 ---
 
 <Layout 
@@ -29,18 +29,18 @@ const teams = getAllTeams();
              role="region" 
              aria-label="Lista de equipos de Pucará Gaming">
       {teams.map((team) => (
-        <a href={`/teams/${team.id}`} 
-           class="group relative rounded-2xl overflow-hidden shadow-2xl hover:scale-[1.02] transition-all duration-500 border border-white/10 hover:border-primary/60 md:w-[628px] md:h-[229px] mx-auto"
+      <a href={`/teams/${team.id}`} 
+        class="group relative rounded-2xl overflow-hidden shadow-2xl hover:scale-[1.02] transition-all duration-500 border border-white/10 hover:border-primary/60 w-full mx-auto"
            aria-label={`Ver equipo de ${team.nombre}`}
            role="article">
               
               <!-- Background Image Container -->
-              <div class="relative h-48 sm:h-56 md:h-[229px] overflow-hidden">
+          <div class="relative h-48 sm:h-56 md:h-auto md:aspect-[628/229] overflow-hidden">
                 <img 
                   src={team.imagen} 
                   alt={team.nombre} 
-                  width="628"
-                  height="229"
+            width="1200"
+            height="450"
                   loading="lazy"
                   class="w-full h-full object-cover object-center filter grayscale group-hover:grayscale-0 transition-all duration-700 group-hover:scale-110" 
                 />
@@ -50,7 +50,11 @@ const teams = getAllTeams();
                 
                 <!-- Content Overlay -->
                 <div class="absolute inset-0 flex flex-col justify-center items-center text-center p-6">
-                  <!-- Sin contenido, solo efectos visuales -->
+                  {team.imagen === "/pucarahero.png" && (
+                    <span class="text-white text-3xl md:text-4xl font-extrabold drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)] bg-black/40 px-4 py-2 rounded-lg tracking-wide">
+                      {team.nombre}
+                    </span>
+                  )}
                 </div>
                 
                 <!-- Glow Effect -->

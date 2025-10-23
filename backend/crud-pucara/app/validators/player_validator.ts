@@ -6,6 +6,10 @@ import vine from '@vinejs/vine'
 export const createPlayerValidator = vine.compile(
   vine.object({
     name: vine.string().minLength(1).maxLength(255),
+    age: vine.number().min(0).max(150).optional().nullable(),
+    role: vine.string().maxLength(100).optional().nullable(),
+    country: vine.string().maxLength(100).optional().nullable(),
+    instagram: vine.string().maxLength(100).optional().nullable(),
     team_id: vine.string().uuid().optional().nullable(),
     bio: vine.string().optional().nullable(),
     stats: vine.record(vine.string()).optional().nullable(),
@@ -19,6 +23,10 @@ export const createPlayerValidator = vine.compile(
 export const updatePlayerValidator = vine.compile(
   vine.object({
     name: vine.string().minLength(1).maxLength(255).optional(),
+    age: vine.number().min(0).max(150).optional().nullable(),
+    role: vine.string().maxLength(100).optional().nullable(),
+    country: vine.string().maxLength(100).optional().nullable(),
+    instagram: vine.string().maxLength(100).optional().nullable(),
     team_id: vine.string().uuid().optional().nullable(),
     bio: vine.string().optional().nullable(),
     stats: vine.record(vine.string()).optional().nullable(),
