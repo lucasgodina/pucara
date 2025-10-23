@@ -79,3 +79,28 @@ Si querés consumir solo lectura desde otro frontend (por ejemplo Astro), usá e
 
 - `backend/crud-pucara/docs/guia-integracion-frontend.md`
 - `backend/crud-pucara/docs/guia-consumo-astro.md`
+
+
+## 🔐 Configuración de Secretos
+
+Este proyecto NO incluye credenciales ni API keys en el código fuente. Debes configurar tus propias variables de entorno.
+
+### Backend
+
+1. Copiá el archivo de ejemplo:
+```bash
+   cd backend-crud-pucara
+   cp .env.example .env
+```
+
+2. Editá `.env` y configurá:
+   - `APP_KEY`: Generá uno con `node ace generate:key`
+   - `ADMIN_EMAIL`: Tu email de administrador
+   - `ADMIN_PASSWORD`: Una contraseña segura (mínimo 8 caracteres)
+
+3. Creá el usuario admin:
+```bash
+   node ace db:seed
+```
+
+⚠️ **IMPORTANTE:** Nunca subas el archivo `.env` a git. Ya está incluido en `.gitignore`.
