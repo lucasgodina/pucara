@@ -1,6 +1,6 @@
-import { DateTime } from 'luxon'
-import { BaseModel, column, belongsTo } from '@adonisjs/lucid/orm'
+import { BaseModel, belongsTo, column } from '@adonisjs/lucid/orm'
 import type { BelongsTo } from '@adonisjs/lucid/types/relations'
+import { DateTime } from 'luxon'
 import Team from './team.js'
 
 export default class Player extends BaseModel {
@@ -9,6 +9,18 @@ export default class Player extends BaseModel {
 
   @column()
   declare name: string
+
+  @column()
+  declare age: number | null
+
+  @column()
+  declare role: string | null
+
+  @column()
+  declare country: string | null
+
+  @column()
+  declare instagram: string | null
 
   @column()
   declare bio: string | null

@@ -1,25 +1,23 @@
-import React from 'react'
+import { Chip } from '@mui/material'
 import {
-  List,
-  Datagrid,
-  TextField,
-  DateField,
-  Create,
-  SimpleForm,
-  TextInput,
-  Edit,
-  Show,
-  SimpleShowLayout,
-  ReferenceField,
-  FunctionField,
-  DeleteButton,
-  EditButton,
-  ShowButton,
-  CreateButton,
-  TopToolbar,
-  ExportButton,
+    Create,
+    CreateButton,
+    Datagrid,
+    DateField,
+    DeleteButton,
+    Edit,
+    EditButton,
+    ExportButton,
+    FunctionField,
+    List,
+    Show,
+    ShowButton,
+    SimpleForm,
+    SimpleShowLayout,
+    TextField,
+    TextInput,
+    TopToolbar
 } from 'react-admin'
-import { Card, CardContent, Typography, Chip } from '@mui/material'
 
 // Componente personalizado para mostrar logros
 const AchievementsField = ({ record }: { record?: any }) => {
@@ -74,6 +72,9 @@ export const TeamCreate = () => (
   <Create>
     <SimpleForm>
       <TextInput source="name" label="Nombre del Equipo" required fullWidth />
+      <TextInput source="slug" label="Slug (URL amigable)" helperText="Ej: dota-2, street-fighter" fullWidth />
+      <TextInput source="emoji" label="Emoji" helperText="Ej: 🎮, 🛡️, 👊" fullWidth />
+      <TextInput source="bannerUrl" label="URL del Banner" helperText="URL de la imagen del banner" fullWidth />
       <TextInput source="description" label="Descripción" multiline rows={3} fullWidth />
       <TextInput
         source="achievements"
@@ -105,6 +106,9 @@ export const TeamEdit = () => (
   <Edit>
     <SimpleForm>
       <TextInput source="name" label="Nombre del Equipo" required fullWidth />
+      <TextInput source="slug" label="Slug (URL amigable)" helperText="Ej: dota-2, street-fighter" fullWidth />
+      <TextInput source="emoji" label="Emoji" helperText="Ej: 🎮, 🛡️, 👊" fullWidth />
+      <TextInput source="bannerUrl" label="URL del Banner" helperText="URL de la imagen del banner" fullWidth />
       <TextInput source="description" label="Descripción" multiline rows={3} fullWidth />
       <TextInput
         source="achievements"

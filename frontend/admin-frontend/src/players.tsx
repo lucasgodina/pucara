@@ -1,27 +1,26 @@
-import React from 'react'
+import { Avatar, Chip } from '@mui/material'
 import {
-  List,
-  Datagrid,
-  TextField,
-  DateField,
-  Create,
-  SimpleForm,
-  TextInput,
-  Edit,
-  Show,
-  SimpleShowLayout,
-  ReferenceField,
-  SelectInput,
-  FunctionField,
-  DeleteButton,
-  EditButton,
-  ShowButton,
-  CreateButton,
-  TopToolbar,
-  ExportButton,
-  useGetList,
+    Create,
+    CreateButton,
+    Datagrid,
+    DateField,
+    DeleteButton,
+    Edit,
+    EditButton,
+    ExportButton,
+    FunctionField,
+    List,
+    ReferenceField,
+    SelectInput,
+    Show,
+    ShowButton,
+    SimpleForm,
+    SimpleShowLayout,
+    TextField,
+    TextInput,
+    TopToolbar,
+    useGetList,
 } from 'react-admin'
-import { Chip, Avatar } from '@mui/material'
 
 // Componente personalizado para el selector de equipos
 const TeamSelectInput = (props: any) => {
@@ -139,6 +138,25 @@ export const PlayerCreate = () => (
     <SimpleForm>
       <TextInput source="name" label="Nombre del Jugador" required fullWidth />
       <TeamSelectInput source="teamId" label="Asignar Equipo" fullWidth />
+      <TextInput source="age" label="Edad" type="number" fullWidth helperText="Edad del jugador" />
+      <TextInput
+        source="role"
+        label="Rol"
+        fullWidth
+        helperText="Ej: Top, Jungle, Mid, ADC, Support"
+      />
+      <TextInput
+        source="country"
+        label="País"
+        fullWidth
+        helperText="Ej: 🇦🇷 Argentina, 🇧🇷 Brasil"
+      />
+      <TextInput
+        source="instagram"
+        label="Instagram"
+        fullWidth
+        helperText="Usuario de Instagram (sin @)"
+      />
       <TextInput source="bio" label="Biografía" multiline rows={3} fullWidth />
       <TextInput source="photoUrl" label="URL de Foto" type="url" fullWidth />
       <TextInput
@@ -172,6 +190,25 @@ export const PlayerEdit = () => (
     <SimpleForm>
       <TextInput source="name" label="Nombre del Jugador" required fullWidth />
       <TeamSelectInput source="teamId" label="Reasignar Equipo" fullWidth />
+      <TextInput source="age" label="Edad" type="number" fullWidth helperText="Edad del jugador" />
+      <TextInput
+        source="role"
+        label="Rol"
+        fullWidth
+        helperText="Ej: Top, Jungle, Mid, ADC, Support"
+      />
+      <TextInput
+        source="country"
+        label="País"
+        fullWidth
+        helperText="Ej: 🇦🇷 Argentina, 🇧🇷 Brasil"
+      />
+      <TextInput
+        source="instagram"
+        label="Instagram"
+        fullWidth
+        helperText="Usuario de Instagram (sin @)"
+      />
       <TextInput source="bio" label="Biografía" multiline rows={3} fullWidth />
       <TextInput source="photoUrl" label="URL de Foto" type="url" fullWidth />
       <TextInput

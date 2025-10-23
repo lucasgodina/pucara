@@ -1,11 +1,11 @@
-import type { HttpContext } from '@adonisjs/core/http'
 import Team from '#models/team'
-import { v4 as uuidv4 } from 'uuid'
 import {
   createTeamValidator,
-  updateTeamValidator,
   teamIdValidator,
+  updateTeamValidator,
 } from '#validators/team_validator'
+import type { HttpContext } from '@adonisjs/core/http'
+import { v4 as uuidv4 } from 'uuid'
 
 export default class TeamsController {
   /**
@@ -42,6 +42,9 @@ export default class TeamsController {
       const team = new Team()
       team.teamId = uuidv4()
       team.name = data.name
+      team.slug = data.slug || null
+      team.emoji = data.emoji || '🎮'
+      team.bannerUrl = data.banner_url || null
       team.description = data.description || null
       team.achievements = data.achievements || null
 
@@ -136,6 +139,9 @@ export default class TeamsController {
 
       // Update only provided fields
       if (data.name !== undefined) team.name = data.name
+      if (data.slug !== undefined) team.slug = data.slug
+      if (data.emoji !== undefined) team.emoji = data.emoji
+      if (data.banner_url !== undefined) team.bannerUrl = data.banner_url
       if (data.description !== undefined) team.description = data.description
       if (data.achievements !== undefined) team.achievements = data.achievements
 

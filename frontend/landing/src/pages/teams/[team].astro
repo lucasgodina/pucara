@@ -7,14 +7,15 @@ const { team } = Astro.params;
 
 // Función para generar rutas estáticas
 export async function getStaticPaths() {
-  return getTeamStaticPaths();
+  return await getTeamStaticPaths();
 }
 
 // Prerenderizar esta página como HTML estático
-export const prerender = true;
+// No prerender to avoid build-time dependency on backend API
+export const prerender = false;
 
 // Obtener el equipo actual desde los datos centralizados
-const currentTeam = getTeamById(team as string);
+const currentTeam = await getTeamById(team as string);
 
 if (!currentTeam) {
   return new Response(null, {

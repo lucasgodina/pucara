@@ -1,6 +1,6 @@
-import { DateTime } from 'luxon'
 import { BaseModel, column, hasMany } from '@adonisjs/lucid/orm'
 import type { HasMany } from '@adonisjs/lucid/types/relations'
+import { DateTime } from 'luxon'
 import Player from './player.js'
 
 export default class Team extends BaseModel {
@@ -9,6 +9,15 @@ export default class Team extends BaseModel {
 
   @column()
   declare name: string
+
+  @column()
+  declare slug: string | null
+
+  @column()
+  declare emoji: string | null
+
+  @column({ columnName: 'banner_url' })
+  declare bannerUrl: string | null
 
   @column()
   declare description: string | null

@@ -1,3 +1,6 @@
+import { apiGet, type ApiResponse } from "./api";
+
+// UI-facing types kept for compatibility with current components
 export interface Player {
   nombre: string;
   edad: number;
@@ -8,7 +11,7 @@ export interface Player {
 }
 
 export interface Team {
-  id: string;
+  id: string; // slug used in routes (generated from name)
   nombre: string;
   emoji: string;
   bgClass: string;
@@ -17,158 +20,126 @@ export interface Team {
   players: Player[];
 }
 
-export const teamsData: Record<string, Team> = {
-  "dota-2": {
-    id: "dota-2",
-    nombre: "DOTA 2",
-    emoji: "🛡️",
+// Backend API types
+export interface ApiTeam {
+  teamId: string;
+  name: string;
+  slug: string | null;
+  emoji: string | null;
+  bannerUrl: string | null;
+  description: string | null;
+  achievements: Record<string, string> | null;
+}
+
+export interface ApiPlayer {
+  playerId: string;
+  name: string;
+  age: number | null;
+  role: string | null;
+  country: string | null;
+  instagram: string | null;
+  bio: string | null;
+  stats: Record<string, string> | null;
+  photoUrl: string | null;
+  teamId: string | null;
+}
+
+function slugify(input: string): string {
+  return input
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/\p{Diacritic}+/gu, "")
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/(^-|-$)/g, "");
+}
+
+function mapApiPlayerToUi(p: ApiPlayer): Player {
+  return {
+    nombre: p.name,
+    edad: p.age ?? 0,
+    nacionalidad: p.country ?? "🇦🇷 Argentina",
+    rol: p.role ?? "Jugador",
+    instagram: p.instagram ?? "",
+    imagen: p.photoUrl || "/players/default.jpg",
+  };
+}
+
+function mapApiTeamToUi(t: ApiTeam, players: ApiPlayer[] = []): Team {
+  const slug = t.slug || slugify(t.name);
+  return {
+    id: slug,
+    nombre: t.name,
+    emoji: t.emoji || "🎮",
     bgClass: "bg-primary-subtle",
-    descripcion: "Nuestro equipo de DOTA 2 compite en los torneos más importantes de Argentina y Latinoamérica.",
-    imagen: "/D2banner.png",
-    players: [
-      { 
-        nombre: "Jugador 1", 
-        edad: 24, 
-        nacionalidad: "🇦🇷 Argentina", 
-        rol: "Carry", 
-        instagram: "jugador1", 
-        imagen: "https://via.placeholder.com/300x300/2d2d2d/ea601a?text=Jugador+1" 
-      },
-      { 
-        nombre: "Jugador 2", 
-        edad: 26, 
-        nacionalidad: "🇦🇷 Argentina", 
-        rol: "Support", 
-        instagram: "jugador2", 
-        imagen: "https://via.placeholder.com/300x300/2d2d2d/ea601a?text=Jugador+2" 
-      },
-      { 
-        nombre: "Jugador 3", 
-        edad: 22, 
-        nacionalidad: "🇺🇾 Uruguay", 
-        rol: "Mid", 
-        instagram: "jugador3", 
-        imagen: "https://via.placeholder.com/300x300/2d2d2d/ea601a?text=Jugador+3" 
-      },
-      { 
-        nombre: "Jugador 4", 
-        edad: 25, 
-        nacionalidad: "🇦🇷 Argentina", 
-        rol: "Offlane", 
-        instagram: "jugador4", 
-        imagen: "https://via.placeholder.com/300x300/2d2d2d/ea601a?text=Jugador+4" 
-      },
-      { 
-        nombre: "Jugador 5", 
-        edad: 23, 
-        nacionalidad: "🇦🇷 Argentina", 
-        rol: "Support", 
-        instagram: "jugador5", 
-        imagen: "https://via.placeholder.com/300x300/2d2d2d/ea601a?text=Jugador+5" 
-      }
-    ]
-  },
-  "street-fighter": {
-    id: "street-fighter",
-    nombre: "STREET FIGHTER",
-    emoji: "👊",
-    bgClass: "bg-primary-subtle",
-    descripcion: "Nuestro especialista en Street Fighter compite en torneos presenciales y online representando a Pucará Gaming.",
-    imagen: "/SFbanner.png",
-    players: [
-      { 
-        nombre: "Neokyo", 
-        edad: 28, 
-        nacionalidad: "🇦🇷 Argentina", 
-        rol: "Fighter", 
-        instagram: "dgoitea", 
-        imagen: "/players/neokyo.webp" 
-      }
-    ]
-  },
-  "fifa": {
-    id: "fifa",
-    nombre: "FIFA",
-    emoji: "⚽",
-    bgClass: "bg-primary-subtle",
-    descripcion: "Nuestro jugador de FIFA compite en las ligas más competitivas del fútbol virtual argentino.",
-    imagen: "/FC25banner.png",
-    players: [
-      { 
-        nombre: "Jugador FIFA", 
-        edad: 21, 
-        nacionalidad: "🇦🇷 Argentina", 
-        rol: "Pro Player", 
-        instagram: "jugadorfifa", 
-        imagen: "https://via.placeholder.com/300x300/2d2d2d/ea601a?text=Jugador+FIFA" 
-      }
-    ]
-  },
-  "chaotic-cards": {
-    id: "chaotic-cards",
-    nombre: "CHAOTIC CARDS",
-    emoji: "🃏",
-    bgClass: "bg-primary-subtle",
-    descripcion: "Nuestro equipo de jovenes desarrolladores y creadores del grandioso juego Chaotic Cards.",
-    imagen: "/GGbanner.png",
-    players: [
-      { 
-        nombre: "Franco Balella", 
-        edad: 24, 
-        nacionalidad: "🇦🇷 Argentina", 
-        rol: "Full-Stack", 
-        instagram: "jugador1", 
-        imagen: "https://via.placeholder.com/300x300/2d2d2d/ea601a?text=Jugador+1" 
-      },
-      { 
-        nombre: "Eduardo Soto", 
-        edad: 26, 
-        nacionalidad: "🇦🇷 Argentina", 
-        rol: "Full-Stack", 
-        instagram: "jugador2", 
-        imagen: "https://via.placeholder.com/300x300/2d2d2d/ea601a?text=Jugador+2" 
-      },
-      { 
-        nombre: "Brandon Ayaviri", 
-        edad: 20,
-        nacionalidad: "🇦🇷 Argentina", 
-        rol: "Full-Stack", 
-        instagram: "jugador3", 
-        imagen: "https://via.placeholder.com/300x300/2d2d2d/ea601a?text=Jugador+3" 
-      },
-      { 
-        nombre: "Lucas Muñoz", 
-        edad: 22,
-        nacionalidad: "🇦🇷 Argentina", 
-        rol: "Full-Stack", 
-        instagram: "jugador4", 
-        imagen: "https://via.placeholder.com/300x300/2d2d2d/ea601a?text=Jugador+4" 
-      },
-      { 
-        nombre: "Fabio Gomez", 
-        edad: 20,
-        nacionalidad: "🇦🇷 Argentina",
-        rol: "Full-Stack", 
-        instagram: "jugador5", 
-        imagen: "https://via.placeholder.com/300x300/2d2d2d/ea601a?text=Jugador+5" 
-      }
-    ]
+    descripcion: t.description || "",
+    imagen: t.bannerUrl || "/pucarahero.png",
+    players: players.map(mapApiPlayerToUi),
+  };
+}
+
+/**
+ * Fetch all teams from backend.
+ * Note: index endpoint returns wrapped payload { success, message, data }
+ */
+async function fetchAllTeams(): Promise<ApiTeam[]> {
+  const res = await apiGet<ApiResponse<ApiTeam[]>>("/api/v1/teams");
+  return res?.data || [];
+}
+
+/**
+ * Fetch a single team with its players from backend.
+ */
+async function fetchTeamWithPlayers(
+  teamId: string
+): Promise<{ team: ApiTeam | null; players: ApiPlayer[] }> {
+  const res = await apiGet<ApiResponse<ApiTeam & { players: ApiPlayer[] }>>(
+    `/api/v1/teams/${teamId}`
+  );
+  const data = res?.data;
+  if (!data) return { team: null, players: [] };
+  const { players, ...team } = data as unknown as ApiTeam & {
+    players: ApiPlayer[];
+  };
+  return { team, players: players || [] };
+}
+
+// Public helpers used by pages
+export const getAllTeams = async (): Promise<Team[]> => {
+  const apiTeams = await fetchAllTeams();
+  // The index endpoint does not include players; we provide empty lists here
+  return apiTeams.map((t) => mapApiTeamToUi(t, []));
+};
+
+export const getTeamById = async (
+  slugOrId: string
+): Promise<Team | undefined> => {
+  // Accept either slug (preferred) or a raw teamId (UUID)
+  const apiTeams = await fetchAllTeams();
+  let selected: ApiTeam | undefined;
+
+  // First try match by stored slug
+  selected = apiTeams.find((t) => t.slug === slugOrId);
+
+  // Then try generated slug from name
+  if (!selected) {
+    selected = apiTeams.find((t) => slugify(t.name) === slugOrId);
   }
+
+  // If none, try raw teamId
+  if (!selected) {
+    selected = apiTeams.find((t) => t.teamId === slugOrId);
+  }
+
+  if (!selected) return undefined;
+
+  const { team, players } = await fetchTeamWithPlayers(selected.teamId);
+  if (!team) return undefined;
+  return mapApiTeamToUi(team, players);
 };
 
-// Utility function para obtener todos los equipos como array
-export const getAllTeams = (): Team[] => {
-  return Object.values(teamsData);
-};
-
-// Utility function para obtener un equipo específico
-export const getTeamById = (id: string): Team | undefined => {
-  return teamsData[id];
-};
-
-// Utility function para obtener las rutas estáticas
-export const getTeamStaticPaths = () => {
-  return Object.keys(teamsData).map(teamId => ({
-    params: { team: teamId }
+export const getTeamStaticPaths = async () => {
+  const apiTeams = await fetchAllTeams();
+  return apiTeams.map((t) => ({
+    params: { team: t.slug || slugify(t.name) },
   }));
 };
