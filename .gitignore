@@ -1,6 +1,5 @@
 # Dependencies
 node_modules/
-package-lock.json
 yarn.lock
 pnpm-lock.yaml
 
@@ -10,6 +9,7 @@ pnpm-lock.yaml
 .env.*.local
 .env.development
 .env.production
+!.env.example
 
 # Build outputs
 dist/
@@ -26,26 +26,10 @@ out/
 *~
 .DS_Store
 
-# Backend specific (AdonisJS)
-backend/crud-pucara/tmp/
-backend/crud-pucara/ace-manifest.json
-backend/crud-pucara/.adonisjs/
-
 # Database
 *.db
 *.sqlite
 *.sqlite3
-backend/crud-pucara/database/*.sqlite
-backend/crud-pucara/database/*.db
-
-# Frontend specific (React Admin)
-frontend/admin-frontend/build/
-frontend/admin-frontend/.env
-
-# Frontend specific (Astro Landing)
-frontend/landing/dist/
-frontend/landing/.astro/
-frontend/landing/.env
 
 # Testing
 coverage/

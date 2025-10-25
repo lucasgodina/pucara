@@ -17,6 +17,11 @@ export default await Env.create(new URL('../', import.meta.url), {
   APP_KEY: Env.schema.string(),
   HOST: Env.schema.string({ format: 'host' }),
   LOG_LEVEL: Env.schema.enum(['fatal', 'error', 'warn', 'info', 'debug', 'trace']),
+  /*
+  |----------------------------------------------------------
+  | Admin user credentials
+  |----------------------------------------------------------
+  */
   ADMIN_NAME: Env.schema.string.optional(),
   ADMIN_EMAIL: Env.schema.string.optional(),
   ADMIN_PASSWORD: Env.schema.string.optional(),
@@ -26,4 +31,18 @@ export default await Env.create(new URL('../', import.meta.url), {
   |----------------------------------------------------------
   */
   DB_CONNECTION: Env.schema.enum(['sqlite'] as const),
+  /*
+  |----------------------------------------------------------
+  | Variables for storage providers
+  |----------------------------------------------------------
+  */
+  STORAGE_PROVIDER: Env.schema.enum(['local', 'cloudinary', 's3'] as const),
+  /*
+  |----------------------------------------------------------
+  | Cloudinary configuration
+  |----------------------------------------------------------
+  */
+  CLOUDINARY_CLOUD_NAME: Env.schema.string.optional(),
+  CLOUDINARY_API_KEY: Env.schema.string.optional(),
+  CLOUDINARY_API_SECRET: Env.schema.string.optional(),
 })
