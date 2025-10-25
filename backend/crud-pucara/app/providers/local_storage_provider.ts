@@ -86,7 +86,7 @@ export class LocalStorageProvider {
    * Delete an image from the storage directory
    * @param imageUrl - The URL of the image to be deleted
    */
-  public async deleteImage(imageUrl: string): Promise<void> {
+  public async deleteImage(imageUrl: string, _publicId?: string): Promise<void> {
     if (!imageUrl || !imageUrl.startsWith('/uploads/')) {
       return // Ignore invalid URLs
     }

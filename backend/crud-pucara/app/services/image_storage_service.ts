@@ -61,7 +61,11 @@ export class ImageStorageService {
   }
 
   // Deletes an image from the selected provider
-  public deleteImage(imageUrl: string): Promise<void> {
-    return this.provider.deleteImage(imageUrl)
+  public deleteImage(imageUrl: string, publicId?: string): Promise<void> {
+    return this.provider.deleteImage(imageUrl, publicId)
   }
 }
+
+// Export a singleton instance for convenience when DI is not used
+import app from '@adonisjs/core/services/app'
+export default new ImageStorageService(app)
