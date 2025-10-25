@@ -1,5 +1,8 @@
 import { defineConfig } from '@adonisjs/core/bodyparser'
 
+// Importamos cuid para generar nombres de archivos únicos
+import { cuid } from '@adonisjs/core/helpers'
+
 const bodyParserConfig = defineConfig({
   /**
    * The bodyparser middleware will parse the request body
@@ -47,8 +50,9 @@ const bodyParserConfig = defineConfig({
      * Maximum limit of data to parse including all files
      * and fields
      */
-    limit: '20mb',
+    limit: '10mb',
     types: ['multipart/form-data'],
+    tmpFileName: () => cuid(),
   },
 })
 
