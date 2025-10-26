@@ -1,18 +1,29 @@
 import User from '#models/user'
+import env from '#start/env'
 import { BaseCommand } from '@adonisjs/core/ace'
 import hash from '@adonisjs/core/services/hash'
 import type { CommandOptions } from '@adonisjs/core/types/ace'
 
 export default class TestLogin extends BaseCommand {
   static commandName = 'test:login'
-  static description = 'Test login credentials'
+  static description = 'Test login credentials from .env'
 
   static options: CommandOptions = {}
 
   async run() {
+    const adminEmail = env.get('ADMIN_EMAIL')
+    const adminPassword = env.get('ADMIN_PASSWORD')
+    const adminUsername = env.get('ADMIN_USERNAME')
+
+    if (!adminEmail || !adminPassword || !adminUsername) {
+      this.logger.error('❌ Credenciales no configuradas en .env')
+      this.logger.error('Por favor configura: ADMIN_EMAIL, ADMIN_PASSWORD, ADMIN_USERNAME')
+      return
+    }
+
     const testCredentials = [
-      { identifier: 'lucasgodina', password: 'pucara2025' },
-      { identifier: 'lucasgodina@gmail.com', password: 'pucara2025' },
+      { identifier: adminUsername, password: adminPassword },
+      { identifier: adminEmail, password: adminPassword },
     ]
 
     for (const cred of testCredentials) {
@@ -28,14 +39,11 @@ export default class TestLogin extends BaseCommand {
 
     // Verificar manualmente el hash
     this.logger.info('\n🔐 Verificación manual del hash:')
-    const user = await User.findByOrFail('email', 'lucasgodina@gmail.com')
+    const user = await User.findByOrFail('email', adminEmail)
     this.logger.info(`Email: ${user.email}`)
     this.logger.info(`Username: ${user.username}`)
-    this.logger.info(`Password hash (primeros 50 chars): ${user.password.substring(0, 50)}`)
 
-    // Intentar hashear la contraseña y compararla
-    const testPassword = 'pucara2025'
-    const isValid = await hash.use('scrypt').verify(user.password, testPassword)
-    this.logger.info(`\n¿La contraseña "${testPassword}" coincide? ${isValid ? '✅ Sí' : '❌ No'}`)
+    const isValid = await hash.use('scrypt').verify(user.password, adminPassword)
+    this.logger.info(`\n¿La contraseña coincide? ${isValid ? '✅ Sí' : '❌ No'}`)
   }
 }

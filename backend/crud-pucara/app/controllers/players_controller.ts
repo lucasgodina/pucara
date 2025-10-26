@@ -146,6 +146,8 @@ export default class PlayersController {
       console.log('=== Player Update Request ===')
       console.log('Player ID:', params.player_id)
       console.log('Request body:', request.body())
+      console.log('Request all():', request.all())
+      console.log('All files:', request.allFiles())
       console.log('Request headers:', request.headers())
 
       const player = await Player.findBy('player_id', params.player_id)
@@ -172,16 +174,50 @@ export default class PlayersController {
       ])
       console.log('Extracted data:', data)
 
+      // Convert string "null" to actual null (from FormData)
+      if (data.photo_url === 'null') {
+        data.photo_url = null
+      }
+      if (data.bio === 'null') {
+        data.bio = null
+      }
+
       // Optional: handle new photo upload
       const photo = request.file('photo')
+      console.log('Photo file received:', photo ? 'YES' : 'NO')
+      if (photo) {
+        console.log('Photo details:', {
+          fieldName: photo.fieldName,
+          clientName: photo.clientName,
+          size: photo.size,
+          type: photo.type,
+        })
+      }
+
       let photoUploaded = false
       if (photo) {
         if (player.photoUrl) {
+          console.log('Deleting old photo before upload:', player.photoUrl)
           await imageStorageService.deleteImage(player.photoUrl)
         }
+        console.log('Uploading new photo...')
         const result = await imageStorageService.uploadImage(photo, 'players')
+        console.log('Upload result:', result)
         player.photoUrl = result.url
         photoUploaded = true
+      }
+
+      // Handle explicit photo deletion (when photoUrl is set to null)
+      // ONLY delete if no new photo was uploaded
+      if (!photoUploaded && data.photo_url === null && player.photoUrl) {
+        console.log('Deleting current photo:', player.photoUrl)
+        // Eliminar imagen de forma asíncrona sin bloquear la respuesta
+        const photoUrlToDelete = player.photoUrl
+        imageStorageService.deleteImage(photoUrlToDelete).catch((error) => {
+          console.error('Error deleting image in background:', error)
+        })
+        player.photoUrl = null
+        photoUploaded = true // Prevent overwriting in next check
       }
 
       // Validate team exists if teamId is provided (and not null)
@@ -209,7 +245,15 @@ export default class PlayersController {
         player.teamId = data.teamId
       }
       if (data.bio !== undefined) player.bio = data.bio
-      if (data.photo_url !== undefined && !photoUploaded) player.photoUrl = data.photo_url
+
+      // CRITICAL: Only update photoUrl from data.photo_url if:
+      // 1. No new photo file was uploaded (photoUploaded === false)
+      // 2. photo_url is explicitly provided in the request
+      // This prevents overwriting a newly uploaded image URL
+      if (!photoUploaded && data.photo_url !== undefined) {
+        console.log('Updating photoUrl from data.photo_url:', data.photo_url)
+        player.photoUrl = data.photo_url
+      }
 
       console.log('Player before save:', player.toJSON())
       await player.save()

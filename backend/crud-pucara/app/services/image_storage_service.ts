@@ -5,19 +5,20 @@ import { Exception } from '@adonisjs/core/exceptions'
 import { ApplicationService } from '@adonisjs/core/types'
 
 // Import providers
+import { CloudinaryProvider } from '#providers/cloudinary_provider'
 import { LocalStorageProvider } from '#providers/local_storage_provider'
-// import { CloudinaryStorageProvider } from '#providers/cloudinary_storage_provider'
 // import { S3StorageProvider } from '#providers/s3_storage_provider'
 
 // Result interface for upload operations
 interface UploadResult {
   url: string
+  publicId?: string
   path?: string
-  name: string
+  name?: string
 }
 
 // Duck typing for storage providers
-type AnyStorageProvider = LocalStorageProvider /* | CloudinaryStorageProvider | S3StorageProvider */
+type AnyStorageProvider = LocalStorageProvider | CloudinaryProvider /* | S3StorageProvider */
 
 /**
  * Centralized service for image storage management.
@@ -38,8 +39,8 @@ export class ImageStorageService {
         break
 
       case 'cloudinary':
-        // this.provider = new CloudinaryStorageProvider()
-        throw new Exception('Cloudinary provider not implemented yet', { status: 501 })
+        this.provider = new CloudinaryProvider()
+        break
 
       case 's3':
         // this.provider = new S3StorageProvider()
