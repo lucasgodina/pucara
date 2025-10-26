@@ -10,7 +10,7 @@ export const createPlayerValidator = vine.compile(
     role: vine.string().maxLength(100).optional().nullable(),
     country: vine.string().maxLength(100).optional().nullable(),
     instagram: vine.string().maxLength(100).optional().nullable(),
-    team_id: vine.string().uuid().optional().nullable(),
+    teamId: vine.string().uuid().optional().nullable(),
     bio: vine.string().optional().nullable(),
     photo_url: vine.string().url().optional().nullable(),
   })
@@ -26,7 +26,7 @@ export const updatePlayerValidator = vine.compile(
     role: vine.string().maxLength(100).optional().nullable(),
     country: vine.string().maxLength(100).optional().nullable(),
     instagram: vine.string().maxLength(100).optional().nullable(),
-    team_id: vine.string().uuid().optional().nullable(),
+    teamId: vine.string().uuid().optional().nullable(),
     bio: vine.string().optional().nullable(),
     photo_url: vine.string().url().optional().nullable(),
   })
@@ -46,7 +46,7 @@ export const playerIdValidator = vine.compile(
  */
 export const assignTeamValidator = vine.compile(
   vine.object({
-    team_id: vine.string().uuid().nullable(),
+    teamId: vine.string().uuid().nullable(),
   })
 )
 

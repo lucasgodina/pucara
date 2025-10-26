@@ -65,12 +65,12 @@ export default class PlayersController {
         photoUrl = result.url
       }
 
-      // Validate team exists if team_id is provided
-      if (data.team_id) {
-        const team = await Team.findBy('team_id', data.team_id)
+      // Validate team exists if teamId is provided
+      if (data.teamId) {
+        const team = await Team.findBy('team_id', data.teamId)
         if (!team) {
           return response.notFound({
-            message: `El equipo con ID '${data.team_id}' no existe. El jugador se creará como libre`,
+            message: `El equipo con ID '${data.teamId}' no existe. El jugador se creará como libre`,
             code: 'TEAM_NOT_FOUND',
           })
         }
@@ -84,7 +84,7 @@ export default class PlayersController {
       player.role = data.role || null
       player.country = data.country || '🇦🇷 Argentina'
       player.instagram = data.instagram || null
-      player.teamId = data.team_id || null
+      player.teamId = data.teamId || null
       player.bio = data.bio || null
       player.photoUrl = photoUrl
 
@@ -166,7 +166,7 @@ export default class PlayersController {
         'role',
         'country',
         'instagram',
-        'team_id',
+        'teamId',
         'bio',
         'photo_url',
       ])
@@ -184,14 +184,14 @@ export default class PlayersController {
         photoUploaded = true
       }
 
-      // Validate team exists if team_id is provided (and not null)
-      if (data.team_id !== undefined && data.team_id !== null) {
-        console.log('Validating team_id:', data.team_id)
-        const team = await Team.findBy('team_id', data.team_id)
+      // Validate team exists if teamId is provided (and not null)
+      if (data.teamId !== undefined && data.teamId !== null) {
+        console.log('Validating teamId:', data.teamId)
+        const team = await Team.findBy('team_id', data.teamId)
         if (!team) {
-          console.log('Team not found:', data.team_id)
+          console.log('Team not found:', data.teamId)
           return response.notFound({
-            message: `El equipo con ID '${data.team_id}' no existe`,
+            message: `El equipo con ID '${data.teamId}' no existe`,
             code: 'TEAM_NOT_FOUND',
           })
         }
@@ -204,9 +204,9 @@ export default class PlayersController {
       if (data.role !== undefined) player.role = data.role
       if (data.country !== undefined) player.country = data.country
       if (data.instagram !== undefined) player.instagram = data.instagram
-      if (data.team_id !== undefined) {
-        console.log('Updating teamId from', player.teamId, 'to', data.team_id)
-        player.teamId = data.team_id
+      if (data.teamId !== undefined) {
+        console.log('Updating teamId from', player.teamId, 'to', data.teamId)
+        player.teamId = data.teamId
       }
       if (data.bio !== undefined) player.bio = data.bio
       if (data.photo_url !== undefined && !photoUploaded) player.photoUrl = data.photo_url
@@ -281,27 +281,27 @@ export default class PlayersController {
         })
       }
 
-      const { team_id } = request.only(['team_id'])
+      const { teamId } = request.only(['teamId'])
 
-      // Validate team exists if team_id is not null
-      if (team_id !== null) {
-        const team = await Team.findBy('team_id', team_id)
+      // Validate team exists if teamId is not null
+      if (teamId !== null) {
+        const team = await Team.findBy('team_id', teamId)
         if (!team) {
           return response.notFound({
-            message: `El equipo con ID '${team_id}' no existe`,
+            message: `El equipo con ID '${teamId}' no existe`,
             code: 'TEAM_NOT_FOUND',
           })
         }
       }
 
       // Update player's team
-      player.teamId = team_id
+      player.teamId = teamId
       await player.save()
 
       // Load team relation
       await player.load('team')
 
-      const action = team_id ? 'asignado al equipo' : 'liberado del equipo'
+      const action = teamId ? 'asignado al equipo' : 'liberado del equipo'
 
       return response.ok({
         ...player.toJSON(),

@@ -14,7 +14,15 @@
     "build:admin": "npm run build --prefix frontend/admin-frontend",
     "build:landing": "npm run build --prefix frontend/landing",
     "build:all": "npm run build:api && npm run build:admin && npm run build:landing",
-    "preview:landing": "npm run preview --prefix frontend/landing"
+    "preview:landing": "npm run preview --prefix frontend/landing",
+    "lint": "npm run lint --prefix backend/crud-pucara",
+    "lint:admin": "cd frontend/admin-frontend && npx eslint src/",
+    "lint:all": "npm run lint && npm run lint:admin",
+    "format": "npm run format --prefix backend/crud-pucara",
+    "format:landing": "cd frontend/landing && npx prettier --write .",
+    "format:all": "npm run format && npm run format:landing",
+    "typecheck": "npm run typecheck --prefix backend/crud-pucara",
+    "check:all": "npm run lint:all && npm run typecheck"
   },
   "devDependencies": {
     "concurrently": "^8.2.2"

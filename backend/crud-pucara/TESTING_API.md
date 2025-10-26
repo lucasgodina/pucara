@@ -234,5 +234,3 @@ Al final de todas las pruebas, deberías tener:
 - Al menos 1 noticia creada por el editor
 - Sistema de permisos funcionando correctamente
 - Todas las rutas protegidas funcionando según el rol
-
-

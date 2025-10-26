@@ -259,5 +259,3 @@ curl -X PATCH http://localhost:3333/users/{USER_ID}/role \
 3. **Roles**: Solo se permiten: `admin`, `editor`, `espectador`
 4. **Emails**: Deben ser únicos en la base de datos
 5. **Tokens**: Incluir en header `Authorization: Bearer {token}`
-
-
