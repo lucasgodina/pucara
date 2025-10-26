@@ -2,8 +2,10 @@ import { DataProvider } from "react-admin";
 
 // Unificamos ambos backends al servicio AdonisJS en 3333
 // Backend A (auth/news/users) sin prefijo y Backend B (teams/players) bajo /api/v1
-const API_BACKEND_A = "http://localhost:3333";
-const API_BACKEND_B = "http://localhost:3333/api/v1";
+// En producción, usa las variables de entorno REACT_APP_API_URL y REACT_APP_API_URL_V1
+const API_BACKEND_A = process.env.REACT_APP_API_URL || "http://localhost:3333";
+const API_BACKEND_B =
+  process.env.REACT_APP_API_URL_V1 || "http://localhost:3333/api/v1";
 
 const getBaseUrl = (resource: string) => {
   // news, users -> Backend A (auth/news/users)

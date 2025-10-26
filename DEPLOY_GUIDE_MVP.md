@@ -1,6 +1,26 @@
 # Guía de Deploy (MVP rápido y barato)
 
-Objetivo: desplegar el monorepo Pucará en proveedores con free tier, con el menor esfuerzo.
+Objetivo: desplegar el monorepo Pucará en prove## 4) Deploy del Admin (Vercel)
+
+Repositorio: `frontend/admin-frontend`
+
+1. En Vercel → New Project → Import Git Repository → seleccionar `frontend/admin-frontend`.
+2. Framework Preset: "Create React App" (auto-detectado).
+3. Variables de entorno (Production):
+
+   - `REACT_APP_API_URL=https://api-tuapp.onrender.com`
+   - `REACT_APP_API_URL_V1=https://api-tuapp.onrender.com/api/v1`
+
+   **Nota:** El dataProvider ya está configurado para leer estas variables. Si no las configuras, usará `http://localhost:3333` por defecto (desarrollo).
+
+4. Deploy. La URL quedará como `https://admin-tuapp.vercel.app`.
+
+Prueba:
+
+- Login con ADMIN del seeder.
+- Crear un equipo y subir banner (debe ir a Cloudinary y verse en el Admin y la Landing).
+
+---r, con el menor esfuerzo.
 
 Arquitectura elegida:
 
@@ -157,7 +177,9 @@ En la Landing/Admin: apuntar a la URL pública de la API.
 
 ## 9) Siguientes pasos sugeridos
 
-- Parametrizar `dataProvider` del Admin para leer `REACT_APP_API_URL` en build (y evitar hardcode de localhost).
+- ~~Parametrizar `dataProvider` del Admin para leer `REACT_APP_API_URL` en build~~ ✅ Ya implementado
 - Agregar Health Check a la API.
 - Configurar dominios propios (opcional) y actualizar `CORS_ORIGIN`.
 - Si lo necesitás, mover Landing a modo estático (Cloudflare Pages) para bajar aún más costos.
+- Implementar rate limiting en endpoints de autenticación.
+- Configurar logging y monitoreo en producción.
