@@ -130,14 +130,36 @@ import Layout from "../layouts/Layout.astro";
     </main>
 
     <script>
+        interface Post {
+            id: string;
+            caption?: string;
+            message?: string;
+            media_type?: string;
+            media_url?: string;
+            thumbnail_url?: string;
+            full_picture?: string;
+            permalink?: string;
+            permalink_url?: string;
+            timestamp?: string;
+            created_time?: string;
+        }
+
+        interface ApiResponse {
+            source: 'instagram' | 'facebook';
+            posts: Post[];
+            error?: string;
+        }
+
         let currentIndex = 0;
-        let posts = [];
+        let posts: Post[] = [];
+        let apiData: ApiResponse | null = null;
         const postsPerPage = window.innerWidth >= 1024 ? 3 : (window.innerWidth >= 768 ? 2 : 1);
 
         async function loadPosts() {
             try {
                 const response = await fetch('/api/instagram-posts');
-                const data = await response.json();
+                const data: ApiResponse = await response.json();
+                apiData = data;
 
                 if (data.error) {
                     showError();
@@ -151,8 +173,10 @@ import Layout from "../layouts/Layout.astro";
                 }
 
                 renderPosts();
-                document.getElementById('loading-posts').classList.add('hidden');
-                document.getElementById('posts-container').classList.remove('hidden');
+                const loadingEl = document.getElementById('loading-posts');
+                const containerEl = document.getElementById('posts-container');
+                if (loadingEl) loadingEl.classList.add('hidden');
+                if (containerEl) containerEl.classList.remove('hidden');
             } catch (error) {
                 console.error('Error loading posts:', error);
                 showError();
@@ -207,7 +231,7 @@ import Layout from "../layouts/Layout.astro";
                                 ${caption}
                             </p>
                             <div class="mt-3 flex items-center justify-between text-xs text-primary">
-                                <span>Ver en ${data.source === 'instagram' ? 'Instagram' : 'Facebook'}</span>
+                                <span>Ver en ${apiData?.source === 'instagram' ? 'Instagram' : 'Facebook'}</span>
                                 <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
                                     <path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/>
                                 </svg>
@@ -235,8 +259,8 @@ import Layout from "../layouts/Layout.astro";
         function updateCarousel() {
             const track = document.getElementById('carousel-track');
             const dots = document.querySelectorAll('#dots-container button');
-            const prevBtn = document.getElementById('prev-btn');
-            const nextBtn = document.getElementById('next-btn');
+            const prevBtn = document.getElementById('prev-btn') as HTMLButtonElement | null;
+            const nextBtn = document.getElementById('next-btn') as HTMLButtonElement | null;
             
             if (!track) return;
 
@@ -262,14 +286,16 @@ import Layout from "../layouts/Layout.astro";
             }
         }
 
-        function goToPage(index) {
+        function goToPage(index: number) {
             currentIndex = index;
             updateCarousel();
         }
 
         function showError() {
-            document.getElementById('loading-posts').classList.add('hidden');
-            document.getElementById('error-posts').classList.remove('hidden');
+            const loadingEl = document.getElementById('loading-posts');
+            const errorEl = document.getElementById('error-posts');
+            if (loadingEl) loadingEl.classList.add('hidden');
+            if (errorEl) errorEl.classList.remove('hidden');
         }
 
         // Event listeners
@@ -292,10 +318,10 @@ import Layout from "../layouts/Layout.astro";
         loadPosts();
 
         // Responsive: recalcular al cambiar tamaño de ventana
-        let resizeTimeout;
+        let resizeTimeout: number | undefined;
         window.addEventListener('resize', () => {
             clearTimeout(resizeTimeout);
-            resizeTimeout = setTimeout(() => {
+            resizeTimeout = window.setTimeout(() => {
                 location.reload(); // Recargar para ajustar postsPerPage
             }, 500);
         });
