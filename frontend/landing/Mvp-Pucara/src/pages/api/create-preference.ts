@@ -64,25 +64,7 @@ export const POST: APIRoute = async ({ request }) => {
       auto_return: 'approved' as const,
       notification_url: `${publicUrl}/api/webhook`,
       statement_descriptor: 'PUCARA GAMING',
-      external_reference: `PUCARA-${productId}-${Date.now()}`,
-      payer: {
-        name: 'Test',
-        surname: 'User',
-        email: 'test@pucara.com',
-        phone: {
-          area_code: '11',
-          number: '12345678'
-        },
-        identification: {
-          type: 'DNI',
-          number: '12345678'
-        },
-        address: {
-          zip_code: '1000',
-          street_name: 'Test Street',
-          street_number: '123'
-        }
-      }
+      external_reference: `PUCARA-${productId}-${Date.now()}`
     };
 
     const response = await preference.create({ body: preferenceData });
