@@ -12,53 +12,25 @@ export const GET: APIRoute = async () => {
       );
     }
 
-    // Obtener el Instagram Business Account ID asociado a la página
-    const igAccountResponse = await fetch(
-      `https://graph.facebook.com/v18.0/${pageId}?fields=instagram_business_account&access_token=${accessToken}`
+    // Obtener posts de Facebook directamente
+    const fbPostsResponse = await fetch(
+      `https://graph.facebook.com/v18.0/${pageId}/posts?fields=id,message,full_picture,created_time,permalink_url&limit=12&access_token=${accessToken}`
     );
     
-    const igAccountData = await igAccountResponse.json();
-    const igAccountId = igAccountData.instagram_business_account?.id;
+    const fbPostsData = await fbPostsResponse.json();
 
-    if (!igAccountId) {
-      // Si no hay cuenta de Instagram, obtener posts de Facebook
-      const fbPostsResponse = await fetch(
-        `https://graph.facebook.com/v18.0/${pageId}/posts?fields=id,message,full_picture,created_time,permalink_url&limit=10&access_token=${accessToken}`
-      );
-      
-      const fbPostsData = await fbPostsResponse.json();
-      
+    if (fbPostsData.error) {
+      console.error('Facebook API Error:', fbPostsData.error);
       return new Response(
-        JSON.stringify({
-          source: 'facebook',
-          posts: fbPostsData.data || []
-        }),
-        { 
-          status: 200, 
-          headers: { 'Content-Type': 'application/json' } 
-        }
-      );
-    }
-
-    // Obtener posts de Instagram
-    const igPostsResponse = await fetch(
-      `https://graph.facebook.com/v18.0/${igAccountId}/media?fields=id,caption,media_type,media_url,thumbnail_url,permalink,timestamp&limit=12&access_token=${accessToken}`
-    );
-
-    const igPostsData = await igPostsResponse.json();
-
-    if (igPostsData.error) {
-      console.error('Instagram API Error:', igPostsData.error);
-      return new Response(
-        JSON.stringify({ error: igPostsData.error.message }),
+        JSON.stringify({ error: fbPostsData.error.message }),
         { status: 400, headers: { 'Content-Type': 'application/json' } }
       );
     }
-
+    
     return new Response(
       JSON.stringify({
-        source: 'instagram',
-        posts: igPostsData.data || []
+        source: 'facebook',
+        posts: fbPostsData.data || []
       }),
       { 
         status: 200, 
