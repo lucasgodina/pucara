@@ -4,10 +4,18 @@ import type { HttpContext } from '@adonisjs/core/http'
 
 export default class AuthController {
   async login({ request, response }: HttpContext) {
-    const email = request.input('email')
+    // Aceptar tanto 'username' como 'email' del request
+    const identifier = request.input('username') || request.input('email')
     const password = request.input('password')
 
-    const user = await User.verifyCredentials(email, password)
+    if (!identifier || !password) {
+      return response.badRequest({
+        message: 'Username/email y password son requeridos',
+      })
+    }
+
+    // Intentar login con username o email
+    const user = await User.verifyCredentials(identifier, password)
 
     // Crear el token con expiración de 7 días
     const token = await User.accessTokens.create(user, [], { expiresIn: '7 days' })
@@ -18,7 +26,9 @@ export default class AuthController {
       user: {
         id: user.id,
         fullName: user.fullName,
+        username: user.username,
         email: user.email,
+        role: user.role,
       },
     }
   }
@@ -26,7 +36,12 @@ export default class AuthController {
   // Registro de usuarios
   async register({ request, response }: HttpContext) {
     try {
-      const { fullName, email, password } = request.only(['fullName', 'email', 'password'])
+      const { fullName, username, email, password } = request.only([
+        'fullName',
+        'username',
+        'email',
+        'password',
+      ])
 
       // Verificar que el email no exista
       const existingUser = await User.findBy('email', email)
@@ -34,11 +49,21 @@ export default class AuthController {
         return response.conflict({ message: 'El email ya está registrado' })
       }
 
+      // Verificar que el username no exista (si se proporcionó)
+      if (username) {
+        const existingUsername = await User.findBy('username', username)
+        if (existingUsername) {
+          return response.conflict({ message: 'El username ya está registrado' })
+        }
+      }
+
       // Crear el usuario
       const user = await User.create({
         fullName,
+        username,
         email,
         password,
+        role: 'user', // Por defecto es user
       })
 
       return response.created({
@@ -46,7 +71,9 @@ export default class AuthController {
         user: {
           id: user.id,
           fullName: user.fullName,
+          username: user.username,
           email: user.email,
+          role: user.role,
         },
       })
     } catch (error) {
@@ -62,7 +89,9 @@ export default class AuthController {
       return response.ok({
         id: user.id,
         fullName: user.fullName,
+        username: user.username,
         email: user.email,
+        role: user.role,
         createdAt: user.createdAt,
         updatedAt: user.updatedAt,
       })

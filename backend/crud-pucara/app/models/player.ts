@@ -25,9 +25,6 @@ export default class Player extends BaseModel {
   @column()
   declare bio: string | null
 
-  @column()
-  declare stats: Record<string, string> | null
-
   @column({ columnName: 'photo_url' })
   declare photoUrl: string | null
 

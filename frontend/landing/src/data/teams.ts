@@ -1,4 +1,4 @@
-import { apiGet, type ApiResponse } from "./api";
+import { API_BASE_URL, apiGet, type ApiResponse } from "./api";
 
 // UI-facing types kept for compatibility with current components
 export interface Player {
@@ -53,6 +53,20 @@ function slugify(input: string): string {
     .replace(/(^-|-$)/g, "");
 }
 
+/**
+ * Convert relative image URLs to absolute URLs pointing to the backend
+ */
+function toAbsoluteUrl(relativeUrl: string | null): string {
+  if (!relativeUrl) return "";
+  if (relativeUrl.startsWith("http://") || relativeUrl.startsWith("https://")) {
+    return relativeUrl; // Already absolute
+  }
+  // Relative URL like /uploads/... -> http://localhost:3333/uploads/...
+  const baseUrl = API_BASE_URL.replace(/\/$/, "");
+  const path = relativeUrl.startsWith("/") ? relativeUrl : `/${relativeUrl}`;
+  return `${baseUrl}${path}`;
+}
+
 function mapApiPlayerToUi(p: ApiPlayer): Player {
   return {
     nombre: p.name,
@@ -60,7 +74,7 @@ function mapApiPlayerToUi(p: ApiPlayer): Player {
     nacionalidad: p.country ?? "🇦🇷 Argentina",
     rol: p.role ?? "Jugador",
     instagram: p.instagram ?? "",
-    imagen: p.photoUrl || "/players/default.jpg",
+    imagen: toAbsoluteUrl(p.photoUrl) || "/players/default.jpg",
   };
 }
 
@@ -72,7 +86,7 @@ function mapApiTeamToUi(t: ApiTeam, players: ApiPlayer[] = []): Team {
     emoji: t.emoji || "🎮",
     bgClass: "bg-primary-subtle",
     descripcion: t.description || "",
-    imagen: t.bannerUrl || "/pucarahero.png",
+    imagen: toAbsoluteUrl(t.bannerUrl) || "/pucarahero.png",
     players: players.map(mapApiPlayerToUi),
   };
 }

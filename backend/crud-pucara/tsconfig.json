@@ -24,7 +24,7 @@
       "#events/*": ["app/events/*.ts"],
       "#middleware/*": ["app/middleware/*.ts"],
       "#validators/*": ["app/validators/*.ts"],
-      "#providers/*": ["providers/*.ts"],
+      "#providers/*": ["app/providers/*.ts"],
       "#policies/*": ["app/policies/*.ts"],
       "#abilities/*": ["app/abilities/*.ts"],
       "#database/*": ["database/*.ts"],
@@ -32,15 +32,8 @@
       "#tests/*": ["tests/*.ts"],
       "#config/*": ["config/*.ts"]
     },
-    "types": [
-      "node"
-    ]
+    "types": ["node"]
   },
-  "include": [
-    "**/*.ts"
-  ],
-  "exclude": [
-    "node_modules",
-    "build"
-  ]
+  "include": ["**/*.ts"],
+  "exclude": ["node_modules", "build"]
 }

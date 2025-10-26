@@ -13,17 +13,11 @@ export default class Team extends BaseModel {
   @column()
   declare slug: string | null
 
-  @column()
-  declare emoji: string | null
-
   @column({ columnName: 'banner_url' })
   declare bannerUrl: string | null
 
   @column()
   declare description: string | null
-
-  @column()
-  declare achievements: Record<string, string> | null
 
   @hasMany(() => Player, {
     foreignKey: 'teamId',

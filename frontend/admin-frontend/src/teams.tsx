@@ -1,46 +1,23 @@
-import { Chip } from '@mui/material'
 import {
-    Create,
-    CreateButton,
-    Datagrid,
-    DateField,
-    DeleteButton,
-    Edit,
-    EditButton,
-    ExportButton,
-    FunctionField,
-    List,
-    Show,
-    ShowButton,
-    SimpleForm,
-    SimpleShowLayout,
-    TextField,
-    TextInput,
-    TopToolbar
+  Create,
+  CreateButton,
+  Datagrid,
+  DateField,
+  DeleteButton,
+  Edit,
+  EditButton,
+  ExportButton,
+  ImageField,
+  ImageInput,
+  List,
+  Show,
+  ShowButton,
+  SimpleForm,
+  SimpleShowLayout,
+  TextField,
+  TextInput,
+  TopToolbar
 } from 'react-admin'
-
-// Componente personalizado para mostrar logros
-const AchievementsField = ({ record }: { record?: any }) => {
-  if (!record?.achievements) return <span>-</span>
-
-  const achievements =
-    typeof record.achievements === 'string' ? JSON.parse(record.achievements) : record.achievements
-
-  return (
-    <div>
-      {Object.entries(achievements).map(([key, value]: [string, any]) => (
-        <Chip
-          key={key}
-          label={`${key}: ${value}`}
-          size="small"
-          style={{ margin: '2px' }}
-          color="primary"
-          variant="outlined"
-        />
-      ))}
-    </div>
-  )
-}
 
 // Lista de equipos
 export const TeamList = () => (
@@ -53,12 +30,10 @@ export const TeamList = () => (
     }
   >
     <Datagrid>
+      <ImageField source="bannerUrl" label="Banner" sx={{ '& img': { maxHeight: 50, maxWidth: 100, objectFit: 'cover' } }} />
       <TextField source="name" label="Nombre del Equipo" />
+      <TextField source="slug" label="Slug" />
       <TextField source="description" label="Descripción" />
-      <FunctionField
-        label="Logros"
-        render={(record: any) => <AchievementsField record={record} />}
-      />
       <DateField source="createdAt" label="Creado" showTime />
       <ShowButton />
       <EditButton />
@@ -73,30 +48,17 @@ export const TeamCreate = () => (
     <SimpleForm>
       <TextInput source="name" label="Nombre del Equipo" required fullWidth />
       <TextInput source="slug" label="Slug (URL amigable)" helperText="Ej: dota-2, street-fighter" fullWidth />
-      <TextInput source="emoji" label="Emoji" helperText="Ej: 🎮, 🛡️, 👊" fullWidth />
-      <TextInput source="bannerUrl" label="URL del Banner" helperText="URL de la imagen del banner" fullWidth />
+      
+      <ImageInput 
+        source="banner" 
+        label="Banner del Equipo" 
+        accept={{ 'image/*': ['.png', '.jpg', '.jpeg', '.webp'] }}
+        maxSize={10000000}
+      >
+        <ImageField source="src" title="title" />
+      </ImageInput>
+      
       <TextInput source="description" label="Descripción" multiline rows={3} fullWidth />
-      <TextInput
-        source="achievements"
-        label="Logros (JSON)"
-        helperText='Ejemplo: {"Torneo 2024": "Campeón", "Liga Regional": "2do Lugar"}'
-        multiline
-        rows={3}
-        fullWidth
-        parse={(value) => {
-          if (!value) return null
-          try {
-            return JSON.parse(value)
-          } catch {
-            return value
-          }
-        }}
-        format={(value) => {
-          if (!value) return ''
-          if (typeof value === 'string') return value
-          return JSON.stringify(value, null, 2)
-        }}
-      />
     </SimpleForm>
   </Create>
 )
@@ -107,30 +69,19 @@ export const TeamEdit = () => (
     <SimpleForm>
       <TextInput source="name" label="Nombre del Equipo" required fullWidth />
       <TextInput source="slug" label="Slug (URL amigable)" helperText="Ej: dota-2, street-fighter" fullWidth />
-      <TextInput source="emoji" label="Emoji" helperText="Ej: 🎮, 🛡️, 👊" fullWidth />
-      <TextInput source="bannerUrl" label="URL del Banner" helperText="URL de la imagen del banner" fullWidth />
+      
+      <ImageField source="bannerUrl" label="Banner Actual" />
+      
+      <ImageInput 
+        source="banner" 
+        label="Nuevo Banner del Equipo" 
+        accept={{ 'image/*': ['.png', '.jpg', '.jpeg', '.webp'] }}
+        maxSize={10000000}
+      >
+        <ImageField source="src" title="title" />
+      </ImageInput>
+      
       <TextInput source="description" label="Descripción" multiline rows={3} fullWidth />
-      <TextInput
-        source="achievements"
-        label="Logros (JSON)"
-        helperText='Ejemplo: {"Torneo 2024": "Campeón", "Liga Regional": "2do Lugar"}'
-        multiline
-        rows={3}
-        fullWidth
-        parse={(value) => {
-          if (!value) return null
-          try {
-            return JSON.parse(value)
-          } catch {
-            return value
-          }
-        }}
-        format={(value) => {
-          if (!value) return ''
-          if (typeof value === 'string') return value
-          return JSON.stringify(value, null, 2)
-        }}
-      />
     </SimpleForm>
   </Edit>
 )
@@ -139,12 +90,10 @@ export const TeamEdit = () => (
 export const TeamShow = () => (
   <Show>
     <SimpleShowLayout>
+      <ImageField source="bannerUrl" label="Banner" />
       <TextField source="name" label="Nombre del Equipo" />
+      <TextField source="slug" label="Slug" />
       <TextField source="description" label="Descripción" />
-      <FunctionField
-        label="Logros"
-        render={(record: any) => <AchievementsField record={record} />}
-      />
       <DateField source="createdAt" label="Creado" showTime />
       <DateField source="updatedAt" label="Actualizado" showTime />
     </SimpleShowLayout>

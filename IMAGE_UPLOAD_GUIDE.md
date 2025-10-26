@@ -444,12 +444,13 @@ app/
 - Importar `ImageInput` y `ImageField` de react-admin
 - Agregar campo `ImageInput`:
   - `source="banner"`
-  - `label="Banner del Equipo"`
-  - `accept="image/*"`
+  - `label="Banner del Equipo"` o `"Nuevo Banner del Equipo"` (en edición)
+  - `accept={{ 'image/*': ['.png', '.jpg', '.jpeg', '.webp'] }}`
   - `maxSize={10000000}` (10MB)
 - Dentro de ImageInput, agregar `<ImageField source="src" title="title" />`
-- Agregar campo separado para mostrar imagen actual:
+- **Solo en edición:** Agregar campo separado para mostrar imagen actual:
   - `<ImageField source="bannerUrl" label="Banner Actual" />`
+- **IMPORTANTE:** NO incluir campo `TextInput` para `bannerUrl` - el backend lo maneja automáticamente
 
 #### Actualizar componentes de Players
 
@@ -458,11 +459,22 @@ app/
 **Hacer lo mismo pero:**
 
 - Usar `source="photo"` y `source="photoUrl"`
-- Label: "Foto del Jugador"
+- Label: "Foto del Jugador" o "Nueva Foto del Jugador" (en edición)
+- **IMPORTANTE:** NO incluir campo `TextInput` para `photoUrl` - el backend lo maneja automáticamente
 
 #### Actualizar dataProvider
 
 **Archivo:** `src/dataProvider.ts`
+
+**Crear función helper `hasFileUpload(data)`:**
+
+```typescript
+const hasFileUpload = (data: any): boolean => {
+  return Object.values(data).some(
+    (value: any) => value?.rawFile instanceof File
+  );
+};
+```
 
 **Crear función `convertFileToFormData(data)`:**
 
@@ -471,130 +483,191 @@ app/
 - Si el valor tiene `rawFile instanceof File`:
   - Agregar el archivo: `formData.append(key, data[key].rawFile)`
 - Si no:
-  - Agregar como JSON string: `formData.append(key, JSON.stringify(data[key]))`
+  - Si es objeto/array: `formData.append(key, JSON.stringify(data[key]))`
+  - Si es primitivo: `formData.append(key, data[key])`
 - Retornar formData
 
 **Actualizar métodos `create` y `update`:**
 
-- Verificar si hay archivo (banner o photo) en `params.data`
+- Verificar si hay archivo usando `hasFileUpload(params.data)`
 - Si hay archivo:
-  - Convertir a FormData
-  - Hacer fetch con body: formData
-  - **NO enviar header Content-Type** (el navegador lo setea automático)
+  - Convertir a FormData: `const formData = convertFileToFormData(params.data)`
+  - Hacer fetch manual (no usar httpClient):
+    ```typescript
+    const response = await fetch(url, {
+      method: "POST", // o 'PATCH'
+      body: formData,
+      headers: {
+        Authorization: `Bearer ${token}`, // si existe
+        // NO enviar Content-Type - el navegador lo setea automático
+      },
+    });
+    ```
+  - Parsear respuesta JSON
 - Si no hay archivo:
-  - Usar JSON normal como siempre
+  - Usar httpClient normal con JSON
+
+**IMPORTANTE:** Cuando hay archivos, NO enviar header `Content-Type` para que el navegador agregue automáticamente `multipart/form-data` con el boundary correcto.
 
 ---
 
-## 🔄 Migración entre Providers
+### 🌐 FASE 7: Landing (Astro) - Soporte para URLs de Backend (30 minutos)
 
-### De Local → Cloudinary (Proceso completo)
+#### Problema
 
-#### Situación Inicial
+Las URLs de imágenes del backend son **relativas** (ej: `/uploads/players/imagen.png`) pero la landing corre en un servidor diferente y necesita URLs absolutas que apunten al backend.
 
-- Imágenes en `public/uploads/teams/` y `public/uploads/players/`
-- URLs en DB: `/uploads/teams/abc123.jpg`
-- Quieres migrar a Cloudinary sin perder imágenes
+#### Solución: Convertir URLs relativas a absolutas
 
-#### Pasos de Migración
+**Archivo:** `frontend/landing/src/data/teams.ts`
 
-**1. Preparar Cloudinary**
+**Agregar función helper:**
 
-- Instalar SDK: `npm install cloudinary`
-- Configurar credenciales en `.env` (pero NO cambiar `STORAGE_PROVIDER` todavía)
+```typescript
+import { API_BASE_URL } from "./api";
 
-**2. Crear comando de migración**
+/**
+ * Convert relative image URLs to absolute URLs pointing to the backend
+ */
+function toAbsoluteUrl(relativeUrl: string | null): string {
+  if (!relativeUrl) return "";
+  if (relativeUrl.startsWith("http://") || relativeUrl.startsWith("https://")) {
+    return relativeUrl; // Already absolute
+  }
+  // Relative URL like /uploads/... -> http://localhost:3333/uploads/...
+  const baseUrl = API_BASE_URL.replace(/\/$/, "");
+  const path = relativeUrl.startsWith("/") ? relativeUrl : `/${relativeUrl}`;
+  return `${baseUrl}${path}`;
+}
+```
 
-**Archivo:** `app/commands/migrate_images_to_cloudinary.ts`
+**Actualizar mappers:**
 
-**Crear comando Ace:**
+```typescript
+function mapApiPlayerToUi(p: ApiPlayer): Player {
+  return {
+    // ...otros campos
+    imagen: toAbsoluteUrl(p.photoUrl) || "/players/default.jpg",
+  };
+}
 
-- Nombre: `migrate:images`
-- En método `run()`:
-  - Configurar Cloudinary manualmente
-  - Obtener todos los teams con `bannerUrl` no null
-  - Para cada team:
-    - Obtener path local: `app.publicPath(team.bannerUrl)`
-    - Subir a Cloudinary con `cloudinary.uploader.upload()`
-    - Configurar folder: `pucara/teams`
-    - Usar slug como public_id
-    - Agregar transformaciones (1920px límite, calidad auto)
-    - Actualizar `team.bannerUrl` con URL de Cloudinary
-    - Guardar team
-    - Log success o error
-  - Hacer lo mismo para players con `photoUrl`
+function mapApiTeamToUi(t: ApiTeam, players: ApiPlayer[] = []): Team {
+  return {
+    // ...otros campos
+    imagen: toAbsoluteUrl(t.bannerUrl) || "/pucarahero.png",
+  };
+}
+```
 
-**3. Ejecutar migración**
+#### Configuración para Producción
 
-**Terminal:**
+En producción, configurar la variable de entorno en el servidor de la landing:
 
-- `node ace migrate:images`
-- Verificar que todos los registros se migraron
-- Revisar dashboard de Cloudinary para confirmar
+```bash
+# .env (servidor de Astro)
+BACKEND_API_URL=https://api.pucara.com
+# o
+PUBLIC_BACKEND_API_URL=https://api.pucara.com  # si se necesita en el cliente
+```
 
-**4. Cambiar provider**
-
-**Archivo:** `.env`
-
-- Cambiar `STORAGE_PROVIDER=local` a `STORAGE_PROVIDER=cloudinary`
-
-**5. Reiniciar servidor**
-
-- `npm run dev`
-- Verificar en consola: "📦 Storage Provider activo: cloudinary"
-
-**6. Testear**
-
-- Subir nueva imagen desde React Admin
-- Verificar que se sube a Cloudinary
-- Verificar URL en base de datos (debe ser https://res.cloudinary.com/...)
-
-**7. Limpiar archivos locales (opcional)**
-
-- Una vez confirmado todo funciona
-- Eliminar contenido de `public/uploads/` (mantener `.gitkeep`)
+**Resultado:** Las imágenes de jugadores y equipos se cargarán correctamente en la landing, apuntando al servidor del backend.
 
 ---
 
-## 📝 Testing
+### ☁️ FASE 8: Consideraciones para Cloudinary (IMPORTANTE)
 
-### Tests Básicos Recomendados
+#### Diferencias clave con Local Storage
 
-**Archivo:** `tests/functional/teams/upload_banner.spec.ts`
+Cuando implementes Cloudinary, ten en cuenta estos cambios:
 
-**Test 1: Upload exitoso**
+**1. URLs Absolutas**
 
-- POST `/api/v1/teams` con archivo válido
-- Verificar status 201
-- Verificar que `bannerUrl` existe en respuesta
-- Verificar que URL comienza con `/uploads` o `https://`
+- **Local:** `/uploads/players/imagen.png` (relativa)
+- **Cloudinary:** `https://res.cloudinary.com/tu-cloud/image/upload/v123456/pucara/players/imagen.png` (absoluta)
 
-**Test 2: Rechazo por tamaño**
+**Ventaja:** La landing NO necesita cambios - `toAbsoluteUrl()` detecta URLs que ya son absolutas y las retorna sin modificar.
 
-- POST con archivo > 10MB
-- Verificar status 400
-- Verificar mensaje de error
+**2. Public ID**
 
-**Test 3: Rechazo por formato**
+El método `deleteImage()` acepta un parámetro opcional `publicId`:
 
-- POST con archivo .pdf
-- Verificar status 400
-- Verificar mensaje de error
+```typescript
+// Método deleteImage(imageUrl, publicId?): Delegar tanto URL como publicId
+public async deleteImage(imageUrl: string, publicId?: string): Promise<void> {
+  return this.provider.deleteImage(imageUrl, publicId)
+}
+```
 
-**Test 4: Actualización**
+**Para Cloudinary:**
 
-- Crear team con banner
-- UPDATE con nuevo banner
-- Verificar que URL cambió
-- Verificar que banner anterior fue eliminado (si es Local)
+- Si hay `publicId`, usarlo directamente
+- Si no, extraer del URL con regex:
+  ```typescript
+  const match = imageUrl.match(/\/v\d+\/(.+)\.\w+$/);
+  const publicId = match ? match[1] : null;
+  ```
+- Llamar: `await cloudinary.uploader.destroy(publicId)`
 
-**Test 5: Eliminación**
+**Para LocalStorageProvider:**
 
-- Crear team con banner
-- DELETE del team
-- Verificar que archivo fue eliminado (si es Local)
+```typescript
+public async deleteImage(imageUrl: string, _publicId?: string): Promise<void> {
+  // Ignorar publicId (solo para providers online)
+  // ... lógica actual
+}
+```
 
-**Nota:** Usar fixtures de prueba en `tests/fixtures/` (imagen válida, imagen grande, PDF)
+**3. Migraciones de Imágenes**
+
+Si ya tienes imágenes en local y cambias a Cloudinary:
+
+**Opción A: Migración automática (recomendado)**
+
+Crear comando Ace que:
+
+1. Lee todos los teams/players de la DB
+2. Por cada imagen local:
+   - Descarga archivo local
+   - Sube a Cloudinary
+   - Actualiza URL en DB
+   - (Opcional) Elimina archivo local
+
+**Opción B: Migración manual**
+
+1. Descargar carpeta `public/uploads/`
+2. Subir manualmente a Cloudinary Dashboard
+3. Actualizar URLs en DB con SQL
+
+**Opción C: Híbrida (más simple)**
+
+1. Cambiar `STORAGE_PROVIDER=cloudinary`
+2. Dejar imágenes viejas en local
+3. Nuevas imágenes van a Cloudinary
+4. La landing sigue funcionando con ambas (gracias a `toAbsoluteUrl()`)
+
+**4. Frontend sin cambios**
+
+✅ React Admin: Sin cambios - sigue enviando archivos igual  
+✅ Landing: Sin cambios - `toAbsoluteUrl()` maneja URLs absolutas y relativas  
+✅ Controladores: Sin cambios - usan el servicio abstracto
+
+**Único cambio necesario:** Variables de entorno
+
+```bash
+# .env
+STORAGE_PROVIDER=cloudinary
+CLOUDINARY_CLOUD_NAME=tu-cloud
+CLOUDINARY_API_KEY=123456789
+CLOUDINARY_API_SECRET=abc123xyz
+```
+
+#### Testing de la Migración
+
+1. **Subir nueva imagen:** Verificar que se suba a Cloudinary
+2. **Ver en Admin:** Verificar que se muestre correctamente
+3. **Ver en Landing:** Verificar que se cargue desde Cloudinary
+4. **Eliminar imagen:** Verificar que se borre de Cloudinary
+5. **Reemplazar imagen:** Verificar que borre vieja y suba nueva
 
 ---
 
@@ -667,84 +740,6 @@ app/
 
 ---
 
-## 🔧 Troubleshooting
-
-### Error: "Cannot read property 'tmpPath' of undefined"
-
-**Causa:** El archivo no se está subiendo.
-
-**Solución:**
-
-- Verificar frontend envía `Content-Type: multipart/form-data`
-- Verificar nombre del campo coincide (banner/photo)
-- Verificar `bodyparser.ts` configurado correctamente
-
----
-
-### Error: "ENOENT: no such file or directory"
-
-**Causa:** Carpeta `public/uploads/` no existe.
-
-**Solución:**
-
-```powershell
-New-Item -Path "public/uploads/teams" -ItemType Directory -Force
-New-Item -Path "public/uploads/players" -ItemType Directory -Force
-```
-
----
-
-### Error Cloudinary: "Invalid cloud_name"
-
-**Causa:** Variables de entorno incorrectas.
-
-**Solución:**
-
-- Verificar `.env` tiene valores sin espacios
-- Verificar `start/env.ts` valida las variables
-- Reiniciar servidor después de cambiar `.env`
-
----
-
-### Imágenes no se ven después de cambiar provider
-
-**Causa:** URLs antiguas incompatibles con nuevo provider.
-
-**Solución:**
-
-- Ejecutar comando de migración: `node ace migrate:images`
-- Verificar URLs actualizadas en DB
-- Verificar imágenes subidas al nuevo provider
-
----
-
-### CORS error al subir a Cloudinary desde frontend
-
-**Causa:** Subida directa al navegador (no aplica en esta implementación).
-
-**Solución:**
-
-- Nuestra implementación sube desde backend, no debería pasar
-- Si pasa, verificar que la subida va a backend primero
-
----
-
-## 📚 Recursos Útiles
-
-### Documentación Oficial
-
-- [AdonisJS File Uploads](https://docs.adonisjs.com/guides/file-uploads)
-- [Cloudinary Node.js SDK](https://cloudinary.com/documentation/node_integration)
-- [AWS SDK v3 Documentation](https://docs.aws.amazon.com/sdk-for-javascript/v3/developer-guide/)
-- [React Admin - ImageInput](https://marmelab.com/react-admin/Inputs.html#imageinput)
-
-### Tutoriales Recomendados
-
-- [Image Optimization Best Practices (web.dev)](https://web.dev/fast/#optimize-your-images)
-- [Choosing Image Formats](https://web.dev/choose-the-right-image-format/)
-
----
-
 ## 📊 Estimación de Costos
 
 ### Escenario: Proyecto Pucará (estimación realista)
@@ -765,86 +760,3 @@ New-Item -Path "public/uploads/players" -ItemType Directory -Force
 **Conclusión:** Cloudinary free tier es perfecto para Pucará. Incluye 25GB storage + 25GB bandwidth/mes, más que suficiente.
 
 ---
-
-## ✅ Checklist de Implementación
-
-### Local Storage (OBLIGATORIO)
-
-- [ ] Configurar `config/bodyparser.ts` para multipart
-- [ ] Agregar variables de entorno a `.env` y `start/env.ts`
-- [ ] Crear carpetas `public/uploads/teams/` y `public/uploads/players/`
-- [ ] Crear `app/providers/local_storage_provider.ts`
-- [ ] Crear `app/services/image_storage_service.ts`
-- [ ] Actualizar `app/controllers/teams_controller.ts`
-- [ ] Actualizar `app/controllers/players_controller.ts`
-- [ ] Actualizar frontend React Admin (`src/teams.tsx`, `src/players.tsx`)
-- [ ] Actualizar `src/dataProvider.ts` para FormData
-- [ ] Agregar tests en `tests/functional/`
-- [ ] Documentar endpoints en `API_DOCUMENTATION.md`
-- [ ] Testear subida, actualización y eliminación
-
-### Cloudinary (MUY RECOMENDADO)
-
-- [ ] Crear cuenta en https://cloudinary.com/
-- [ ] Instalar: `npm install cloudinary`
-- [ ] Crear `config/cloudinary.ts`
-- [ ] Crear `app/providers/cloudinary_provider.ts`
-- [ ] Agregar credenciales a `.env`
-- [ ] Crear comando `app/commands/migrate_images_to_cloudinary.ts`
-- [ ] Testear migración en desarrollo
-- [ ] Ejecutar migración: `node ace migrate:images`
-- [ ] Cambiar `STORAGE_PROVIDER=cloudinary` en `.env`
-- [ ] Reiniciar servidor y verificar log
-- [ ] Testear subida nueva
-- [ ] Verificar dashboard de Cloudinary
-- [ ] Testing en staging
-- [ ] Deploy a producción
-
-### AWS S3 (OPCIONAL - BAJA PRIORIDAD)
-
-- [ ] Crear cuenta AWS
-- [ ] Crear bucket S3
-- [ ] Configurar IAM y permisos
-- [ ] Configurar CloudFront (opcional)
-- [ ] Instalar: `npm install @aws-sdk/client-s3`
-- [ ] Crear `config/aws.ts`
-- [ ] Crear `app/providers/s3_provider.ts`
-- [ ] Agregar credenciales a `.env`
-- [ ] Cambiar `STORAGE_PROVIDER=s3`
-- [ ] Testing exhaustivo
-
----
-
-## 🚀 Decisión Final
-
-### Para Pucará, la recomendación es:
-
-**Implementación Mínima:**
-
-1. ✅ **Local Storage** (1-2 días) - Para desarrollo y MVP
-
-**Implementación Ideal:**
-
-1. ✅ **Local Storage** (1-2 días) - Para desarrollo
-2. ✅ **Cloudinary** (2-3 días) - Para producción
-
-**Razones:**
-
-- Cloudinary free tier cubre perfectamente las necesidades
-- CDN global mejora experiencia de usuario
-- Fácil de implementar y mantener
-- Sin costos adicionales
-- Backups automáticos
-
-**AWS S3:**
-
-- ⚠️ Solo implementar si sobra tiempo (improbable)
-- No aporta valor significativo vs Cloudinary para este proyecto
-- Mayor complejidad sin beneficio proporcional
-
----
-
-**Creado:** Octubre 2025  
-**Versión:** 2.1 (Sin bloques de código, solo pasos)  
-**Prioridad:** Local (ALTA) → Cloudinary (MEDIA-ALTA) → AWS (BAJA)  
-**Mantenedor:** Team Pucará
