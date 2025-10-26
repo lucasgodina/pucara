@@ -1,25 +1,27 @@
 import { Avatar, Chip } from '@mui/material'
 import {
-    Create,
-    CreateButton,
-    Datagrid,
-    DateField,
-    DeleteButton,
-    Edit,
-    EditButton,
-    ExportButton,
-    FunctionField,
-    List,
-    ReferenceField,
-    SelectInput,
-    Show,
-    ShowButton,
-    SimpleForm,
-    SimpleShowLayout,
-    TextField,
-    TextInput,
-    TopToolbar,
-    useGetList,
+  Create,
+  CreateButton,
+  Datagrid,
+  DateField,
+  DeleteButton,
+  Edit,
+  EditButton,
+  ExportButton,
+  FunctionField,
+  ImageField,
+  ImageInput,
+  List,
+  ReferenceField,
+  SelectInput,
+  Show,
+  ShowButton,
+  SimpleForm,
+  SimpleShowLayout,
+  TextField,
+  TextInput,
+  TopToolbar,
+  useGetList,
 } from 'react-admin'
 
 // Componente personalizado para el selector de equipos
@@ -158,7 +160,17 @@ export const PlayerCreate = () => (
         helperText="Usuario de Instagram (sin @)"
       />
       <TextInput source="bio" label="Biografía" multiline rows={3} fullWidth />
-      <TextInput source="photoUrl" label="URL de Foto" type="url" fullWidth />
+      
+      <ImageInput 
+        source="photo" 
+        label="Foto del Jugador" 
+        accept={{ 'image/*': ['.png', '.jpg', '.jpeg', '.webp'] }}
+        maxSize={10000000}
+      >
+        <ImageField source="src" title="title" />
+      </ImageInput>
+      
+      <TextInput source="photoUrl" label="URL de Foto (opcional)" type="url" fullWidth helperText="URL externa de la foto" />
       <TextInput
         source="stats"
         label="Estadísticas (JSON)"
@@ -210,7 +222,19 @@ export const PlayerEdit = () => (
         helperText="Usuario de Instagram (sin @)"
       />
       <TextInput source="bio" label="Biografía" multiline rows={3} fullWidth />
-      <TextInput source="photoUrl" label="URL de Foto" type="url" fullWidth />
+      
+      <ImageField source="photoUrl" label="Foto Actual" />
+      
+      <ImageInput 
+        source="photo" 
+        label="Nueva Foto del Jugador" 
+        accept={{ 'image/*': ['.png', '.jpg', '.jpeg', '.webp'] }}
+        maxSize={10000000}
+      >
+        <ImageField source="src" title="title" />
+      </ImageInput>
+      
+      <TextInput source="photoUrl" label="URL de Foto (opcional)" type="url" fullWidth helperText="URL externa de la foto" />
       <TextInput
         source="stats"
         label="Estadísticas (JSON)"

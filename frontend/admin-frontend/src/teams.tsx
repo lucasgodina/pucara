@@ -1,22 +1,24 @@
 import { Chip } from '@mui/material'
 import {
-    Create,
-    CreateButton,
-    Datagrid,
-    DateField,
-    DeleteButton,
-    Edit,
-    EditButton,
-    ExportButton,
-    FunctionField,
-    List,
-    Show,
-    ShowButton,
-    SimpleForm,
-    SimpleShowLayout,
-    TextField,
-    TextInput,
-    TopToolbar
+  Create,
+  CreateButton,
+  Datagrid,
+  DateField,
+  DeleteButton,
+  Edit,
+  EditButton,
+  ExportButton,
+  FunctionField,
+  ImageField,
+  ImageInput,
+  List,
+  Show,
+  ShowButton,
+  SimpleForm,
+  SimpleShowLayout,
+  TextField,
+  TextInput,
+  TopToolbar
 } from 'react-admin'
 
 // Componente personalizado para mostrar logros
@@ -74,7 +76,17 @@ export const TeamCreate = () => (
       <TextInput source="name" label="Nombre del Equipo" required fullWidth />
       <TextInput source="slug" label="Slug (URL amigable)" helperText="Ej: dota-2, street-fighter" fullWidth />
       <TextInput source="emoji" label="Emoji" helperText="Ej: 🎮, 🛡️, 👊" fullWidth />
-      <TextInput source="bannerUrl" label="URL del Banner" helperText="URL de la imagen del banner" fullWidth />
+      
+      <ImageInput 
+        source="banner" 
+        label="Banner del Equipo" 
+        accept={{ 'image/*': ['.png', '.jpg', '.jpeg', '.webp'] }}
+        maxSize={10000000}
+      >
+        <ImageField source="src" title="title" />
+      </ImageInput>
+      
+      <TextInput source="bannerUrl" label="URL del Banner (opcional)" helperText="URL externa de la imagen del banner" fullWidth />
       <TextInput source="description" label="Descripción" multiline rows={3} fullWidth />
       <TextInput
         source="achievements"
@@ -108,7 +120,19 @@ export const TeamEdit = () => (
       <TextInput source="name" label="Nombre del Equipo" required fullWidth />
       <TextInput source="slug" label="Slug (URL amigable)" helperText="Ej: dota-2, street-fighter" fullWidth />
       <TextInput source="emoji" label="Emoji" helperText="Ej: 🎮, 🛡️, 👊" fullWidth />
-      <TextInput source="bannerUrl" label="URL del Banner" helperText="URL de la imagen del banner" fullWidth />
+      
+      <ImageField source="bannerUrl" label="Banner Actual" />
+      
+      <ImageInput 
+        source="banner" 
+        label="Nuevo Banner del Equipo" 
+        accept={{ 'image/*': ['.png', '.jpg', '.jpeg', '.webp'] }}
+        maxSize={10000000}
+      >
+        <ImageField source="src" title="title" />
+      </ImageInput>
+      
+      <TextInput source="bannerUrl" label="URL del Banner (opcional)" helperText="URL externa de la imagen del banner" fullWidth />
       <TextInput source="description" label="Descripción" multiline rows={3} fullWidth />
       <TextInput
         source="achievements"

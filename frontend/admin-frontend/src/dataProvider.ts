@@ -12,6 +12,36 @@ const getBaseUrl = (resource: string) => {
   return API_BACKEND_B;
 };
 
+// Helper function to convert data with files to FormData
+const convertFileToFormData = (data: any): FormData => {
+  const formData = new FormData();
+
+  Object.keys(data).forEach((key) => {
+    const value = data[key];
+
+    // Check if value has a rawFile (file upload from ImageInput)
+    if (value && typeof value === "object" && value.rawFile instanceof File) {
+      formData.append(key, value.rawFile);
+    } else if (value !== undefined && value !== null) {
+      // For non-file values, append as JSON string
+      formData.append(
+        key,
+        typeof value === "object" ? JSON.stringify(value) : value
+      );
+    }
+  });
+
+  return formData;
+};
+
+// Check if data contains file uploads
+const hasFileUpload = (data: any): boolean => {
+  return Object.keys(data).some((key) => {
+    const value = data[key];
+    return value && typeof value === "object" && value.rawFile instanceof File;
+  });
+};
+
 // Custom fetch function that handles JSON and errors
 const httpClient = async (url: string, options: RequestInit = {}) => {
   console.log("=== httpClient Request ===");
@@ -221,15 +251,45 @@ export const dataProvider: DataProvider = {
     const data = convertFromReactAdmin(resource, params.data);
 
     try {
-      const { json } = await httpClient(url, {
-        method: "POST",
-        body: JSON.stringify(data),
-      });
+      // Check if data contains file uploads (banner or photo)
+      if (hasFileUpload(params.data)) {
+        // Use FormData for file uploads
+        const formData = convertFileToFormData(data);
+        const token = localStorage.getItem("auth");
 
-      const responseData = json.data || json;
-      return {
-        data: convertToReactAdmin(resource, responseData),
-      };
+        const response = await fetch(url, {
+          method: "POST",
+          headers: {
+            ...(token ? { Authorization: `Bearer ${token}` } : {}),
+            // DO NOT set Content-Type for FormData - browser sets it automatically with boundary
+          },
+          body: formData,
+        });
+
+        if (!response.ok) {
+          const errorText = await response.text();
+          throw new Error(
+            `HTTP error! status: ${response.status} - ${errorText}`
+          );
+        }
+
+        const json = await response.json();
+        const responseData = json.data || json;
+        return {
+          data: convertToReactAdmin(resource, responseData),
+        };
+      } else {
+        // Use regular JSON for non-file uploads
+        const { json } = await httpClient(url, {
+          method: "POST",
+          body: JSON.stringify(data),
+        });
+
+        const responseData = json.data || json;
+        return {
+          data: convertToReactAdmin(resource, responseData),
+        };
+      }
     } catch (error) {
       console.error(`Error creating ${resource}:`, error);
       throw error;
@@ -251,21 +311,58 @@ export const dataProvider: DataProvider = {
     try {
       const method =
         resource === "users" || resource === "news" ? "PUT" : "PATCH";
-      const { json } = await httpClient(url, {
-        method,
-        body: JSON.stringify(data),
-      });
 
-      console.log("Backend response:", json);
-      const responseData = json.data || json;
-      console.log("Response data:", responseData);
+      // Check if data contains file uploads (banner or photo)
+      if (hasFileUpload(params.data)) {
+        // Use FormData for file uploads
+        const formData = convertFileToFormData(data);
+        const token = localStorage.getItem("auth");
 
-      const convertedResponse = convertToReactAdmin(resource, responseData);
-      console.log("Converted response:", convertedResponse);
+        const response = await fetch(url, {
+          method,
+          headers: {
+            ...(token ? { Authorization: `Bearer ${token}` } : {}),
+            // DO NOT set Content-Type for FormData - browser sets it automatically with boundary
+          },
+          body: formData,
+        });
 
-      return {
-        data: convertedResponse,
-      };
+        if (!response.ok) {
+          const errorText = await response.text();
+          throw new Error(
+            `HTTP error! status: ${response.status} - ${errorText}`
+          );
+        }
+
+        const json = await response.json();
+        console.log("Backend response:", json);
+        const responseData = json.data || json;
+        console.log("Response data:", responseData);
+
+        const convertedResponse = convertToReactAdmin(resource, responseData);
+        console.log("Converted response:", convertedResponse);
+
+        return {
+          data: convertedResponse,
+        };
+      } else {
+        // Use regular JSON for non-file uploads
+        const { json } = await httpClient(url, {
+          method,
+          body: JSON.stringify(data),
+        });
+
+        console.log("Backend response:", json);
+        const responseData = json.data || json;
+        console.log("Response data:", responseData);
+
+        const convertedResponse = convertToReactAdmin(resource, responseData);
+        console.log("Converted response:", convertedResponse);
+
+        return {
+          data: convertedResponse,
+        };
+      }
     } catch (error) {
       console.error(`Error updating ${resource}:`, error);
       throw error;
