@@ -36,7 +36,7 @@ export default class PlayersController {
 
       const players = await query
       return response.ok(players)
-    } catch (error) {
+    } catch (error: any) {
       if (error.messages) {
         return response.badRequest({
           message: 'Parámetros de consulta inválidos',
@@ -87,7 +87,7 @@ export default class PlayersController {
       await player.load('team')
 
       return response.created(player)
-    } catch (error) {
+    } catch (error: any) {
       if (error.messages) {
         return response.badRequest({
           message: 'Datos de entrada inválidos',
@@ -122,7 +122,7 @@ export default class PlayersController {
       }
 
       return response.ok(player)
-    } catch (error) {
+    } catch (error: any) {
       return response.internalServerError({
         message: 'Error al obtener el jugador',
         code: 'INTERNAL_ERROR',
@@ -192,7 +192,7 @@ export default class PlayersController {
       console.log('Response data:', responseData)
 
       return response.ok(responseData)
-    } catch (error) {
+    } catch (error: any) {
       console.error('Error updating player:', error)
       return response.internalServerError({
         message: 'Error al actualizar el jugador',
@@ -222,7 +222,7 @@ export default class PlayersController {
       return response.ok({
         message: `El jugador '${player.name}' ha sido eliminado exitosamente`,
       })
-    } catch (error) {
+    } catch (error: any) {
       return response.internalServerError({
         message: 'Error al eliminar el jugador',
         code: 'INTERNAL_ERROR',
@@ -271,7 +271,7 @@ export default class PlayersController {
         ...player.toJSON(),
         message: `El jugador '${player.name}' ha sido ${action} exitosamente`,
       })
-    } catch (error) {
+    } catch (error: any) {
       return response.internalServerError({
         message: 'Error al asignar el jugador al equipo',
         code: 'INTERNAL_ERROR',

@@ -20,7 +20,7 @@ export default class TeamsController {
         message: 'Equipos obtenidos exitosamente',
         data: teams,
       })
-    } catch (error) {
+    } catch (error: any) {
       return response.internalServerError({
         success: false,
         message: 'Error al obtener los equipos',
@@ -52,7 +52,7 @@ export default class TeamsController {
         message: 'Equipo creado exitosamente',
         data: team,
       })
-    } catch (error) {
+    } catch (error: any) {
       if (error.messages) {
         return response.badRequest({
           success: false,
@@ -94,7 +94,7 @@ export default class TeamsController {
         message: 'Equipo obtenido exitosamente',
         data: team,
       })
-    } catch (error) {
+    } catch (error: any) {
       if (error.messages) {
         return response.badRequest({
           success: false,
@@ -146,7 +146,7 @@ export default class TeamsController {
         message: 'Equipo actualizado exitosamente',
         data: team,
       })
-    } catch (error) {
+    } catch (error: any) {
       if (error.messages) {
         return response.badRequest({
           success: false,
@@ -207,7 +207,7 @@ export default class TeamsController {
           message: `El equipo '${team.name}' ha sido eliminado y sus ${team.players.length} jugadores han sido liberados`,
         })
       }
-    } catch (error) {
+    } catch (error: any) {
       return response.internalServerError({
         success: false,
         message: 'Error al eliminar el equipo',
