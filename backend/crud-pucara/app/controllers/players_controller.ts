@@ -1,5 +1,6 @@
 import Player from '#models/player'
 import Team from '#models/team'
+import imageStorageService from '#services/image_storage_service'
 import { createPlayerValidator, playerFiltersValidator } from '#validators/player_validator'
 import type { HttpContext } from '@adonisjs/core/http'
 import { v4 as uuidv4 } from 'uuid'
@@ -55,6 +56,15 @@ export default class PlayersController {
       // Validate request data
       const data = await request.validateUsing(createPlayerValidator)
 
+      // Handle optional photo file upload
+      const photo = request.file('photo')
+      let photoUrl: string | null = data.photo_url || null
+
+      if (photo) {
+        const result = await imageStorageService.uploadImage(photo, 'players')
+        photoUrl = result.url
+      }
+
       // Validate team exists if team_id is provided
       if (data.team_id) {
         const team = await Team.findBy('team_id', data.team_id)
@@ -77,7 +87,7 @@ export default class PlayersController {
       player.teamId = data.team_id || null
       player.bio = data.bio || null
       player.stats = data.stats || null
-      player.photoUrl = data.photo_url || null
+      player.photoUrl = photoUrl
 
       await player.save()
 
@@ -164,6 +174,18 @@ export default class PlayersController {
       ])
       console.log('Extracted data:', data)
 
+      // Optional: handle new photo upload
+      const photo = request.file('photo')
+      let photoUploaded = false
+      if (photo) {
+        if (player.photoUrl) {
+          await imageStorageService.deleteImage(player.photoUrl)
+        }
+        const result = await imageStorageService.uploadImage(photo, 'players')
+        player.photoUrl = result.url
+        photoUploaded = true
+      }
+
       // Validate team exists if team_id is provided (and not null)
       if (data.team_id !== undefined && data.team_id !== null) {
         console.log('Validating team_id:', data.team_id)
@@ -190,7 +212,7 @@ export default class PlayersController {
       }
       if (data.bio !== undefined) player.bio = data.bio
       if (data.stats !== undefined) player.stats = data.stats
-      if (data.photo_url !== undefined) player.photoUrl = data.photo_url
+      if (data.photo_url !== undefined && !photoUploaded) player.photoUrl = data.photo_url
 
       console.log('Player before save:', player.toJSON())
       await player.save()
@@ -227,6 +249,11 @@ export default class PlayersController {
           message: `El jugador con ID '${params.player_id}' no fue encontrado`,
           code: 'NOT_FOUND',
         })
+      }
+
+      // Delete photo if exists
+      if (player.photoUrl) {
+        await imageStorageService.deleteImage(player.photoUrl)
       }
 
       await player.delete()

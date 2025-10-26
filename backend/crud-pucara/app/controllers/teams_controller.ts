@@ -1,4 +1,5 @@
 import Team from '#models/team'
+import imageStorageService from '#services/image_storage_service'
 import {
   createTeamValidator,
   teamIdValidator,
@@ -38,13 +39,22 @@ export default class TeamsController {
       // Validate request data
       const data = await request.validateUsing(createTeamValidator)
 
+      // Handle optional banner file upload
+      const banner = request.file('banner')
+      let bannerUrl: string | null = data.banner_url || null
+
+      if (banner) {
+        const result = await imageStorageService.uploadImage(banner, 'teams')
+        bannerUrl = result.url
+      }
+
       // Create team with UUID
       const team = new Team()
       team.teamId = uuidv4()
       team.name = data.name
       team.slug = data.slug || null
       team.emoji = data.emoji || '🎮'
-      team.bannerUrl = data.banner_url || null
+      team.bannerUrl = bannerUrl
       team.description = data.description || null
       team.achievements = data.achievements || null
 
@@ -137,11 +147,23 @@ export default class TeamsController {
         })
       }
 
-      // Update only provided fields
+      // Optional: handle new banner upload
+      const banner = request.file('banner')
+      let bannerUploaded = false
+      if (banner) {
+        if (team.bannerUrl) {
+          await imageStorageService.deleteImage(team.bannerUrl)
+        }
+        const result = await imageStorageService.uploadImage(banner, 'teams')
+        team.bannerUrl = result.url
+        bannerUploaded = true
+      }
+
+      // Update only provided fields (avoid overriding bannerUrl if we uploaded a new one)
       if (data.name !== undefined) team.name = data.name
       if (data.slug !== undefined) team.slug = data.slug
       if (data.emoji !== undefined) team.emoji = data.emoji
-      if (data.banner_url !== undefined) team.bannerUrl = data.banner_url
+      if (data.banner_url !== undefined && !bannerUploaded) team.bannerUrl = data.banner_url
       if (data.description !== undefined) team.description = data.description
       if (data.achievements !== undefined) team.achievements = data.achievements
 
@@ -184,6 +206,11 @@ export default class TeamsController {
           message: `El equipo con ID '${params.team_id}' no fue encontrado`,
           code: 'NOT_FOUND',
         })
+      }
+
+      // Delete banner if exists
+      if (team.bannerUrl) {
+        await imageStorageService.deleteImage(team.bannerUrl)
       }
 
       // Check deletePlayers query parameter
