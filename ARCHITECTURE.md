@@ -578,6 +578,7 @@ General:
 ---
 
 **📖 Para más detalles, consulta:**
+
 - [LOCAL_SETUP.md](./LOCAL_SETUP.md) - Configuración local
 - [IMAGE_UPLOAD_GUIDE.md](./IMAGE_UPLOAD_GUIDE.md) - Sistema de imágenes
 - [AUTHENTICATION_GUIDE.md](./AUTHENTICATION_GUIDE.md) - Autenticación
