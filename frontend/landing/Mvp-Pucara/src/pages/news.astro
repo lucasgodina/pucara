@@ -20,7 +20,57 @@ import Layout from "../layouts/Layout.astro";
                 </p>
             </header>
 
-            <!-- Próximamente -->
+            <!-- Carrusel de publicaciones de Instagram/Facebook -->
+            <section role="region" aria-labelledby="social-feed" class="mb-12">
+                <h2 id="social-feed" class="text-2xl font-bold text-primary mb-6 text-center">
+                    ÚLTIMAS PUBLICACIONES
+                </h2>
+                
+                <div id="posts-carousel" class="relative">
+                    <!-- Loading state -->
+                    <div id="loading-posts" class="text-center py-12">
+                        <div class="animate-spin rounded-full h-12 w-12 border-t-4 border-b-4 border-primary mx-auto mb-4"></div>
+                        <p class="text-light/70">Cargando publicaciones...</p>
+                    </div>
+
+                    <!-- Error state -->
+                    <div id="error-posts" class="hidden text-center py-12 bg-gray-800/50 rounded-xl p-8 border border-red-500/20">
+                        <div class="text-4xl mb-4">⚠️</div>
+                        <p class="text-red-400">No se pudieron cargar las publicaciones</p>
+                    </div>
+
+                    <!-- Posts container -->
+                    <div id="posts-container" class="hidden">
+                        <div class="relative overflow-hidden">
+                            <!-- Carousel wrapper -->
+                            <div id="carousel-track" class="flex transition-transform duration-500 ease-in-out gap-6">
+                                <!-- Los posts se cargarán aquí dinámicamente -->
+                            </div>
+                        </div>
+
+                        <!-- Navigation buttons -->
+                        <div class="flex justify-center gap-4 mt-8">
+                            <button id="prev-btn" class="bg-primary/20 hover:bg-primary text-white p-3 rounded-full transition-all disabled:opacity-30 disabled:cursor-not-allowed" aria-label="Anterior">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                                    <path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/>
+                                </svg>
+                            </button>
+                            <button id="next-btn" class="bg-primary/20 hover:bg-primary text-white p-3 rounded-full transition-all disabled:opacity-30 disabled:cursor-not-allowed" aria-label="Siguiente">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                                    <path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/>
+                                </svg>
+                            </button>
+                        </div>
+
+                        <!-- Dots indicator -->
+                        <div id="dots-container" class="flex justify-center gap-2 mt-4">
+                            <!-- Los dots se generarán dinámicamente -->
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Próximamente (mantener como backup) -->
             <section role="region" aria-labelledby="development-section" class="text-center py-16">
                 <div class="bg-gray-800/50 rounded-xl p-8 border border-primary/20 max-w-2xl mx-auto">
                     <div class="text-6xl mb-6" role="img" aria-label="Periódico">📰</div>
@@ -78,4 +128,185 @@ import Layout from "../layouts/Layout.astro";
             </section>
         </div>
     </main>
+
+    <script>
+        let currentIndex = 0;
+        let posts = [];
+        const postsPerPage = window.innerWidth >= 1024 ? 3 : (window.innerWidth >= 768 ? 2 : 1);
+
+        async function loadPosts() {
+            try {
+                const response = await fetch('/api/instagram-posts');
+                const data = await response.json();
+
+                if (data.error) {
+                    showError();
+                    return;
+                }
+
+                posts = data.posts;
+                if (posts.length === 0) {
+                    showError();
+                    return;
+                }
+
+                renderPosts();
+                document.getElementById('loading-posts').classList.add('hidden');
+                document.getElementById('posts-container').classList.remove('hidden');
+            } catch (error) {
+                console.error('Error loading posts:', error);
+                showError();
+            }
+        }
+
+        function renderPosts() {
+            const track = document.getElementById('carousel-track');
+            const dotsContainer = document.getElementById('dots-container');
+            
+            if (!track || !dotsContainer) return;
+
+            // Limpiar contenido anterior
+            track.innerHTML = '';
+            dotsContainer.innerHTML = '';
+
+            // Renderizar posts
+            posts.forEach((post, index) => {
+                const postElement = document.createElement('div');
+                postElement.className = 'min-w-full md:min-w-[calc(50%-12px)] lg:min-w-[calc(33.333%-16px)] bg-gray-800/50 rounded-lg overflow-hidden border border-primary/20 hover:border-primary/50 transition-all';
+                
+                const isVideo = post.media_type === 'VIDEO';
+                const imageUrl = isVideo ? (post.thumbnail_url || post.media_url) : post.media_url;
+                const caption = post.caption || post.message || 'Sin descripción';
+                const link = post.permalink || post.permalink_url || '#';
+                
+                postElement.innerHTML = `
+                    <a href="${link}" target="_blank" rel="noopener noreferrer" class="block group">
+                        <div class="relative aspect-square overflow-hidden bg-gray-900">
+                            ${imageUrl ? `
+                                <img 
+                                    src="${imageUrl}" 
+                                    alt="${caption.substring(0, 100)}"
+                                    class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
+                                    loading="lazy"
+                                />
+                            ` : `
+                                <div class="w-full h-full flex items-center justify-center text-6xl">
+                                    📷
+                                </div>
+                            `}
+                            ${isVideo ? `
+                                <div class="absolute inset-0 flex items-center justify-center bg-black/30">
+                                    <svg width="64" height="64" viewBox="0 0 24 24" fill="white" class="drop-shadow-lg">
+                                        <path d="M8 5v14l11-7z"/>
+                                    </svg>
+                                </div>
+                            ` : ''}
+                        </div>
+                        <div class="p-4">
+                            <p class="text-light/80 text-sm line-clamp-3">
+                                ${caption}
+                            </p>
+                            <div class="mt-3 flex items-center justify-between text-xs text-primary">
+                                <span>Ver en ${data.source === 'instagram' ? 'Instagram' : 'Facebook'}</span>
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                                    <path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/>
+                                </svg>
+                            </div>
+                        </div>
+                    </a>
+                `;
+                
+                track.appendChild(postElement);
+            });
+
+            // Crear dots
+            const totalPages = Math.ceil(posts.length / postsPerPage);
+            for (let i = 0; i < totalPages; i++) {
+                const dot = document.createElement('button');
+                dot.className = `w-3 h-3 rounded-full transition-all ${i === 0 ? 'bg-primary w-8' : 'bg-gray-600'}`;
+                dot.setAttribute('aria-label', `Ir a página ${i + 1}`);
+                dot.addEventListener('click', () => goToPage(i));
+                dotsContainer.appendChild(dot);
+            }
+
+            updateCarousel();
+        }
+
+        function updateCarousel() {
+            const track = document.getElementById('carousel-track');
+            const dots = document.querySelectorAll('#dots-container button');
+            const prevBtn = document.getElementById('prev-btn');
+            const nextBtn = document.getElementById('next-btn');
+            
+            if (!track) return;
+
+            const totalPages = Math.ceil(posts.length / postsPerPage);
+            const offset = -(currentIndex * (100 / postsPerPage));
+            track.style.transform = `translateX(${offset}%)`;
+
+            // Actualizar dots
+            dots.forEach((dot, index) => {
+                if (index === currentIndex) {
+                    dot.classList.add('bg-primary', 'w-8');
+                    dot.classList.remove('bg-gray-600');
+                } else {
+                    dot.classList.remove('bg-primary', 'w-8');
+                    dot.classList.add('bg-gray-600');
+                }
+            });
+
+            // Actualizar botones
+            if (prevBtn && nextBtn) {
+                prevBtn.disabled = currentIndex === 0;
+                nextBtn.disabled = currentIndex >= totalPages - 1;
+            }
+        }
+
+        function goToPage(index) {
+            currentIndex = index;
+            updateCarousel();
+        }
+
+        function showError() {
+            document.getElementById('loading-posts').classList.add('hidden');
+            document.getElementById('error-posts').classList.remove('hidden');
+        }
+
+        // Event listeners
+        document.getElementById('prev-btn')?.addEventListener('click', () => {
+            if (currentIndex > 0) {
+                currentIndex--;
+                updateCarousel();
+            }
+        });
+
+        document.getElementById('next-btn')?.addEventListener('click', () => {
+            const totalPages = Math.ceil(posts.length / postsPerPage);
+            if (currentIndex < totalPages - 1) {
+                currentIndex++;
+                updateCarousel();
+            }
+        });
+
+        // Cargar posts al iniciar
+        loadPosts();
+
+        // Responsive: recalcular al cambiar tamaño de ventana
+        let resizeTimeout;
+        window.addEventListener('resize', () => {
+            clearTimeout(resizeTimeout);
+            resizeTimeout = setTimeout(() => {
+                location.reload(); // Recargar para ajustar postsPerPage
+            }, 500);
+        });
+    </script>
+
+    <style>
+        .line-clamp-3 {
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+    </style>
 </Layout>

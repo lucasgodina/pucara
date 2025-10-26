@@ -3,6 +3,8 @@
 interface ImportMetaEnv {
   readonly MERCADOPAGO_ACCESS_TOKEN: string;
   readonly MERCADOPAGO_PUBLIC_KEY: string;
+  readonly META_ACCESS_TOKEN?: string;
+  readonly META_PAGE_ID?: string;
   readonly NGROK_URL?: string;
   readonly SMTP_HOST?: string;
   readonly SMTP_PORT?: string;
