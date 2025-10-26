@@ -494,7 +494,14 @@
       if (link && link.href && !link.href.includes('mailto:') && !link.href.includes('tel:') && !link.href.includes('#')) {
         // Solo aplicar a links internos
         if (link.href.includes(window.location.origin)) {
-          showGamingLoader();
+          // Excluir páginas de resultado de pago de MercadoPago
+          const excludedPaths = ['/store/success', '/store/failure', '/store/pending'];
+          const linkPath = new URL(link.href).pathname;
+          const isExcluded = excludedPaths.some(path => linkPath.includes(path));
+          
+          if (!isExcluded) {
+            showGamingLoader();
+          }
         }
       }
     });
