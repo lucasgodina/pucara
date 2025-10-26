@@ -135,6 +135,11 @@ export default class TeamsController {
       // Validate request data
       const data = await request.validateUsing(updateTeamValidator)
 
+      // Convert string "null" to actual null (from FormData)
+      if (data.banner_url === 'null') {
+        data.banner_url = null
+      }
+
       const team = await Team.findBy('team_id', params.team_id)
 
       if (!team) {
@@ -155,6 +160,19 @@ export default class TeamsController {
         const result = await imageStorageService.uploadImage(banner, 'teams')
         team.bannerUrl = result.url
         bannerUploaded = true
+      }
+
+      // Handle explicit banner deletion (when bannerUrl is set to null)
+      // ONLY delete if no new banner was uploaded
+      if (!bannerUploaded && data.banner_url === null && team.bannerUrl) {
+        console.log('Deleting current banner:', team.bannerUrl)
+        // Eliminar imagen de forma asíncrona sin bloquear la respuesta
+        const bannerUrlToDelete = team.bannerUrl
+        imageStorageService.deleteImage(bannerUrlToDelete).catch((error) => {
+          console.error('Error deleting banner in background:', error)
+        })
+        team.bannerUrl = null
+        bannerUploaded = true // Prevent overwriting in next check
       }
 
       // Update only provided fields (avoid overriding bannerUrl if we uploaded a new one)

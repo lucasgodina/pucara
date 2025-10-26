@@ -1,28 +1,35 @@
-import { Avatar, Chip } from '@mui/material'
+import CloseIcon from '@mui/icons-material/Close'
+import { Avatar, Box, Chip, IconButton } from '@mui/material'
+import { useState } from 'react'
 import {
-  Create,
-  CreateButton,
-  Datagrid,
-  DateField,
-  DeleteButton,
-  Edit,
-  EditButton,
-  ExportButton,
-  FunctionField,
-  ImageField,
-  ImageInput,
-  List,
-  NumberField,
-  ReferenceField,
-  SelectInput,
-  Show,
-  ShowButton,
-  SimpleForm,
-  SimpleShowLayout,
-  TextField,
-  TextInput,
-  TopToolbar,
-  useGetList,
+    Confirm,
+    Create,
+    CreateButton,
+    Datagrid,
+    DateField,
+    DeleteButton,
+    Edit,
+    EditButton,
+    ExportButton,
+    FunctionField,
+    ImageField,
+    ImageInput,
+    List,
+    NumberField,
+    ReferenceField,
+    SelectInput,
+    Show,
+    ShowButton,
+    SimpleForm,
+    SimpleShowLayout,
+    TextField,
+    TextInput,
+    TopToolbar,
+    useDataProvider,
+    useGetList,
+    useNotify,
+    useRecordContext,
+    useRefresh,
 } from 'react-admin'
 
 // Componente personalizado para el selector de equipos
@@ -151,10 +158,49 @@ export const PlayerCreate = () => (
   </Create>
 )
 
-// Formulario de edición de jugadores
-export const PlayerEdit = () => (
-  <Edit>
-    <SimpleForm>
+// Componente interno para el formulario de edición con acceso al contexto
+const PlayerEditForm = () => {
+  const [showPhoto, setShowPhoto] = useState(true)
+  const [confirmOpen, setConfirmOpen] = useState(false)
+  const record = useRecordContext()
+  const dataProvider = useDataProvider()
+  const notify = useNotify()
+  const refresh = useRefresh()
+
+  const handleDeleteImage = async () => {
+    if (!record?.id) return
+
+    // Cerrar el diálogo inmediatamente
+    setConfirmOpen(false)
+    
+    // Optimistic update - ocultar la imagen inmediatamente
+    setShowPhoto(false)
+    notify('Eliminando imagen...', { type: 'info' })
+
+    try {
+      // Llamar al backend de forma asíncrona (sin bloquear la UI)
+      dataProvider.update('players', {
+        id: record.id,
+        data: { photoUrl: null },
+        previousData: record,
+      }).then(() => {
+        notify('Imagen eliminada correctamente', { type: 'success' })
+        refresh()
+      }).catch((error) => {
+        console.error('Error al eliminar la imagen:', error)
+        notify('Error al eliminar la imagen', { type: 'error' })
+        // Revertir el cambio visual en caso de error
+        setShowPhoto(true)
+      })
+    } catch (error) {
+      console.error('Error al eliminar la imagen:', error)
+      notify('Error al eliminar la imagen', { type: 'error' })
+      setShowPhoto(true)
+    }
+  }
+
+  return (
+    <>
       <TextInput source="name" label="Nombre del Jugador" required fullWidth />
       <TeamSelectInput source="teamId" label="Reasignar Equipo" fullWidth />
       <TextInput source="age" label="Edad" type="number" fullWidth helperText="Edad del jugador" />
@@ -177,9 +223,30 @@ export const PlayerEdit = () => (
         helperText="Usuario de Instagram (sin @)"
       />
       <TextInput source="bio" label="Biografía" multiline rows={3} fullWidth />
-      
-      <ImageField source="photoUrl" label="Foto Actual" />
-      
+
+      {/* Imagen actual con botón de eliminar */}
+      {record?.photoUrl && showPhoto && (
+        <Box position="relative" display="block" width="fit-content" mb={2}>
+          <ImageField source="photoUrl" label="Foto Actual" sx={{ width: 180, height: 180, borderRadius: 2, boxShadow: 1 }} />
+          <IconButton
+            size="small"
+            sx={{
+              position: 'absolute',
+              top: 4,
+              right: 4,
+              background: 'rgba(255,255,255,0.8)',
+              zIndex: 2,
+              boxShadow: 1,
+              ':hover': { background: 'rgba(255,0,0,0.8)', color: '#fff' },
+            }}
+            onClick={() => setConfirmOpen(true)}
+            title="Eliminar imagen"
+          >
+            <CloseIcon />
+          </IconButton>
+        </Box>
+      )}
+
       <ImageInput 
         source="photo" 
         label="Nueva Foto del Jugador" 
@@ -188,6 +255,24 @@ export const PlayerEdit = () => (
       >
         <ImageField source="src" title="title" />
       </ImageInput>
+
+      {/* Diálogo de confirmación */}
+      <Confirm
+        isOpen={confirmOpen}
+        title="Eliminar imagen"
+        content="¿Estás seguro de que deseas eliminar esta imagen? Esta acción no se puede deshacer."
+        onConfirm={handleDeleteImage}
+        onClose={() => setConfirmOpen(false)}
+      />
+    </>
+  )
+}
+
+// Formulario de edición de jugadores
+export const PlayerEdit = () => (
+  <Edit>
+    <SimpleForm>
+      <PlayerEditForm />
     </SimpleForm>
   </Edit>
 )

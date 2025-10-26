@@ -14,7 +14,17 @@ Antes de comenzar, asegúrate de tener instalados:
 
 Verificar instalaciones:
 
+**Windows (PowerShell):**
+
 ```powershell
+node --version    # Debe mostrar v18.x o superior
+npm --version     # Debe mostrar v9.x o superior
+git --version     # Debe mostrar v2.x o superior
+```
+
+**Linux/Mac (Terminal):**
+
+```bash
 node --version    # Debe mostrar v18.x o superior
 npm --version     # Debe mostrar v9.x o superior
 git --version     # Debe mostrar v2.x o superior
@@ -44,14 +54,18 @@ pucara/
 
 ### 1️⃣ Clonar el Repositorio
 
-```powershell
+**Windows (PowerShell) / Linux / Mac:**
+
+```bash
 git clone https://github.com/lucasgodina/pucara.git
 cd pucara
 ```
 
 ### 2️⃣ Instalar Dependencias del Monorepo Raíz
 
-```powershell
+**Windows (PowerShell) / Linux / Mac:**
+
+```bash
 npm install
 ```
 
@@ -59,7 +73,9 @@ Esto instalará `concurrently`, que permite ejecutar múltiples servicios simult
 
 ### 3️⃣ Instalar Dependencias de Todos los Proyectos
 
-```powershell
+**Windows (PowerShell) / Linux / Mac:**
+
+```bash
 npm run install:all
 ```
 
@@ -79,14 +95,24 @@ Este comando instalará las dependencias de:
 
 1. Navegar al directorio del backend:
 
-```powershell
+**Windows (PowerShell) / Linux / Mac:**
+
+```bash
 cd backend/crud-pucara
 ```
 
 2. Crear archivo `.env` desde el ejemplo:
 
+**Windows (PowerShell):**
+
 ```powershell
 Copy-Item .env.example .env
+```
+
+**Linux/Mac:**
+
+```bash
+cp .env.example .env
 ```
 
 3. Abrir `.env` y configurar:
@@ -124,7 +150,9 @@ AWS_SECRET_ACCESS_KEY=
 
 El `APP_KEY` es requerido por AdonisJS para encriptación:
 
-```powershell
+**Windows (PowerShell) / Linux / Mac:**
+
+```bash
 node ace generate:key
 ```
 
@@ -132,7 +160,9 @@ Esto generará una clave y la agregará automáticamente a tu `.env`.
 
 ### 6️⃣ Ejecutar Migraciones de Base de Datos
 
-```powershell
+**Windows (PowerShell) / Linux / Mac:**
+
+```bash
 node ace migration:run
 ```
 
@@ -140,7 +170,9 @@ Esto creará las tablas necesarias en la base de datos SQLite (`database/pucara.
 
 ### 7️⃣ Crear Usuario Administrador
 
-```powershell
+**Windows (PowerShell) / Linux / Mac:**
+
+```bash
 node ace db:seed
 ```
 
@@ -151,7 +183,9 @@ Esto creará el usuario administrador con las credenciales del `.env`:
 
 ### 8️⃣ Volver al Directorio Raíz
 
-```powershell
+**Windows (PowerShell) / Linux / Mac:**
+
+```bash
 cd ../..
 ```
 
@@ -163,7 +197,9 @@ cd ../..
 
 Desde el directorio raíz del proyecto:
 
-```powershell
+**Windows (PowerShell) / Linux / Mac:**
+
+```bash
 npm run dev:all
 ```
 
@@ -179,21 +215,27 @@ Si prefieres ejecutar servicios por separado (en terminales diferentes):
 
 **Terminal 1 - Backend API:**
 
-```powershell
+**Windows (PowerShell) / Linux / Mac:**
+
+```bash
 npm run dev:api
 # O bien: cd backend/crud-pucara && npm run dev
 ```
 
 **Terminal 2 - Admin Frontend:**
 
-```powershell
+**Windows (PowerShell) / Linux / Mac:**
+
+```bash
 npm run dev:admin
 # O bien: cd frontend/admin-frontend && npm start
 ```
 
 **Terminal 3 - Landing:**
 
-```powershell
+**Windows (PowerShell) / Linux / Mac:**
+
+```bash
 npm run dev:landing
 # O bien: cd frontend/landing && npm run dev
 ```
@@ -267,7 +309,9 @@ Deberías ver la landing page del proyecto Pucara.
 
 ### Desde el Directorio Raíz
 
-```powershell
+**Windows (PowerShell) / Linux / Mac:**
+
+```bash
 # Instalar todas las dependencias
 npm run install:all
 
@@ -289,7 +333,9 @@ npm run build:all
 
 ### Desde backend/crud-pucara
 
-```powershell
+**Windows (PowerShell) / Linux / Mac:**
+
+```bash
 # Ejecutar migraciones
 node ace migration:run
 
@@ -317,6 +363,8 @@ npm run typecheck
 
 **Solución**: Otro proceso está usando el puerto 3333.
 
+**Windows (PowerShell):**
+
 ```powershell
 # Encontrar el proceso
 netstat -ano | findstr :3333
@@ -328,11 +376,26 @@ taskkill /PID <PID> /F
 PORT=3334
 ```
 
+**Linux/Mac:**
+
+```bash
+# Encontrar el proceso
+lsof -i :3333
+
+# Matar el proceso (reemplaza PID con el número encontrado)
+kill -9 <PID>
+
+# O cambiar el puerto en backend/crud-pucara/.env
+PORT=3334
+```
+
 ### Problema: "Cannot find module '@adonisjs/...'"
 
 **Solución**: Las dependencias del backend no están instaladas.
 
-```powershell
+**Windows (PowerShell) / Linux / Mac:**
+
+```bash
 cd backend/crud-pucara
 npm install
 cd ../..
@@ -342,9 +405,21 @@ cd ../..
 
 **Solución**: Elimina la base de datos y vuelve a crear las migraciones.
 
+**Windows (PowerShell):**
+
 ```powershell
 cd backend/crud-pucara
 Remove-Item database/pucara.sqlite -Force
+node ace migration:run
+node ace db:seed
+cd ../..
+```
+
+**Linux/Mac:**
+
+```bash
+cd backend/crud-pucara
+rm -f database/pucara.sqlite
 node ace migration:run
 node ace db:seed
 cd ../..
@@ -354,7 +429,9 @@ cd ../..
 
 **Solución**: Verifica que el usuario administrador existe.
 
-```powershell
+**Windows (PowerShell) / Linux / Mac:**
+
+```bash
 cd backend/crud-pucara
 node ace db:seed
 cd ../..
@@ -364,6 +441,8 @@ cd ../..
 
 **Solución**: Las carpetas se crean automáticamente al subir la primera imagen. Si hay un error de permisos:
 
+**Windows (PowerShell):**
+
 ```powershell
 cd backend/crud-pucara
 # Verificar que existe la carpeta public
@@ -371,13 +450,35 @@ Test-Path public
 cd ../..
 ```
 
+**Linux/Mac:**
+
+```bash
+cd backend/crud-pucara
+# Verificar que existe la carpeta public
+ls -la public
+# Si necesitas dar permisos
+chmod -R 755 public
+cd ../..
+```
+
 ### Problema: "Module not found" en Admin Frontend
 
 **Solución**: Reinstala las dependencias del admin frontend.
 
+**Windows (PowerShell):**
+
 ```powershell
 cd frontend/admin-frontend
 Remove-Item -Recurse -Force node_modules
+npm install
+cd ../..
+```
+
+**Linux/Mac:**
+
+```bash
+cd frontend/admin-frontend
+rm -rf node_modules
 npm install
 cd ../..
 ```
@@ -441,7 +542,9 @@ CLOUDINARY_API_SECRET=tu_api_secret
 
 4. Instalar dependencia:
 
-```powershell
+**Windows (PowerShell) / Linux / Mac:**
+
+```bash
 cd backend/crud-pucara
 npm install cloudinary
 cd ../..

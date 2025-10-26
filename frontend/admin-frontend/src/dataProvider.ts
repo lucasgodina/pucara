@@ -16,18 +16,34 @@ const getBaseUrl = (resource: string) => {
 const convertFileToFormData = (data: any): FormData => {
   const formData = new FormData();
 
+  // Check if there's a photo/banner file being uploaded
+  const hasPhotoFile = data.photo && data.photo.rawFile instanceof File;
+  const hasBannerFile = data.banner && data.banner.rawFile instanceof File;
+
   Object.keys(data).forEach((key) => {
     const value = data[key];
 
     // Check if value has a rawFile (file upload from ImageInput)
     if (value && typeof value === "object" && value.rawFile instanceof File) {
       formData.append(key, value.rawFile);
-    } else if (value !== undefined && value !== null) {
-      // For non-file values, append as JSON string
-      formData.append(
-        key,
-        typeof value === "object" ? JSON.stringify(value) : value
-      );
+    } else if (value === null) {
+      // Explicitly handle null values (for image deletion)
+      formData.append(key, "null");
+    } else if (value !== undefined) {
+      // Skip photo_url/banner_url if we're uploading a new file
+      if (
+        (key === "photo_url" && hasPhotoFile) ||
+        (key === "banner_url" && hasBannerFile)
+      ) {
+        return; // Don't send the URL when uploading a new file
+      }
+
+      // For non-file values, append as-is (don't stringify non-objects)
+      if (typeof value === "object") {
+        formData.append(key, JSON.stringify(value));
+      } else {
+        formData.append(key, value);
+      }
     }
   });
 
@@ -158,11 +174,8 @@ const convertFromReactAdmin = (resource: string, data: any) => {
   delete converted.updatedAt;
   delete converted.team;
 
-  // Para players, mapear teamId a team_id si existe
-  if (resource === "players" && "teamId" in converted) {
-    converted.team_id = converted.teamId;
-    delete converted.teamId;
-  }
+  // Para players, el backend espera teamId en camelCase (no snake_case)
+  // Solo necesitamos mantener el campo como está
 
   // Para players, mapear photoUrl a photo_url si existe
   if (resource === "players" && "photoUrl" in converted) {

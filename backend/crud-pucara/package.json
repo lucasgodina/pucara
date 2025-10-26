@@ -60,6 +60,7 @@
     "@types/uuid": "^10.0.0",
     "@vinejs/vine": "^3.0.1",
     "better-sqlite3": "^11.10.0",
+    "cloudinary": "^2.8.0",
     "luxon": "^3.6.1",
     "pucara-monorepo": "file:../..",
     "reflect-metadata": "^0.2.2",
