@@ -38,12 +38,9 @@ export const POST: APIRoute = async ({ request }) => {
     const preference = new Preference(client);
 
     // Obtener la URL base del sitio
-    // Si hay NGROK_URL configurado, usar esa tanto para webhooks como para back_urls
     const siteUrl = new URL(request.url).origin;
-    const publicUrl = import.meta.env.NGROK_URL || siteUrl;
 
     console.log('🌐 Site URL:', siteUrl);
-    console.log('🔔 Public URL (ngrok):', publicUrl);
 
     // Crear preferencia de pago
     const preferenceData = {
@@ -57,12 +54,12 @@ export const POST: APIRoute = async ({ request }) => {
         }
       ],
       back_urls: {
-        success: `${publicUrl}/store/success`,
-        failure: `${publicUrl}/store/failure`,
-        pending: `${publicUrl}/store/pending`
+        success: `${siteUrl}/store/success`,
+        failure: `${siteUrl}/store/failure`,
+        pending: `${siteUrl}/store/pending`
       },
       auto_return: 'approved' as const,
-      notification_url: `${publicUrl}/api/webhook`,
+      notification_url: `${siteUrl}/api/webhook`,
       statement_descriptor: 'PUCARA GAMING',
       external_reference: `PUCARA-${productId}-${Date.now()}`
     };
