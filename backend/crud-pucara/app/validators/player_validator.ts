@@ -12,7 +12,6 @@ export const createPlayerValidator = vine.compile(
     instagram: vine.string().maxLength(100).optional().nullable(),
     team_id: vine.string().uuid().optional().nullable(),
     bio: vine.string().optional().nullable(),
-    stats: vine.record(vine.string()).optional().nullable(),
     photo_url: vine.string().url().optional().nullable(),
   })
 )
@@ -29,7 +28,6 @@ export const updatePlayerValidator = vine.compile(
     instagram: vine.string().maxLength(100).optional().nullable(),
     team_id: vine.string().uuid().optional().nullable(),
     bio: vine.string().optional().nullable(),
-    stats: vine.record(vine.string()).optional().nullable(),
     photo_url: vine.string().url().optional().nullable(),
   })
 )

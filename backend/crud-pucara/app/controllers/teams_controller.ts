@@ -53,10 +53,8 @@ export default class TeamsController {
       team.teamId = uuidv4()
       team.name = data.name
       team.slug = data.slug || null
-      team.emoji = data.emoji || '🎮'
       team.bannerUrl = bannerUrl
       team.description = data.description || null
-      team.achievements = data.achievements || null
 
       await team.save()
 
@@ -162,10 +160,8 @@ export default class TeamsController {
       // Update only provided fields (avoid overriding bannerUrl if we uploaded a new one)
       if (data.name !== undefined) team.name = data.name
       if (data.slug !== undefined) team.slug = data.slug
-      if (data.emoji !== undefined) team.emoji = data.emoji
       if (data.banner_url !== undefined && !bannerUploaded) team.bannerUrl = data.banner_url
       if (data.description !== undefined) team.description = data.description
-      if (data.achievements !== undefined) team.achievements = data.achievements
 
       await team.save()
 

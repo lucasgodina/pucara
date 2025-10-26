@@ -86,7 +86,6 @@ export default class PlayersController {
       player.instagram = data.instagram || null
       player.teamId = data.team_id || null
       player.bio = data.bio || null
-      player.stats = data.stats || null
       player.photoUrl = photoUrl
 
       await player.save()
@@ -169,7 +168,6 @@ export default class PlayersController {
         'instagram',
         'team_id',
         'bio',
-        'stats',
         'photo_url',
       ])
       console.log('Extracted data:', data)
@@ -211,7 +209,6 @@ export default class PlayersController {
         player.teamId = data.team_id
       }
       if (data.bio !== undefined) player.bio = data.bio
-      if (data.stats !== undefined) player.stats = data.stats
       if (data.photo_url !== undefined && !photoUploaded) player.photoUrl = data.photo_url
 
       console.log('Player before save:', player.toJSON())

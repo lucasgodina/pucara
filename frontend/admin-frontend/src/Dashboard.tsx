@@ -1,23 +1,23 @@
-import React, { useState, useEffect } from 'react'
 import {
-  Card,
-  CardContent,
-  Typography,
-  Box,
-  Chip,
-  Paper,
-  List,
-  ListItem,
-  ListItemText,
-  ListItemAvatar,
-  Avatar,
-} from '@mui/material'
-import {
-  Groups as TeamsIcon,
-  Person as PlayerIcon,
-  PersonOff as FreeAgentIcon,
-  EmojiEvents as TrophyIcon,
+    PersonOff as FreeAgentIcon,
+    Person as PlayerIcon,
+    Groups as TeamsIcon,
+    EmojiEvents as TrophyIcon,
 } from '@mui/icons-material'
+import {
+    Avatar,
+    Box,
+    Card,
+    CardContent,
+    Chip,
+    List,
+    ListItem,
+    ListItemAvatar,
+    ListItemText,
+    Paper,
+    Typography,
+} from '@mui/material'
+import { useEffect, useState } from 'react'
 import { useDataProvider } from 'react-admin'
 
 interface DashboardStats {
@@ -33,6 +33,7 @@ interface Team {
   description?: string
   achievements?: any
   playersCount?: number
+  bannerUrl?: string
 }
 
 interface Player {
@@ -203,9 +204,19 @@ export const Dashboard = () => {
               <List>
                 {teams.map((team) => (
                   <ListItem key={team.teamId}>
-                    <ListItemAvatar>
-                      <Avatar sx={{ bgcolor: 'primary.main' }}>
-                        <TeamsIcon />
+                    <ListItemAvatar sx={{ minWidth: 96, mr: 2 }}>
+                      <Avatar
+                        variant="rounded"
+                        src={team.bannerUrl || undefined}
+                        sx={{
+                          width: 84,
+                          height: 44,
+                          bgcolor: team.bannerUrl ? 'transparent' : 'primary.main',
+                          borderRadius: 1,
+                          img: { objectFit: 'cover' },
+                        }}
+                      >
+                        {!team.bannerUrl && <TeamsIcon />}
                       </Avatar>
                     </ListItemAvatar>
                     <ListItemText

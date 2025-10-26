@@ -1,23 +1,44 @@
-import React from 'react'
+import { Chip } from '@mui/material'
 import {
-  List,
-  Datagrid,
-  TextField,
-  DateField,
   Create,
-  SimpleForm,
-  TextInput,
-  Edit,
-  Show,
-  SimpleShowLayout,
-  DeleteButton,
-  EditButton,
-  ShowButton,
   CreateButton,
-  TopToolbar,
+  Datagrid,
+  DateField,
+  DeleteButton,
+  Edit,
+  EditButton,
   ExportButton,
+  FunctionField,
+  List,
   SelectInput,
+  Show,
+  ShowButton,
+  SimpleForm,
+  SimpleShowLayout,
+  TextField,
+  TextInput,
+  TopToolbar,
 } from 'react-admin'
+
+// Componente para mostrar el rol con color
+const RoleField = ({ record }: { record?: any }) => {
+  if (!record?.role) return <span>-</span>
+
+  const getColor = (role: string) => {
+    switch (role) {
+      case 'admin':
+        return 'error'
+      case 'editor':
+        return 'primary'
+      case 'user':
+        return 'success'
+      default:
+        return 'default'
+    }
+  }
+
+  return <Chip label={record.role.toUpperCase()} color={getColor(record.role)} size="small" />
+}
 
 // Lista de usuarios (solo admin)
 export const UserList = () => (
@@ -32,8 +53,10 @@ export const UserList = () => (
     <Datagrid>
       <TextField source="username" label="Usuario" />
       <TextField source="email" label="Email" />
-      <TextField source="role" label="Rol" />
+      <TextField source="fullName" label="Nombre Completo" />
+      <FunctionField label="Rol" render={(record: any) => <RoleField record={record} />} />
       <DateField source="createdAt" label="Creado" showTime />
+      <DateField source="updatedAt" label="Última Act." showTime />
       <ShowButton />
       <EditButton />
       <DeleteButton />
@@ -91,7 +114,8 @@ export const UserShow = () => (
     <SimpleShowLayout>
       <TextField source="username" label="Usuario" />
       <TextField source="email" label="Email" />
-      <TextField source="role" label="Rol" />
+      <TextField source="fullName" label="Nombre Completo" />
+      <FunctionField label="Rol" render={(record: any) => <RoleField record={record} />} />
       <DateField source="createdAt" label="Creado" showTime />
       <DateField source="updatedAt" label="Actualizado" showTime />
     </SimpleShowLayout>

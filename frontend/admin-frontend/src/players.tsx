@@ -12,6 +12,7 @@ import {
   ImageField,
   ImageInput,
   List,
+  NumberField,
   ReferenceField,
   SelectInput,
   Show,
@@ -52,28 +53,6 @@ const TeamSelectInput = (props: any) => {
       optionValue="id"
       emptyText="Seleccionar equipo..."
     />
-  )
-}
-
-// Componente personalizado para mostrar estadísticas
-const StatsField = ({ record }: { record?: any }) => {
-  if (!record?.stats) return <span>-</span>
-
-  const stats = typeof record.stats === 'string' ? JSON.parse(record.stats) : record.stats
-
-  return (
-    <div>
-      {Object.entries(stats).map(([key, value]: [string, any]) => (
-        <Chip
-          key={key}
-          label={`${key}: ${value}`}
-          size="small"
-          style={{ margin: '2px' }}
-          color="secondary"
-          variant="outlined"
-        />
-      ))}
-    </div>
   )
 }
 
@@ -120,12 +99,11 @@ export const PlayerList = () => (
     <Datagrid>
       <FunctionField label="Foto" render={(record: any) => <PlayerAvatar record={record} />} />
       <TextField source="name" label="Nombre" />
+      <NumberField source="age" label="Edad" />
+      <TextField source="role" label="Rol" />
+      <TextField source="country" label="País" />
+      <TextField source="instagram" label="Instagram" />
       <FunctionField label="Equipo" render={(record: any) => <TeamDisplay record={record} />} />
-      <TextField source="bio" label="Biografía" />
-      <FunctionField
-        label="Estadísticas"
-        render={(record: any) => <StatsField record={record} />}
-      />
       <DateField source="createdAt" label="Creado" showTime />
       <ShowButton />
       <EditButton />
@@ -169,28 +147,6 @@ export const PlayerCreate = () => (
       >
         <ImageField source="src" title="title" />
       </ImageInput>
-      
-      <TextInput
-        source="stats"
-        label="Estadísticas (JSON)"
-        helperText='Ejemplo: {"KDA": "5.2", "Role": "Mid", "Champion": "Yasuo"}'
-        multiline
-        rows={3}
-        fullWidth
-        parse={(value) => {
-          if (!value) return null
-          try {
-            return JSON.parse(value)
-          } catch {
-            return value
-          }
-        }}
-        format={(value) => {
-          if (!value) return ''
-          if (typeof value === 'string') return value
-          return JSON.stringify(value, null, 2)
-        }}
-      />
     </SimpleForm>
   </Create>
 )
@@ -232,28 +188,6 @@ export const PlayerEdit = () => (
       >
         <ImageField source="src" title="title" />
       </ImageInput>
-      
-      <TextInput
-        source="stats"
-        label="Estadísticas (JSON)"
-        helperText='Ejemplo: {"KDA": "5.2", "Role": "Mid", "Champion": "Yasuo"}'
-        multiline
-        rows={3}
-        fullWidth
-        parse={(value) => {
-          if (!value) return null
-          try {
-            return JSON.parse(value)
-          } catch {
-            return value
-          }
-        }}
-        format={(value) => {
-          if (!value) return ''
-          if (typeof value === 'string') return value
-          return JSON.stringify(value, null, 2)
-        }}
-      />
     </SimpleForm>
   </Edit>
 )
@@ -264,13 +198,12 @@ export const PlayerShow = () => (
     <SimpleShowLayout>
       <FunctionField label="Foto" render={(record: any) => <PlayerAvatar record={record} />} />
       <TextField source="name" label="Nombre" />
+      <NumberField source="age" label="Edad" />
+      <TextField source="role" label="Rol" />
+      <TextField source="country" label="País" />
+      <TextField source="instagram" label="Instagram" />
       <FunctionField label="Equipo" render={(record: any) => <TeamDisplay record={record} />} />
       <TextField source="bio" label="Biografía" />
-      {/* <UrlField source="photoUrl" label="URL de Foto" /> */}
-      <FunctionField
-        label="Estadísticas"
-        render={(record: any) => <StatsField record={record} />}
-      />
       <DateField source="createdAt" label="Creado" showTime />
       <DateField source="updatedAt" label="Actualizado" showTime />
     </SimpleShowLayout>
