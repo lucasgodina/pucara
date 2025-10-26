@@ -170,7 +170,6 @@ export const PlayerCreate = () => (
         <ImageField source="src" title="title" />
       </ImageInput>
       
-      <TextInput source="photoUrl" label="URL de Foto (opcional)" type="url" fullWidth helperText="URL externa de la foto" />
       <TextInput
         source="stats"
         label="Estadísticas (JSON)"
@@ -234,7 +233,6 @@ export const PlayerEdit = () => (
         <ImageField source="src" title="title" />
       </ImageInput>
       
-      <TextInput source="photoUrl" label="URL de Foto (opcional)" type="url" fullWidth helperText="URL externa de la foto" />
       <TextInput
         source="stats"
         label="Estadísticas (JSON)"

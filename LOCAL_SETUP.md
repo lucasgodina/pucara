@@ -130,16 +130,7 @@ node ace generate:key
 
 Esto generará una clave y la agregará automáticamente a tu `.env`.
 
-### 6️⃣ Crear Carpetas para Imágenes
-
-```powershell
-New-Item -ItemType Directory -Force -Path public/uploads/teams
-New-Item -ItemType Directory -Force -Path public/uploads/players
-New-Item -ItemType File -Force -Path public/uploads/teams/.gitkeep
-New-Item -ItemType File -Force -Path public/uploads/players/.gitkeep
-```
-
-### 7️⃣ Ejecutar Migraciones de Base de Datos
+### 6️⃣ Ejecutar Migraciones de Base de Datos
 
 ```powershell
 node ace migration:run
@@ -147,7 +138,7 @@ node ace migration:run
 
 Esto creará las tablas necesarias en la base de datos SQLite (`database/pucara.sqlite`).
 
-### 8️⃣ Crear Usuario Administrador
+### 7️⃣ Crear Usuario Administrador
 
 ```powershell
 node ace db:seed
@@ -158,7 +149,7 @@ Esto creará el usuario administrador con las credenciales del `.env`:
 - **Email**: `admin@example.com` (o el que configuraste)
 - **Password**: `admin123` (o el que configuraste)
 
-### 9️⃣ Volver al Directorio Raíz
+### 8️⃣ Volver al Directorio Raíz
 
 ```powershell
 cd ../..
@@ -371,12 +362,12 @@ cd ../..
 
 ### Problema: "Cannot upload images"
 
-**Solución**: Verifica que las carpetas de uploads existen y tienen permisos.
+**Solución**: Las carpetas se crean automáticamente al subir la primera imagen. Si hay un error de permisos:
 
 ```powershell
 cd backend/crud-pucara
-New-Item -ItemType Directory -Force -Path public/uploads/teams
-New-Item -ItemType Directory -Force -Path public/uploads/players
+# Verificar que existe la carpeta public
+Test-Path public
 cd ../..
 ```
 
@@ -402,6 +393,8 @@ El proyecto usa SQLite para desarrollo local. La base de datos se crea automáti
 ```
 backend/crud-pucara/database/pucara.sqlite
 ```
+
+**Nota**: Las carpetas de imágenes (`public/uploads/teams/` y `public/uploads/players/`) se crean automáticamente al subir la primera imagen.
 
 **Ventajas**:
 
@@ -547,7 +540,6 @@ Usa esta lista para verificar que todo está configurado correctamente:
 - [ ] Dependencias de todos los proyectos instaladas (`npm run install:all`)
 - [ ] Archivo `.env` creado en `backend/crud-pucara/`
 - [ ] `APP_KEY` generada en el `.env`
-- [ ] Carpetas de uploads creadas (`public/uploads/teams` y `public/uploads/players`)
 - [ ] Migraciones ejecutadas (`node ace migration:run`)
 - [ ] Usuario admin creado (`node ace db:seed`)
 - [ ] Backend corriendo en http://localhost:3333

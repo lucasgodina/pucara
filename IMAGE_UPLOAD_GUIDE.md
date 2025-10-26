@@ -444,12 +444,13 @@ app/
 - Importar `ImageInput` y `ImageField` de react-admin
 - Agregar campo `ImageInput`:
   - `source="banner"`
-  - `label="Banner del Equipo"`
-  - `accept="image/*"`
+  - `label="Banner del Equipo"` o `"Nuevo Banner del Equipo"` (en edición)
+  - `accept={{ 'image/*': ['.png', '.jpg', '.jpeg', '.webp'] }}`
   - `maxSize={10000000}` (10MB)
 - Dentro de ImageInput, agregar `<ImageField source="src" title="title" />`
-- Agregar campo separado para mostrar imagen actual:
+- **Solo en edición:** Agregar campo separado para mostrar imagen actual:
   - `<ImageField source="bannerUrl" label="Banner Actual" />`
+- **IMPORTANTE:** NO incluir campo `TextInput` para `bannerUrl` - el backend lo maneja automáticamente
 
 #### Actualizar componentes de Players
 
@@ -458,11 +459,22 @@ app/
 **Hacer lo mismo pero:**
 
 - Usar `source="photo"` y `source="photoUrl"`
-- Label: "Foto del Jugador"
+- Label: "Foto del Jugador" o "Nueva Foto del Jugador" (en edición)
+- **IMPORTANTE:** NO incluir campo `TextInput` para `photoUrl` - el backend lo maneja automáticamente
 
 #### Actualizar dataProvider
 
 **Archivo:** `src/dataProvider.ts`
+
+**Crear función helper `hasFileUpload(data)`:**
+
+```typescript
+const hasFileUpload = (data: any): boolean => {
+  return Object.values(data).some(
+    (value: any) => value?.rawFile instanceof File
+  );
+};
+```
 
 **Crear función `convertFileToFormData(data)`:**
 
@@ -471,18 +483,191 @@ app/
 - Si el valor tiene `rawFile instanceof File`:
   - Agregar el archivo: `formData.append(key, data[key].rawFile)`
 - Si no:
-  - Agregar como JSON string: `formData.append(key, JSON.stringify(data[key]))`
+  - Si es objeto/array: `formData.append(key, JSON.stringify(data[key]))`
+  - Si es primitivo: `formData.append(key, data[key])`
 - Retornar formData
 
 **Actualizar métodos `create` y `update`:**
 
-- Verificar si hay archivo (banner o photo) en `params.data`
+- Verificar si hay archivo usando `hasFileUpload(params.data)`
 - Si hay archivo:
-  - Convertir a FormData
-  - Hacer fetch con body: formData
-  - **NO enviar header Content-Type** (el navegador lo setea automático)
+  - Convertir a FormData: `const formData = convertFileToFormData(params.data)`
+  - Hacer fetch manual (no usar httpClient):
+    ```typescript
+    const response = await fetch(url, {
+      method: "POST", // o 'PATCH'
+      body: formData,
+      headers: {
+        Authorization: `Bearer ${token}`, // si existe
+        // NO enviar Content-Type - el navegador lo setea automático
+      },
+    });
+    ```
+  - Parsear respuesta JSON
 - Si no hay archivo:
-  - Usar JSON normal como siempre
+  - Usar httpClient normal con JSON
+
+**IMPORTANTE:** Cuando hay archivos, NO enviar header `Content-Type` para que el navegador agregue automáticamente `multipart/form-data` con el boundary correcto.
+
+---
+
+### 🌐 FASE 7: Landing (Astro) - Soporte para URLs de Backend (30 minutos)
+
+#### Problema
+
+Las URLs de imágenes del backend son **relativas** (ej: `/uploads/players/imagen.png`) pero la landing corre en un servidor diferente y necesita URLs absolutas que apunten al backend.
+
+#### Solución: Convertir URLs relativas a absolutas
+
+**Archivo:** `frontend/landing/src/data/teams.ts`
+
+**Agregar función helper:**
+
+```typescript
+import { API_BASE_URL } from "./api";
+
+/**
+ * Convert relative image URLs to absolute URLs pointing to the backend
+ */
+function toAbsoluteUrl(relativeUrl: string | null): string {
+  if (!relativeUrl) return "";
+  if (relativeUrl.startsWith("http://") || relativeUrl.startsWith("https://")) {
+    return relativeUrl; // Already absolute
+  }
+  // Relative URL like /uploads/... -> http://localhost:3333/uploads/...
+  const baseUrl = API_BASE_URL.replace(/\/$/, "");
+  const path = relativeUrl.startsWith("/") ? relativeUrl : `/${relativeUrl}`;
+  return `${baseUrl}${path}`;
+}
+```
+
+**Actualizar mappers:**
+
+```typescript
+function mapApiPlayerToUi(p: ApiPlayer): Player {
+  return {
+    // ...otros campos
+    imagen: toAbsoluteUrl(p.photoUrl) || "/players/default.jpg",
+  };
+}
+
+function mapApiTeamToUi(t: ApiTeam, players: ApiPlayer[] = []): Team {
+  return {
+    // ...otros campos
+    imagen: toAbsoluteUrl(t.bannerUrl) || "/pucarahero.png",
+  };
+}
+```
+
+#### Configuración para Producción
+
+En producción, configurar la variable de entorno en el servidor de la landing:
+
+```bash
+# .env (servidor de Astro)
+BACKEND_API_URL=https://api.pucara.com
+# o
+PUBLIC_BACKEND_API_URL=https://api.pucara.com  # si se necesita en el cliente
+```
+
+**Resultado:** Las imágenes de jugadores y equipos se cargarán correctamente en la landing, apuntando al servidor del backend.
+
+---
+
+### ☁️ FASE 8: Consideraciones para Cloudinary (IMPORTANTE)
+
+#### Diferencias clave con Local Storage
+
+Cuando implementes Cloudinary, ten en cuenta estos cambios:
+
+**1. URLs Absolutas**
+
+- **Local:** `/uploads/players/imagen.png` (relativa)
+- **Cloudinary:** `https://res.cloudinary.com/tu-cloud/image/upload/v123456/pucara/players/imagen.png` (absoluta)
+
+**Ventaja:** La landing NO necesita cambios - `toAbsoluteUrl()` detecta URLs que ya son absolutas y las retorna sin modificar.
+
+**2. Public ID**
+
+El método `deleteImage()` acepta un parámetro opcional `publicId`:
+
+```typescript
+// Método deleteImage(imageUrl, publicId?): Delegar tanto URL como publicId
+public async deleteImage(imageUrl: string, publicId?: string): Promise<void> {
+  return this.provider.deleteImage(imageUrl, publicId)
+}
+```
+
+**Para Cloudinary:**
+
+- Si hay `publicId`, usarlo directamente
+- Si no, extraer del URL con regex:
+  ```typescript
+  const match = imageUrl.match(/\/v\d+\/(.+)\.\w+$/);
+  const publicId = match ? match[1] : null;
+  ```
+- Llamar: `await cloudinary.uploader.destroy(publicId)`
+
+**Para LocalStorageProvider:**
+
+```typescript
+public async deleteImage(imageUrl: string, _publicId?: string): Promise<void> {
+  // Ignorar publicId (solo para providers online)
+  // ... lógica actual
+}
+```
+
+**3. Migraciones de Imágenes**
+
+Si ya tienes imágenes en local y cambias a Cloudinary:
+
+**Opción A: Migración automática (recomendado)**
+
+Crear comando Ace que:
+
+1. Lee todos los teams/players de la DB
+2. Por cada imagen local:
+   - Descarga archivo local
+   - Sube a Cloudinary
+   - Actualiza URL en DB
+   - (Opcional) Elimina archivo local
+
+**Opción B: Migración manual**
+
+1. Descargar carpeta `public/uploads/`
+2. Subir manualmente a Cloudinary Dashboard
+3. Actualizar URLs en DB con SQL
+
+**Opción C: Híbrida (más simple)**
+
+1. Cambiar `STORAGE_PROVIDER=cloudinary`
+2. Dejar imágenes viejas en local
+3. Nuevas imágenes van a Cloudinary
+4. La landing sigue funcionando con ambas (gracias a `toAbsoluteUrl()`)
+
+**4. Frontend sin cambios**
+
+✅ React Admin: Sin cambios - sigue enviando archivos igual  
+✅ Landing: Sin cambios - `toAbsoluteUrl()` maneja URLs absolutas y relativas  
+✅ Controladores: Sin cambios - usan el servicio abstracto
+
+**Único cambio necesario:** Variables de entorno
+
+```bash
+# .env
+STORAGE_PROVIDER=cloudinary
+CLOUDINARY_CLOUD_NAME=tu-cloud
+CLOUDINARY_API_KEY=123456789
+CLOUDINARY_API_SECRET=abc123xyz
+```
+
+#### Testing de la Migración
+
+1. **Subir nueva imagen:** Verificar que se suba a Cloudinary
+2. **Ver en Admin:** Verificar que se muestre correctamente
+3. **Ver en Landing:** Verificar que se cargue desde Cloudinary
+4. **Eliminar imagen:** Verificar que se borre de Cloudinary
+5. **Reemplazar imagen:** Verificar que borre vieja y suba nueva
 
 ---
 

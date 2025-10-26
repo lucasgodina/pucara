@@ -53,14 +53,17 @@ export class LocalStorageProvider {
     // Generate unique file name and define paths
     const fileName = `${cuid()}.${extension}`
     const targetDir = path.join(this.getStoragePath(), folder)
-    const filePath = path.join(targetDir, fileName)
 
     // Ensure the target directory exists
     await fs.mkdir(targetDir, { recursive: true })
 
     // Move the file to the target directory
     try {
-      await file.move(filePath, { overwrite: true })
+      // file.move() expects a directory path and a file name separately
+      await file.move(targetDir, {
+        name: fileName,
+        overwrite: true,
+      })
 
       if (file.hasErrors) {
         throw new Exception('Error al procesar el archivo', {
@@ -71,6 +74,9 @@ export class LocalStorageProvider {
     } catch (error) {
       throw new Exception('Error al mover el archivo subido.', { status: 500, cause: error })
     }
+
+    // Get the final file path after move
+    const filePath = path.join(targetDir, fileName)
 
     // Return object with URL and path
     const relativeUrl = `/uploads/${folder}/${fileName}`

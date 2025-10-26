@@ -86,7 +86,6 @@ export const TeamCreate = () => (
         <ImageField source="src" title="title" />
       </ImageInput>
       
-      <TextInput source="bannerUrl" label="URL del Banner (opcional)" helperText="URL externa de la imagen del banner" fullWidth />
       <TextInput source="description" label="Descripción" multiline rows={3} fullWidth />
       <TextInput
         source="achievements"
@@ -132,7 +131,6 @@ export const TeamEdit = () => (
         <ImageField source="src" title="title" />
       </ImageInput>
       
-      <TextInput source="bannerUrl" label="URL del Banner (opcional)" helperText="URL externa de la imagen del banner" fullWidth />
       <TextInput source="description" label="Descripción" multiline rows={3} fullWidth />
       <TextInput
         source="achievements"

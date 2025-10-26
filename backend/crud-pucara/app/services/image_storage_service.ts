@@ -5,9 +5,9 @@ import { Exception } from '@adonisjs/core/exceptions'
 import { ApplicationService } from '@adonisjs/core/types'
 
 // Import providers
-import { LocalStorageProvider } from 'app/providers/local_storage_provider.js'
-// import { CloudinaryStorageProvider } from 'app/providers/cloudinary_storage_provider.js'
-// import { S3StorageProvider } from 'app/providers/s3_storage_provider.js'
+import { LocalStorageProvider } from '#providers/local_storage_provider'
+// import { CloudinaryStorageProvider } from '#providers/cloudinary_storage_provider'
+// import { S3StorageProvider } from '#providers/s3_storage_provider'
 
 // Result interface for upload operations
 interface UploadResult {
