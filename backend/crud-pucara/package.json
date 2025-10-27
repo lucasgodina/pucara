@@ -50,7 +50,6 @@
     "hot-hook": "^0.4.0",
     "pino-pretty": "^13.0.0",
     "prettier": "^3.5.3",
-    "ts-node-maintained": "^10.9.6",
     "typescript": "~5.8"
   },
   "dependencies": {
@@ -70,6 +69,7 @@
     "pucara-monorepo": "file:../..",
     "reflect-metadata": "^0.2.2",
     "uuid": "^11.1.0",
+    "ts-node-maintained": "^10.9.6",
     "zod": "^4.1.12"
   },
   "hotHook": {
