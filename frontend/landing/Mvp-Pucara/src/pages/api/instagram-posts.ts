@@ -12,7 +12,45 @@ export const GET: APIRoute = async () => {
       );
     }
 
-    // Obtener posts de Facebook directamente
+    // Intentar obtener Instagram Business Account
+    try {
+      const igAccountResponse = await fetch(
+        `https://graph.facebook.com/v18.0/${pageId}?fields=instagram_business_account&access_token=${accessToken}`
+      );
+      
+      if (igAccountResponse.ok) {
+        const igAccountData = await igAccountResponse.json();
+        const igAccountId = igAccountData.instagram_business_account?.id;
+
+        if (igAccountId) {
+          // Obtener posts de Instagram
+          const igPostsResponse = await fetch(
+            `https://graph.facebook.com/v18.0/${igAccountId}/media?fields=id,caption,media_type,media_url,thumbnail_url,permalink,timestamp&limit=12&access_token=${accessToken}`
+          );
+
+          if (igPostsResponse.ok) {
+            const igPostsData = await igPostsResponse.json();
+            
+            if (igPostsData.data && igPostsData.data.length > 0) {
+              return new Response(
+                JSON.stringify({
+                  source: 'instagram',
+                  posts: igPostsData.data
+                }),
+                { 
+                  status: 200, 
+                  headers: { 'Content-Type': 'application/json' } 
+                }
+              );
+            }
+          }
+        }
+      }
+    } catch (igError) {
+      console.log('Instagram not available, falling back to Facebook:', igError);
+    }
+
+    // Fallback: Obtener posts de Facebook
     const fbPostsResponse = await fetch(
       `https://graph.facebook.com/v18.0/${pageId}/posts?fields=id,message,full_picture,created_time,permalink_url&limit=12&access_token=${accessToken}`
     );
