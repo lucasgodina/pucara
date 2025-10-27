@@ -17,6 +17,15 @@ export default class AuthController {
     // Intentar login con username o email
     const user = await User.verifyCredentials(identifier, password)
 
+    // Single session para admin: eliminar todos los tokens anteriores para evitar
+    // problemas de concurrencia y asegurar que solo hay una sesión activa.
+    // Usuarios con rol 'editor' y 'user' pueden tener múltiples sesiones simultáneas.
+    if (user.role === 'admin') {
+      await User.accessTokens.all(user).then((tokens) => {
+        return Promise.all(tokens.map((t) => User.accessTokens.delete(user, t.identifier)))
+      })
+    }
+
     // Crear el token con expiración de 7 días
     const token = await User.accessTokens.create(user, [], { expiresIn: '7 days' })
 

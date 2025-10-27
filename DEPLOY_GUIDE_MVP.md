@@ -1,27 +1,5 @@
 # Guía de Deploy (MVP rápido y barato)
 
-Objetivo: desplegar el monorepo Pucará en prove## 4) Deploy del Admin (Vercel)
-
-Repositorio: `frontend/admin-frontend`
-
-1. En Vercel → New Project → Import Git Repository → seleccionar `frontend/admin-frontend`.
-2. Framework Preset: "Create React App" (auto-detectado).
-3. Variables de entorno (Production):
-
-   - `REACT_APP_API_URL=https://api-tuapp.onrender.com`
-   - `REACT_APP_API_URL_V1=https://api-tuapp.onrender.com/api/v1`
-
-   **Nota:** El dataProvider ya está configurado para leer estas variables. Si no las configuras, usará `http://localhost:3333` por defecto (desarrollo).
-
-4. Deploy. La URL quedará como `https://admin-tuapp.vercel.app`.
-
-Prueba:
-
-- Login con ADMIN del seeder.
-- Crear un equipo y subir banner (debe ir a Cloudinary y verse en el Admin y la Landing).
-
----r, con el menor esfuerzo.
-
 Arquitectura elegida:
 
 - Landing (Astro) → Vercel (SSR con adapter ya configurado)
