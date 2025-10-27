@@ -1,8 +1,9 @@
+import env from '#start/env'
 import app from '@adonisjs/core/services/app'
 import { defineConfig } from '@adonisjs/lucid'
 
 const dbConfig = defineConfig({
-  connection: 'sqlite',
+  connection: env.get('DB_CONNECTION'),
   connections: {
     sqlite: {
       client: 'better-sqlite3',
@@ -14,6 +15,15 @@ const dbConfig = defineConfig({
         naturalSort: true,
         paths: ['database/migrations'],
       },
+    },
+    pg: {
+      client: 'pg',
+      connection: env.get('DATABASE_URL'),
+      migrations: {
+        naturalSort: true,
+        paths: ['database/migrations'],
+      },
+      // Neon requires SSL; in many environments the default CA is fine
     },
   },
 })
