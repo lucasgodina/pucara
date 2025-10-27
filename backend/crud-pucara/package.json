@@ -50,7 +50,7 @@
     "hot-hook": "^0.4.0",
     "pino-pretty": "^13.0.0",
     "prettier": "^3.5.3",
-    "ts-node-maintained": "^10.9.5",
+    "ts-node-maintained": "^10.9.6",
     "typescript": "~5.8"
   },
   "dependencies": {
@@ -62,11 +62,11 @@
     "@adonisjs/validator": "^13.0.2",
     "@types/uuid": "^10.0.0",
     "@vinejs/vine": "^3.0.1",
-    "dotenv": "^16.4.5",
     "better-sqlite3": "^11.10.0",
-    "pg": "^8.13.1",
     "cloudinary": "^2.8.0",
+    "dotenv": "^16.4.5",
     "luxon": "^3.6.1",
+    "pg": "^8.13.1",
     "pucara-monorepo": "file:../..",
     "reflect-metadata": "^0.2.2",
     "uuid": "^11.1.0",
