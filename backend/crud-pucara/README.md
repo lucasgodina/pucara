@@ -1,177 +1,206 @@
-# 🎮 Pucará Esports - CRUD Players
+# Backend API - Pucará Esports
 
-Sistema de gestión de jugadores y equipos de esports con React Admin + AdonisJS.
+API REST construida con **AdonisJS 6** para la gestión completa de equipos, jugadores, noticias y usuarios de esports.
 
-## 🚀 Arquitectura
+---
 
-- **Backend**: AdonisJS (Node.js + TypeScript)
-- **Frontend**: React Admin (React + Material-UI)
-- **Base de datos**: MySQL
+## 🎯 Descripción
 
-## 📦 Instalación
+API RESTful con arquitectura MVC que proporciona endpoints para operaciones CRUD sobre:
 
-### 1. Backend (AdonisJS)
+- **Equipos** (Teams)
+- **Jugadores** (Players)
+- **Noticias** (News)
+- **Usuarios** (Users)
 
-```bash
-cd d:\Pucara\crud-players-pucara
-npm install
-```
+Sistema de autenticación basado en **Access Tokens** con soporte para 3 roles: `admin`, `editor` y `user`.
 
-### 2. Frontend (React Admin)
+---
 
-```bash
-cd admin-frontend
-npm install
-```
+## 🛠️ Stack Tecnológico
 
-## 🔧 Configuración
+| Tecnología     | Versión | Propósito                     |
+| -------------- | ------- | ----------------------------- |
+| **AdonisJS**   | 6.18.0  | Framework backend             |
+| **Lucid ORM**  | 21.6.1  | Interacción con base de datos |
+| **SQLite**     | -       | Base de datos (desarrollo)    |
+| **PostgreSQL** | -       | Base de datos (producción)    |
+| **VineJS**     | 3.0.1   | Validación de datos           |
+| **TypeScript** | 5.8.x   | Lenguaje principal            |
 
-### Base de datos
+---
 
-1. Configura tu base de datos MySQL en `.env`
-2. Ejecuta las migraciones:
-
-```bash
-node ace migration:run
-```
-
-### Archivos de configuración
-
-- `.env` - Variables de entorno
-- `config/database.ts` - Configuración de base de datos
-- `config/cors.ts` - Configuración CORS
-
-## 🎯 Uso
-
-### Iniciar el Backend
-
-```bash
-node ace serve --watch
-```
-
-**Servidor:** http://localhost:3333
-
-### Iniciar el Frontend
-
-```bash
-cd admin-frontend
-npm start
-```
-
-**Interfaz:** http://localhost:3000
-
-## 🛠️ Funcionalidades
-
-### Gestión de Equipos
-
-- ✅ Crear equipos
-- ✅ Editar equipos
-- ✅ Eliminar equipos
-- ✅ Listar equipos
-
-### Gestión de Jugadores
-
-- ✅ Crear jugadores
-- ✅ Editar jugadores
-- ✅ Eliminar jugadores
-- ✅ Asignar/reasignar equipos
-- ✅ Gestionar jugadores libres
-- ✅ Subir fotos de jugadores
-- ✅ Estadísticas en formato JSON
-
-### Características Técnicas
-
-- 🔒 **UUIDs** para IDs únicos y seguros
-- 🌐 **API RESTful** completa
-- 📱 **Interfaz responsiva** con Material-UI
-- 🔄 **Validaciones** en backend y frontend
-- 🚀 **Carga asíncrona** de datos
-
-## 📚 Estructura del Proyecto
+## 📁 Estructura
 
 ```
-crud-players-pucara/
-├── app/
-│   ├── controllers/     # Controladores de API
-│   ├── models/         # Modelos de datos
-│   └── validators/     # Validaciones
-├── admin-frontend/     # Frontend React Admin
-│   ├── src/
-│   │   ├── players.tsx # Gestión de jugadores
-│   │   ├── teams.tsx   # Gestión de equipos
-│   │   └── dataProvider.ts # Conexión con API
-├── config/            # Configuración del servidor
-├── database/          # Migraciones
-└── start/            # Rutas y configuración inicial
+app/
+├── controllers/      # Lógica de endpoints (auth, teams, players, news, users)
+├── models/          # Modelos Lucid (User, Team, Player, News)
+├── middleware/      # Auth, CORS, validaciones, error handling
+├── validators/      # Esquemas VineJS para validación
+├── helpers/         # Utilidades (response_helper)
+└── services/        # Lógica de negocio reutilizable
+
+config/              # Configuración (auth, database, cors, cloudinary)
+database/
+├── migrations/      # Esquema de base de datos
+└── seeders/         # Datos iniciales (admin + equipos + jugadores)
+
+start/
+├── routes.ts        # Definición de rutas API
+└── kernel.ts        # Middleware stack
 ```
 
-## 🔗 Endpoints API
+---
+
+## 🔐 Autenticación
+
+**Sistema**: Access Tokens (Bearer token)  
+**Expiración**: 7 días  
+**Roles disponibles**:
+
+- `admin` - Acceso total, single session (un token activo)
+- `editor` - Gestión de contenido
+- `user` - Lectura y operaciones limitadas
+
+**Endpoints**:
+
+- `POST /api/v1/auth/register` - Registro
+- `POST /api/v1/auth/login` - Login (retorna token)
+- `GET /api/v1/auth/me` - Usuario actual
+- `DELETE /api/v1/auth/logout` - Logout (revoca token)
+
+---
+
+## 🔗 Endpoints Principales
 
 ### Equipos
 
-- `GET /api/v1/teams` - Listar equipos
-- `POST /api/v1/teams` - Crear equipo
-- `GET /api/v1/teams/:id` - Obtener equipo
-- `PATCH /api/v1/teams/:id` - Actualizar equipo
-- `DELETE /api/v1/teams/:id` - Eliminar equipo
+```
+GET    /api/v1/teams         # Listar equipos
+POST   /api/v1/teams         # Crear equipo [auth]
+GET    /api/v1/teams/:id     # Obtener equipo
+PUT    /api/v1/teams/:id     # Actualizar equipo [auth]
+DELETE /api/v1/teams/:id     # Eliminar equipo [auth]
+```
 
 ### Jugadores
 
-- `GET /api/v1/players` - Listar jugadores
-- `POST /api/v1/players` - Crear jugador
-- `GET /api/v1/players/:id` - Obtener jugador
-- `PATCH /api/v1/players/:id` - Actualizar jugador
-- `DELETE /api/v1/players/:id` - Eliminar jugador
+```
+GET    /api/v1/players       # Listar jugadores
+POST   /api/v1/players       # Crear jugador [auth]
+GET    /api/v1/players/:id   # Obtener jugador
+PUT    /api/v1/players/:id   # Actualizar jugador [auth]
+DELETE /api/v1/players/:id   # Eliminar jugador [auth]
+POST   /api/v1/players/:id/assign-team  # Asignar equipo [auth]
+```
 
-## 🎨 Interfaz de Usuario
+### Noticias
 
-- **Dashboard**: Resumen de equipos y jugadores
-- **Lista de jugadores**: Con fotos, equipos y estadísticas
-- **Formularios**: Crear/editar jugadores con selector de equipos
-- **Gestión de equipos**: CRUD completo
-- **Filtros**: Por equipo, jugadores libres, etc.
+```
+GET    /api/v1/news          # Listar noticias
+POST   /api/v1/news          # Crear noticia [auth]
+GET    /api/v1/news/:id      # Obtener noticia
+PUT    /api/v1/news/:id      # Actualizar noticia [auth]
+DELETE /api/v1/news/:id      # Eliminar noticia [auth]
+```
 
-## 🔧 Desarrollo
+### Usuarios (admin only)
+
+```
+GET    /api/v1/users         # Listar usuarios [admin]
+POST   /api/v1/users         # Crear usuario [admin]
+GET    /api/v1/users/:id     # Obtener usuario [admin]
+PUT    /api/v1/users/:id     # Actualizar usuario [admin]
+DELETE /api/v1/users/:id     # Eliminar usuario [admin]
+```
+
+---
+
+## 📦 Instalación Rápida
+
+> ⚠️ **Nota**: Este proyecto es parte de un monorepo. Se recomienda instalar desde la raíz del proyecto.
+
+### Desde la raíz del monorepo (recomendado):
+
+```bash
+npm run install:all
+cd backend/crud-pucara
+node ace generate:key   # Copia APP_KEY al .env
+node ace migration:run
+node ace db:seed
+```
+
+### Desde este directorio:
+
+```bash
+npm install
+node ace generate:key
+node ace migration:run
+node ace db:seed
+```
+
+---
+
+## � Desarrollo
+
+### Iniciar servidor
+
+```bash
+node ace serve --watch  # Con hot reload
+```
+
+**URL**: http://localhost:3333
 
 ### Comandos útiles
 
 ```bash
-# Backend
-node ace serve --watch    # Servidor con hot reload
-node ace migration:run    # Ejecutar migraciones
-node ace migration:rollback # Revertir migraciones
-
-# Frontend
-npm start                 # Servidor de desarrollo
-npm run build            # Build para producción
+node ace migration:run           # Ejecutar migraciones
+node ace migration:rollback      # Revertir última migración
+node ace db:seed                 # Poblar base de datos
+node ace list:routes             # Ver todas las rutas
 ```
 
-### Variables de entorno importantes
+---
+
+## 🗃️ Base de Datos
+
+### Desarrollo
+
+- **Motor**: SQLite
+- **Archivo**: `tmp/db.sqlite3`
+- **Ventajas**: Zero config, portátil
+
+### Producción
+
+- **Motor**: PostgreSQL
+- **Configuración**: Via variables de entorno
+- **Migración**: Lucid maneja el cambio de driver automáticamente
+
+---
+
+## 📝 Variables de Entorno
 
 ```env
 PORT=3333
 HOST=localhost
-DB_CONNECTION=mysql
-DB_HOST=127.0.0.1
-DB_PORT=3306
-DB_USER=root
+LOG_LEVEL=info
+APP_KEY=                    # Generar con: node ace generate:key
+NODE_ENV=development
+
+# Base de datos (desarrollo)
+DB_CONNECTION=sqlite
+
+# Base de datos (producción)
+DB_CONNECTION=pg
+DB_HOST=
+DB_PORT=5432
+DB_USER=
 DB_PASSWORD=
-DB_DATABASE=pucara_players_crud_api
+DB_DATABASE=
+
+# Cloudinary (opcional)
+CLOUDINARY_CLOUD_NAME=
+CLOUDINARY_API_KEY=
+CLOUDINARY_API_SECRET=
 ```
-
-## 📝 Notas
-
-- El sistema usa **UUIDs** para mayor seguridad
-- Los jugadores pueden ser "Agentes Libres" (sin equipo)
-- Las estadísticas se almacenan en formato JSON
-- La interfaz es completamente responsive
-- El backend es una API pura (sin vistas HTML)
-
-## 📘 Guía de integración para otro frontend
-
-Si vas a consumir esta API desde otro frontend distinto al React Admin incluido, consulta la guía:
-
-- docs/guia-integracion-frontend.md
-- docs/guia-consumo-astro.md (solo lectura desde un sitio Astro)
-
-¡Listo para gestionar tu equipo de esports! 🚀
