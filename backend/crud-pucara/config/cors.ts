@@ -8,7 +8,14 @@ import { defineConfig } from '@adonisjs/cors'
  */
 const corsConfig = defineConfig({
   enabled: true,
-  origin: true,
+  // En desarrollo acepta todos los orígenes
+  origin: [
+    'https://pucara-api-9424c4c471cc.herokuapp.com', // URL de Heroku (para CORS interno)
+    'https://pucara-admin-frontend.vercel.app',
+    'https://pucara-landing.vercel.app',
+    'http://localhost:3000', // Admin frontend en desarrollo
+    'http://localhost:4321', // Landing en desarrollo
+  ],
   methods: ['GET', 'HEAD', 'POST', 'PUT', 'PATCH', 'DELETE'],
   headers: true,
   exposeHeaders: [],

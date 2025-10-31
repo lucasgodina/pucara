@@ -15,10 +15,10 @@ pnpm-debug.log*
 
 # environment variables
 .env
-.env.production
 .env.local
 .env.development
 !.env.example
+!.env.production
 
 # vercel
 .vercel

@@ -246,11 +246,18 @@ Esto crea el usuario admin con las credenciales configuradas en `ADMIN_*`.
 
 ### 9.1 Configurar dataProvider
 
-Actualizar `frontend/admin-frontend/src/dataProvider.ts` para usar la URL de Heroku:
+Ya está configurado en `frontend/admin-frontend/src/dataProvider.ts` con la URL de Heroku:
 
 ```typescript
-const API_URL =
-  import.meta.env.VITE_API_URL || "https://pucara-api-xxxxx.herokuapp.com";
+const API_BASE_URL =
+  process.env.REACT_APP_API_URL ||
+  "https://pucara-api-9424c4c471cc.herokuapp.com";
+```
+
+Para desarrollo local, crea un archivo `.env` con:
+
+```bash
+REACT_APP_API_URL=http://localhost:3333
 ```
 
 ### 9.2 Deploy en Vercel
@@ -263,8 +270,8 @@ const API_URL =
    - Build Command: `npm run build`
    - Output Directory: `build`
    - Install Command: `npm install`
-4. Variables de entorno:
-   - `VITE_API_URL`: `https://pucara-api-xxxxx.herokuapp.com`
+4. Variables de entorno (opcional, para sobreescribir el fallback):
+   - `REACT_APP_API_URL`: `https://pucara-api-9424c4c471cc.herokuapp.com`
 5. Deploy.
 
 URL resultante: `https://pucara-admin-xxxxx.vercel.app`
@@ -275,12 +282,10 @@ URL resultante: `https://pucara-admin-xxxxx.vercel.app`
 
 ### 10.1 Configurar API URL
 
-Actualizar `frontend/landing/astro.config.mjs` o usar variables de entorno:
-
-Crear `frontend/landing/.env.production`:
+Ya está configurado en `frontend/landing/.env.production`:
 
 ```bash
-PUBLIC_API_URL=https://pucara-api-xxxxx.herokuapp.com
+PUBLIC_API_URL=https://pucara-api-9424c4c471cc.herokuapp.com
 ```
 
 ### 10.2 Deploy en Vercel
@@ -291,8 +296,8 @@ PUBLIC_API_URL=https://pucara-api-xxxxx.herokuapp.com
    - Root Directory: `frontend/landing`
    - Build Command: `npm run build`
    - Output Directory: `dist`
-3. Variables de entorno (opcional):
-   - `PUBLIC_API_URL`: `https://pucara-api-xxxxx.herokuapp.com`
+3. Variables de entorno (opcional, para sobreescribir el archivo .env.production):
+   - `PUBLIC_API_URL`: `https://pucara-api-9424c4c471cc.herokuapp.com`
 4. Deploy.
 
 URL resultante: `https://pucara-landing-xxxxx.vercel.app`
@@ -301,16 +306,19 @@ URL resultante: `https://pucara-landing-xxxxx.vercel.app`
 
 ## 11) Configurar CORS en la API
 
-Actualizar `backend/crud-pucara/config/cors.ts`:
+El archivo `backend/crud-pucara/config/cors.ts` ya está configurado con las URLs necesarias.
+
+Cuando despliegues en Vercel, actualiza las URLs placeholder con tus URLs reales:
 
 ```typescript
 import { defineConfig } from "@adonisjs/cors";
 
-export default defineConfig({
+const corsConfig = defineConfig({
   enabled: true,
   origin: [
-    "https://pucara-admin-xxxxx.vercel.app",
-    "https://pucara-landing-xxxxx.vercel.app",
+    "https://pucara-api-9424c4c471cc.herokuapp.com",
+    "https://pucara-admin-frontend.vercel.app",
+    "https://pucara-landing.vercel.app",
     "http://localhost:3000",
     "http://localhost:4321",
   ],
@@ -320,13 +328,15 @@ export default defineConfig({
   credentials: true,
   maxAge: 90,
 });
+
+export default corsConfig;
 ```
 
-Commit y redeploy:
+Después de actualizar las URLs, commit y redeploy:
 
 ```bash
 git add backend/crud-pucara/config/cors.ts
-git commit -m "Update CORS for production"
+git commit -m "Update CORS with production URLs"
 git push origin main
 git subtree push --prefix backend/crud-pucara heroku main
 ```
@@ -352,7 +362,7 @@ heroku domains:add api.pucara.com -a pucara-api
 
 ## 13) Checklist final
 
-- [ ] API corriendo en Heroku: `https://pucara-api-xxxxx.herokuapp.com`
+- [ ] API corriendo en Heroku: `https://pucara-api-9424c4c471cc.herokuapp.com`
 - [ ] Admin corriendo en Vercel: `https://pucara-admin-xxxxx.vercel.app`
 - [ ] Landing corriendo en Vercel: `https://pucara-landing-xxxxx.vercel.app`
 - [ ] CORS configurado correctamente
