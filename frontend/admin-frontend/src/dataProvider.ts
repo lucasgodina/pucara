@@ -10,6 +10,15 @@ const API_BASE_URL =
 const API_BACKEND_A = API_BASE_URL;
 const API_BACKEND_B = `${API_BASE_URL}/api/v1`;
 
+// Debug: verificar qué URL se está usando
+console.log("🔍 Debug - API_BASE_URL:", API_BASE_URL);
+console.log("🔍 Debug - API_BACKEND_A:", API_BACKEND_A);
+console.log("🔍 Debug - API_BACKEND_B:", API_BACKEND_B);
+console.log(
+  "🔍 Debug - process.env.REACT_APP_API_URL:",
+  process.env.REACT_APP_API_URL
+);
+
 const getBaseUrl = (resource: string) => {
   // news, users -> Backend A (auth/news/users)
   // teams, players -> Backend B (CRUD API)
