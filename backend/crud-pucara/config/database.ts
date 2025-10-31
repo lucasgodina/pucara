@@ -21,8 +21,8 @@ const dbConfig = defineConfig({
       connection: {
         connectionString: env.get('DATABASE_URL'),
         ssl: {
-          rejectUnauthorized: false
-        }
+          rejectUnauthorized: false,
+        },
       },
       migrations: {
         naturalSort: true,
