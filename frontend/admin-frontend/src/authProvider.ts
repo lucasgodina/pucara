@@ -1,6 +1,12 @@
 import type { AuthProvider } from "react-admin";
 
-const AUTH_URL = "http://localhost:3333/api/v1";
+// Usar la misma URL base que el dataProvider
+const API_BASE_URL =
+  process.env.REACT_APP_API_URL ||
+  "https://pucara-api-9424c4c471cc.herokuapp.com";
+const AUTH_URL = `${API_BASE_URL}/api/v1`;
+
+console.log("🔍 Debug authProvider - AUTH_URL:", AUTH_URL);
 
 export const authProvider: AuthProvider = {
   login: async ({ username, password }) => {
