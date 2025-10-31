@@ -6,7 +6,7 @@
  * expose PUBLIC_BACKEND_API_URL and use it explicitly.
  */
 
-const DEFAULT_BASE_URL = "http://localhost:3333";
+const DEFAULT_BASE_URL = "https://pucara-api-9424c4c471cc.herokuapp.com";
 
 export const API_BASE_URL: string =
   // Server-only variable (preferred)
